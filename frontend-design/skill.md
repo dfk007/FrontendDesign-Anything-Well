@@ -1,6 +1,4 @@
 # SKILL: Frontend Design — Editorial Craft System
-> Derived from `opencode-session-summation-all.html` · Daud's house style
-
 ---
 
 ## 1. Design Identity
