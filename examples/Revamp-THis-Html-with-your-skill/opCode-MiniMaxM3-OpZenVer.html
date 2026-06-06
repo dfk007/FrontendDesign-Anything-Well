@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DevOps → AI DevOps Engineer Roadmap · A Field Manual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Geist:wght@300..900&family=JetBrains+Mono:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+<style>
+  /* ════════════════════════════════════════════════════════
+     1. EDITORIAL TOKENS  —  paper, ink, rust, forest, mustard
+     ════════════════════════════════════════════════════════ */
+  :root {
+    /* Backgrounds (warm parchment) */
+    --paper:        #f0e7d2;
+    --paper-2:      #e7dcc1;
+    --paper-3:      #ddcfac;
+    --tile:         #ece1c2;
+
+    /* Ink */
+    --ink:          #1a140e;
+    --ink-2:        #3a2f23;
+    --muted:        #7a6852;
+
+    /* Rules / borders */
+    --rule:         #b8a47a;
+    --rule-soft:    #d4c196;
+    --grid-line:    rgba(26, 20, 14, 0.06);
+
+    /* Accents */
+    --rust:         #b8331a;
+    --rust-soft:    #e85d3a;
+    --mustard:      #b48020;
+    --forest:       #1f4a36;
+    --moss:         #5a7048;
+
+    /* Accent series */
+    --accent-1:     #b8331a;
+    --accent-2:     #1f4a36;
+    --accent-3:     #b48020;
+    --accent-4:     #3b2a4a;
+    --accent-5:     #2c4858;
+
+    /* Code */
+    --code-bg:      #2a1f12;
+    --code-text:    #f0e7d2;
+  }
+
+  [data-theme="dark"] {
+    --paper:        #14110b;
+    --paper-2:      #1c1810;
+    --paper-3:      #25201a;
+    --tile:         #1c1810;
+    --ink:          #f0e7d2;
+    --ink-2:        #d4c5a8;
+    --muted:        #9a8a72;
+    --rule:         #4a3f2d;
+    --rule-soft:    #3a3022;
+    --grid-line:    rgba(240, 231, 210, 0.05);
+    --rust:         #e85d3a;
+    --rust-soft:    #ff7a52;
+    --mustard:      #d9a04a;
+    --forest:       #6ba888;
+    --moss:         #8aa878;
+    --accent-1:     #e85d3a;
+    --accent-2:     #6ba888;
+    --accent-3:     #d9a04a;
+    --accent-4:     #9a7ab8;
+    --accent-5:     #6ba8c8;
+    --code-bg:      #0a0805;
+    --code-text:    #d4c5a8;
+  }
+
+  /* ════════════════════════════════════════════════════════
+     2. RESET + BASE
+     ════════════════════════════════════════════════════════ */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--paper);
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 40px 40px;
+    color: var(--ink-2);
+    font-family: 'Geist', sans-serif;
+    font-size: 1rem;
+    line-height: 1.55;
+    overflow-x: hidden;
+    transition: background 0.4s ease, color 0.4s ease;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.35;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0 0.05 0 0 0 0.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  [data-theme="dark"] body::before { opacity: 0.18; }
+
+  .page-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem 1.5rem 4rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ════════════════════════════════════════════════════════
+     3. THEME TOGGLE  —  fixed top-right, hard offset shadow
+     ════════════════════════════════════════════════════════ */
+  .theme-toggle {
+    position: fixed; top: 1rem; right: 1rem; z-index: 100;
+    background: var(--paper); color: var(--ink);
+    border: 1.5px solid var(--ink);
+    width: 44px; height: 44px; border-radius: 50%;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.2rem;
+    box-shadow: 2px 2px 0 var(--ink);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  .theme-toggle:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0 var(--ink);
+    background: var(--rust); color: var(--paper);
+  }
+  .theme-toggle:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 var(--ink);
+  }
+
+  /* ════════════════════════════════════════════════════════
+     4. MASTHEAD  —  newspaper-style 3-col header bar
+     ════════════════════════════════════════════════════════ */
+  .masthead {
+    border-top: 4px double var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding: 1.1rem 0 0.9rem;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: end;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .masthead .left  { text-align: left; }
+  .masthead .center {
+    text-align: center;
+    font-weight: 700;
+    color: var(--ink);
+    font-size: 0.85rem;
+    letter-spacing: 0.18em;
+  }
+  .masthead .right { text-align: right; }
+
+  /* ════════════════════════════════════════════════════════
+     5. HERO  —  asymmetric, Fraunces display + Fraunces lede
+     ════════════════════════════════════════════════════════ */
+  .hero {
+    padding: 3rem 0 2.2rem;
+    border-bottom: 1px solid var(--ink);
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 2.5rem;
+    align-items: end;
+  }
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 0;
+    font-weight: 360;
+    font-size: clamp(3.4rem, 7.8vw, 6.3rem);
+    line-height: 0.88;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+  }
+  .hero h1 em {
+    font-style: italic;
+    font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
+    font-weight: 300;
+    color: var(--rust);
+  }
+  .lede {
+    border-left: 3px solid var(--rust);
+    padding-left: 1.25rem;
+    font-style: italic;
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "opsz" 36, "SOFT" 30;
+    font-weight: 380;
+    font-size: 1.12rem;
+    line-height: 1.55;
+    color: var(--ink-2);
+  }
+  .lede .eyebrow {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-style: normal;
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.6rem;
+  }
+
+  /* ════════════════════════════════════════════════════════
+     6. META BAR  —  stat strip with Fraunces numerals
+     ════════════════════════════════════════════════════════ */
+  .meta-bar {
+    display: flex;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+  }
+  .meta-cell {
+    flex: 1;
+    min-width: 140px;
+    padding: 0.9rem 1.1rem;
+    border-right: 1px solid var(--rule-soft);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+  }
+  .meta-cell:last-child { border-right: none; }
+  .meta-cell .label {
+    text-transform: uppercase;
+    color: var(--muted);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+  .meta-cell .val {
+    font-family: 'Geist', sans-serif;
+    font-size: 0.85rem;
+    color: var(--ink-2);
+  }
+  .meta-cell .val.big {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "opsz" 72;
+    font-size: 1.7rem;
+    font-weight: 400;
+    color: var(--rust);
+    font-style: italic;
+    line-height: 1;
+    display: block;
+  }
+  .meta-cell .val.big.italic-num {
+    font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
+  }
+
+  /* ════════════════════════════════════════════════════════
+     7. PROGRESS STRIP  —  7 chapter cells
+     ════════════════════════════════════════════════════════ */
+  .progress-strip {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    border-bottom: 4px double var(--ink);
+  }
+  .prog-cell {
+    padding: 0.85rem 0.4rem;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    border-right: 1px solid var(--rule-soft);
+    border-top: 1px solid var(--rule-soft);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+  }
+  .prog-cell:last-child { border-right: none; }
+  .prog-cell:hover { background: var(--paper-2); color: var(--ink); }
+  .prog-cell.active { background: var(--ink); color: var(--paper); }
+  .prog-cell .lbl {
+    display: block;
+    font-size: 0.58rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 0.2rem;
+    opacity: 0.7;
+  }
+
+  /* ════════════════════════════════════════════════════════
+     8. PHASE DIVIDER  —  editorial chapter break
+     ════════════════════════════════════════════════════════ */
+  .phase-divider {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    align-items: end;
+    gap: 1.1rem;
+    margin: 3.5rem 0 1.8rem;
+  }
+  .phase-divider .phase-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    padding: 0.5rem 0.85rem;
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .phase-divider .phase-title {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "opsz" 144, "SOFT" 50, "WONK" 0;
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    line-height: 0.95;
+    color: var(--rust);
+    letter-spacing: -0.02em;
+  }
+  .phase-divider .phase-line { height: 1px; background: var(--ink); align-self: end; margin-bottom: 0.7rem; }
+  .phase-divider .phase-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    align-self: end;
+    margin-bottom: 0.7rem;
+  }
+
+  /* ════════════════════════════════════════════════════════
+     9. STEP CARD  —  lifted paper, big chapter numeral
+     ════════════════════════════════════════════════════════ */
+  .step {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 1.4rem;
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    padding: 1.5rem 1.75rem;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+  }
+  .step::before {
+    content: "";
+    position: absolute;
+    top: 6px; left: 6px; right: -6px; bottom: -6px;
+    border: 1px solid var(--rule);
+    z-index: -1;
+    transition: all 0.3s ease;
+    pointer-events: none;
+  }
+  .step:hover { background: var(--paper-3); border-color: var(--ink); }
+  .step:hover::before {
+    top: 4px; left: 4px; right: -4px; bottom: -4px;
+    border-color: var(--ink);
+  }
+  .step.open { background: var(--paper-2); border-color: var(--ink); }
+  .step.open::before { border-color: var(--ink); }
+
+  .step-num {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "opsz" 144, "SOFT" 50, "WONK" 0;
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(3.2rem, 5.5vw, 4.6rem);
+    line-height: 0.85;
+    color: var(--rust);
+    letter-spacing: -0.03em;
+    border-right: 1px solid var(--rule-soft);
+    padding-right: 1rem;
+    user-select: none;
+  }
+  .step-content { min-width: 0; }
+
+  .step-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    cursor: pointer;
+  }
+  .step-meta { flex: 1; }
+  .step-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0.22rem 0.55rem;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+  .step-title {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "opsz" 72;
+    font-weight: 400;
+    font-size: 1.85rem;
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+  }
+  .step-title em {
+    font-style: italic;
+    font-variation-settings: "opsz" 72, "SOFT" 100, "WONK" 1;
+    color: var(--rust);
+  }
+  .step-toggle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--muted);
+    transition: transform 0.3s ease, color 0.2s;
+    line-height: 1;
+    user-select: none;
+    flex-shrink: 0;
+  }
+  .step.open .step-toggle {
+    color: var(--rust);
+    transform: rotate(45deg);
+  }
+
+  .step-body {
+    display: none;
+    padding-top: 1.4rem;
+    margin-top: 1.4rem;
+    border-top: 1px solid var(--rule-soft);
+  }
+  .step.open .step-body {
+    display: block;
+    animation: panelIn 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  /* Description */
+  .step-desc {
+    color: var(--ink-2);
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 1.4rem;
+    max-width: 70ch;
+  }
+
+  /* Cols */
+  .cols-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.6rem;
+    margin-bottom: 1.4rem;
+  }
+  .cols-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.2rem;
+    margin-bottom: 1.4rem;
+  }
+  .col-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.7rem;
+    font-weight: 700;
+  }
+  .col-label::before { content: "▸  "; color: var(--rust); }
+
+  /* Tags */
+  .tag-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .tag {
+    display: inline-block;
+    padding: 0.22rem 0.55rem;
+    border: 1px solid var(--rule);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--ink-2);
+    background: var(--paper);
+    transition: all 0.15s ease;
+  }
+  .tag:hover {
+    background: var(--paper-3);
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  .tag.rust    { color: var(--rust);    border-color: var(--rust); }
+  .tag.forest  { color: var(--forest);  border-color: var(--forest); }
+  .tag.mustard { color: var(--mustard); border-color: var(--mustard); }
+
+  /* Code block */
+  .code-block { margin-bottom: 1.4rem; }
+  .snip-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--mustard);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px dashed var(--rule);
+  }
+  .snip-label::before { content: "▸  "; color: var(--rust); }
+  pre.snippet {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 1.1rem 1.3rem;
+    border-left: 3px solid var(--rust-soft);
+    overflow-x: auto;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    white-space: pre;
+  }
+  pre.snippet .kw  { color: var(--rust-soft); }
+  pre.snippet .cm  { color: var(--muted); font-style: italic; }
+  pre.snippet .str { color: var(--mustard); }
+  pre.snippet .fn  { color: var(--rust-soft); }
+
+  /* Outcomes (forest answer block) */
+  .outcomes-box {
+    background: var(--forest);
+    color: var(--paper);
+    border-left: 4px solid var(--mustard);
+    padding: 1rem 1.2rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .outcomes-box h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--mustard);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.7rem;
+  }
+  .outcomes-box ul { list-style: none; margin: 0; padding: 0; }
+  .outcomes-box li {
+    padding-left: 1.4rem;
+    position: relative;
+    margin-bottom: 0.4rem;
+    font-size: 0.82rem;
+    line-height: 1.55;
+  }
+  .outcomes-box li:last-child { margin-bottom: 0; }
+  .outcomes-box li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--mustard);
+    font-weight: 700;
+  }
+
+  /* Habit badge */
+  .habit-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.3rem 0.7rem;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.7rem;
+  }
+  .habit-badge::before { content: "◆"; color: var(--rust); }
+
+  /* Pull quote inside steps */
+  .pull-quote {
+    border-left: 3px solid var(--rust);
+    padding: 0.3rem 0 0.3rem 1.4rem;
+    margin: 1.2rem 0;
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "opsz" 36, "SOFT" 50;
+    font-style: italic;
+    font-weight: 380;
+    font-size: 1.1rem;
+    line-height: 1.45;
+    color: var(--ink);
+  }
+
+  /* ════════════════════════════════════════════════════════
+     10. FOOTER RULE
+     ════════════════════════════════════════════════════════ */
+  .footer-rule {
+    border-top: 1px solid var(--ink);
+    margin-top: 4rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 4px double var(--ink);
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+  }
+  .footer-rule .left  { text-align: left; }
+  .footer-rule .center { color: var(--rust); font-weight: 700; text-align: center; }
+  .footer-rule .right { text-align: right; }
+  .footer-rule a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+  }
+  .footer-rule a:hover { color: var(--rust); border-color: var(--rust); }
+
+  .colophon {
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 1.2rem;
+  }
+
+  /* ════════════════════════════════════════════════════════
+     11. ANIMATIONS
+     ════════════════════════════════════════════════════════ */
+  @keyframes rise {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes panelIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .block {
+    opacity: 0;
+    transform: translateY(15px);
+    animation: rise 0.6s forwards;
+  }
+  .block:nth-child(1)  { animation-delay: 0.05s; }
+  .block:nth-child(2)  { animation-delay: 0.15s; }
+  .block:nth-child(3)  { animation-delay: 0.25s; }
+  .block:nth-child(4)  { animation-delay: 0.35s; }
+  .block:nth-child(5)  { animation-delay: 0.45s; }
+  .block:nth-child(6)  { animation-delay: 0.55s; }
+  .block:nth-child(7)  { animation-delay: 0.65s; }
+  .block:nth-child(8)  { animation-delay: 0.75s; }
+  .block:nth-child(9)  { animation-delay: 0.85s; }
+  .block:nth-child(10) { animation-delay: 0.95s; }
+  .block:nth-child(11) { animation-delay: 1.05s; }
+  .block:nth-child(12) { animation-delay: 1.15s; }
+  .block:nth-child(13) { animation-delay: 1.25s; }
+  .block:nth-child(14) { animation-delay: 1.35s; }
+
+  /* ════════════════════════════════════════════════════════
+     12. RESPONSIVE
+     ════════════════════════════════════════════════════════ */
+  @media (max-width: 900px) {
+    .hero          { grid-template-columns: 1fr; gap: 1.8rem; }
+    .masthead      { grid-template-columns: 1fr; text-align: center; gap: 0.3rem; }
+    .masthead .right, .masthead .left { text-align: center; }
+    .progress-strip { grid-template-columns: repeat(4, 1fr); }
+    .prog-cell:nth-child(4) { border-right: none; }
+    .prog-cell:nth-child(5),
+    .prog-cell:nth-child(6),
+    .prog-cell:nth-child(7) { border-top: 1px solid var(--rule-soft); }
+    .step          { grid-template-columns: 1fr; }
+    .step-num      { border-right: none; border-bottom: 1px solid var(--rule-soft); padding-right: 0; padding-bottom: 0.6rem; }
+    .cols-2, .cols-3 { grid-template-columns: 1fr; }
+    .footer-rule   { grid-template-columns: 1fr; text-align: center; gap: 0.5rem; }
+    .footer-rule .right, .footer-rule .left { text-align: center; }
+    .phase-divider { grid-template-columns: auto 1fr; }
+    .phase-divider .phase-meta { display: none; }
+  }
+  @media (max-width: 500px) {
+    .progress-strip { grid-template-columns: repeat(7, 1fr); }
+  }
+
+  /* ════════════════════════════════════════════════════════
+     13. PRINT
+     ════════════════════════════════════════════════════════ */
+  @media print {
+    body { background: #fff; color: #000; }
+    .step-body { display: block !important; }
+    .step-toggle { display: none; }
+    .theme-toggle { display: none; }
+    .block { opacity: 1; transform: none; animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">◐</button>
+
+<div class="page-wrapper">
+
+  <!-- ════════ MASTHEAD ════════ -->
+  <div class="masthead block">
+    <span class="left">Vol. I · No. 03 — Career Transition Guide</span>
+    <span class="center">◆ The AI DevOps Field Manual ◆</span>
+    <span class="right">2025–2026 Edition</span>
+  </div>
+
+  <!-- ════════ HERO ════════ -->
+  <section class="hero block">
+    <h1>DevOps to<br><em>AI DevOps</em> Engineer<br><em>Roadmap</em></h1>
+    <div class="lede">
+      <span class="eyebrow">// A 7-step practitioner path</span>
+      A working field guide for DevOps engineers integrating AI into production workflows — covering prompt engineering, local inference, cloud APIs, autonomous agents, workflow automation, AIOps, and continuous learning.
+    </div>
+  </section>
+
+  <!-- ════════ META BAR ════════ -->
+  <div class="meta-bar block">
+    <div class="meta-cell">
+      <span class="label">Steps</span>
+      <span class="val big">7</span>
+    </div>
+    <div class="meta-cell">
+      <span class="label">Phases</span>
+      <span class="val big">3</span>
+    </div>
+    <div class="meta-cell">
+      <span class="label">Duration</span>
+      <span class="val big italic-num">6–12</span>
+      <span class="label" style="margin-top:.3rem;margin-bottom:0">months</span>
+    </div>
+    <div class="meta-cell">
+      <span class="label">Prerequisite</span>
+      <span class="val">No ML degree required · DevOps fluency assumed</span>
+    </div>
+  </div>
+
+  <!-- ════════ PROGRESS STRIP ════════ -->
+  <div class="progress-strip block" id="progressBar">
+    <div class="prog-cell active">01<span class="lbl">Prompts</span></div>
+    <div class="prog-cell active">02<span class="lbl">Local</span></div>
+    <div class="prog-cell active">03<span class="lbl">Cloud</span></div>
+    <div class="prog-cell">04<span class="lbl">Agents</span></div>
+    <div class="prog-cell">05<span class="lbl">Workflow</span></div>
+    <div class="prog-cell">06<span class="lbl">AIOps</span></div>
+    <div class="prog-cell">07<span class="lbl">Growth</span></div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════
+       PHASE 01 — AI FOUNDATIONS
+       ════════════════════════════════════════════════════════ -->
+  <div class="phase-divider block">
+    <span class="phase-label">Phase 01</span>
+    <span class="phase-title">AI Foundations</span>
+    <div class="phase-line"></div>
+    <span class="phase-meta">Steps 01 — 03</span>
+  </div>
+
+  <!-- STEP 01 — PROMPT ENGINEERING -->
+  <article class="step block" onclick="toggle(this, 0)">
+    <div class="step-num">01</div>
+    <div class="step-content">
+      <div class="step-head">
+        <div class="step-meta">
+          <span class="step-tag">Foundation</span>
+          <h2 class="step-title">Prompt <em>Engineering</em></h2>
+        </div>
+        <span class="step-toggle">+</span>
+      </div>
+      <div class="step-body">
+        <p class="step-desc">
+          Before touching any framework, master how to talk to models. Zero-shot, one-shot, and n-shot prompting are the most underrated DevOps productivity multipliers. A well-crafted prompt replaces hours of scripting. Learn chain-of-thought, role prompting, and structured output (JSON mode) to get deterministic results from stochastic systems — critical before you pipe LLM output into real pipelines.
+        </p>
+
+        <div class="cols-2">
+          <div>
+            <p class="col-label">Core concepts</p>
+            <div class="tag-list">
+              <span class="tag">Zero-shot prompting</span>
+              <span class="tag">Few-shot / n-shot</span>
+              <span class="tag">Chain-of-Thought</span>
+              <span class="tag">Role prompting</span>
+              <span class="tag">JSON mode / structured output</span>
+              <span class="tag">System vs user prompt</span>
+              <span class="tag">Temperature &amp; top-p tuning</span>
+            </div>
+          </div>
+          <div>
+            <p class="col-label">Tools</p>
+            <div class="tag-list">
+              <span class="tag rust">Claude / ChatGPT</span>
+              <span class="tag rust">OpenAI Playground</span>
+              <span class="tag rust">LangSmith (trace)</span>
+              <span class="tag rust">PromptLayer</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-block">
+          <div class="snip-label">bash · curl example</div>
+<pre class="snippet"><span class="kw">curl</span> https://api.openai.com/v1/chat/completions \
+  -H <span class="str">"Authorization: Bearer $OPENAI_API_KEY"</span> \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -d <span class="str">'{ "model": "gpt-4o-mini",
+       "messages": [
+         {"role":"system","content":"You are a senior DevOps engineer. Reply only in valid JSON."},
+         {"role":"user","content":"Generate a Dockerfile for a FastAPI app. Output keys: base_image, workdir, cmd."}
+       ],
+       "response_format": {"type":"json_object"},
+       "temperature": 0.1
+     }'</span></pre>
+        </div>
+
+        <div class="outcomes-box">
+          <h3>Outcomes</h3>
+          <ul>
+            <li>Consistent, parseable LLM output</li>
+            <li>Prompt templates for Dockerfile / K8s manifest generation</li>
+            <li>Reduced hallucination via structured output</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- STEP 02 — LOCAL MODEL EXECUTION -->
+  <article class="step block" onclick="toggle(this, 1)">
+    <div class="step-num">02</div>
+    <div class="step-content">
+      <div class="step-head">
+        <div class="step-meta">
+          <span class="step-tag">Foundation</span>
+          <h2 class="step-title">Local Model <em>Execution</em></h2>
+        </div>
+        <span class="step-toggle">+</span>
+      </div>
+      <div class="step-body">
+        <p class="step-desc">
+          Run models on your own hardware — zero API costs, full privacy, no rate limits. Ollama gives you an OpenAI-compatible local server in one command. Hugging Face + transformers handles custom fine-tuned models. This is your sandbox before committing to cloud APIs, and the foundation for air-gapped production deployments. Quantized models (GGUF, AWQ) let mid-range hardware (8–32GB RAM) run 7B–13B models at acceptable throughput.
+        </p>
+
+        <div class="cols-2">
+          <div>
+            <p class="col-label">Stack</p>
+            <div class="tag-list">
+              <span class="tag">Ollama</span>
+              <span class="tag">Hugging Face Transformers</span>
+              <span class="tag">llama.cpp</span>
+              <span class="tag">GGUF quantization</span>
+              <span class="tag">vLLM (GPU serving)</span>
+              <span class="tag">Open WebUI</span>
+            </div>
+          </div>
+          <div>
+            <p class="col-label">Models to start with</p>
+            <div class="tag-list">
+              <span class="tag rust">llama3.2:3b (CPU-friendly)</span>
+              <span class="tag rust">qwen2.5-coder:7b (code)</span>
+              <span class="tag rust">mistral:7b (general)</span>
+              <span class="tag rust">nomic-embed-text (RAG)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-block">
+          <div class="snip-label">docker-compose · ollama</div>
+<pre class="snippet"><span class="kw">services</span>:
+  <span class="fn">ollama</span>:
+    image: <span class="str">ollama/ollama:latest</span>
+    ports: [<span class="str">"11434:11434"</span>]
+    volumes: [<span class="str">"ollama_data:/root/.ollama"</span>]
+    deploy:
+      resources.reservations.devices:
+        - capabilities: [gpu]   <span class="cm"># remove if CPU-only</span>
+
+  <span class="fn">open-webui</span>:
+    image: <span class="str">ghcr.io/open-webui/open-webui:latest</span>
+    ports: [<span class="str">"3000:8080"</span>]
+    environment:
+      OLLAMA_BASE_URL: <span class="str">http://ollama:11434</span>
+    depends_on: [ollama]
+
+<span class="kw">volumes</span>: { ollama_data: }</pre>
+        </div>
+
+        <div class="outcomes-box">
+          <h3>Outcomes</h3>
+          <ul>
+            <li>$0 inference cost dev environment</li>
+            <li>OpenAI-compatible local endpoint</li>
+            <li>Model hot-swap without code changes</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- STEP 03 — CLOUD MODEL INTEGRATION -->
+  <article class="step block" onclick="toggle(this, 2)">
+    <div class="step-num">03</div>
+    <div class="step-content">
+      <div class="step-head">
+        <div class="step-meta">
+          <span class="step-tag">Foundation</span>
+          <h2 class="step-title">Cloud Model <em>Integration</em></h2>
+        </div>
+        <span class="step-toggle">+</span>
+      </div>
+      <div class="step-body">
+        <p class="step-desc">
+          When local hardware isn't enough — scale, latency, or multimodal capability — wire proprietary models into your Python and shell scripts via APIs. The goal: automate real DevOps tasks such as Dockerfile generation, incident triage write-ups, and runbook drafts. Use async Python clients for non-blocking calls in pipelines. AWS Bedrock and GCP Vertex AI let you stay inside your existing cloud billing and IAM without managing API keys directly.
+        </p>
+
+        <div class="cols-2">
+          <div>
+            <p class="col-label">Providers</p>
+            <div class="tag-list">
+              <span class="tag">OpenAI API / Azure OpenAI</span>
+              <span class="tag">Anthropic Claude API</span>
+              <span class="tag">AWS Bedrock</span>
+              <span class="tag">GCP Vertex AI</span>
+              <span class="tag">Groq (low-latency)</span>
+            </div>
+          </div>
+          <div>
+            <p class="col-label">Python libs</p>
+            <div class="tag-list">
+              <span class="tag rust">openai</span>
+              <span class="tag rust">anthropic</span>
+              <span class="tag rust">boto3 (Bedrock)</span>
+              <span class="tag rust">google-cloud-aiplatform</span>
+              <span class="tag rust">httpx (async)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-block">
+          <div class="snip-label">python · async dockerfile generator</div>
+<pre class="snippet"><span class="kw">import</span> asyncio, json
+<span class="kw">from</span> openai <span class="kw">import</span> <span class="fn">AsyncOpenAI</span>
+
+client = <span class="fn">AsyncOpenAI</span>()  <span class="cm"># reads OPENAI_API_KEY from env</span>
+
+<span class="kw">async def</span> <span class="fn">gen_dockerfile</span>(app_desc: str) -> dict:
+    resp = <span class="kw">await</span> client.chat.completions.<span class="fn">create</span>(
+        model=<span class="str">"gpt-4o-mini"</span>,
+        messages=[
+            {<span class="str">"role"</span>:<span class="str">"system"</span>, <span class="str">"content"</span>:<span class="str">"Output valid JSON only."</span>},
+            {<span class="str">"role"</span>:<span class="str">"user"</span>,   <span class="str">"content"</span>: f<span class="str">"Dockerfile for: {app_desc}"</span>}
+        ],
+        response_format={<span class="str">"type"</span>:<span class="str">"json_object"</span>},
+        temperature=0.1,
+    )
+    <span class="kw">return</span> json.<span class="fn">loads</span>(resp.choices[0].message.content)
+
+asyncio.<span class="fn">run</span>(<span class="fn">gen_dockerfile</span>(<span class="str">"FastAPI + uvicorn, Python 3.12"</span>))</pre>
+        </div>
+
+        <div class="outcomes-box">
+          <h3>Outcomes</h3>
+          <ul>
+            <li>Automated Dockerfile / manifest generation</li>
+            <li>AI-assisted incident summary in runbooks</li>
+            <li>Cost-aware model routing (local ↔ cloud)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ════════════════════════════════════════════════════════
+       PHASE 02 — AUTOMATION & AGENTS
+       ════════════════════════════════════════════════════════ -->
+  <div class="phase-divider block">
+    <span class="phase-label">Phase 02</span>
+    <span class="phase-title">Automation &amp; Agents</span>
+    <div class="phase-line"></div>
+    <span class="phase-meta">Steps 04 — 05</span>
+  </div>
+
+  <!-- STEP 04 — AI AGENTS -->
+  <article class="step block" onclick="toggle(this, 3)">
+    <div class="step-num">04</div>
+    <div class="step-content">
+      <div class="step-head">
+        <div class="step-meta">
+          <span class="step-tag">Automation</span>
+          <h2 class="step-title">AI <em>Agents</em></h2>
+        </div>
+        <span class="step-toggle">+</span>
+      </div>
+      <div class="step-body">
+        <p class="step-desc">
+          Agents go beyond single API calls — they plan, use tools, and self-correct over multiple steps. For DevOps: a pod-failure agent that reads <code>kubectl describe</code>, queries Prometheus, checks recent deployments, and outputs a structured incident report is a real 2-hour time saver per on-call shift. LangGraph gives you state-machine-level control over agent flow. MCP (Model Context Protocol) is the emerging standard for wiring AI directly to your infra tooling without custom glue code.
+        </p>
+
+        <div class="cols-2">
+          <div>
+            <p class="col-label">Frameworks</p>
+            <div class="tag-list">
+              <span class="tag">LangGraph</span>
+              <span class="tag">LangChain</span>
+              <span class="tag">CrewAI</span>
+              <span class="tag">AutoGen</span>
+              <span class="tag">MCP (Model Context Protocol)</span>
+            </div>
+          </div>
+          <div>
+            <p class="col-label">Agent use-cases for DevOps</p>
+            <div class="tag-list">
+              <span class="tag rust">K8s pod failure diagnosis</span>
+              <span class="tag rust">Auto-generated PR descriptions</span>
+              <span class="tag rust">Terraform plan reviewer</span>
+              <span class="tag rust">Log anomaly triage</span>
+              <span class="tag rust">CVE impact analysis</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-block">
+          <div class="snip-label">python · k8s agent tool (LangGraph)</div>
+<pre class="snippet"><span class="kw">from</span> langchain_core.tools <span class="kw">import</span> tool
+<span class="kw">import</span> subprocess, json
+
+<span class="fn">@tool</span>
+<span class="kw">def</span> <span class="fn">kubectl_describe</span>(pod_name: str, namespace: str = <span class="str">"default"</span>) -> str:
+    <span class="str">"""Describe a Kubernetes pod to diagnose failures."""</span>
+    result = subprocess.<span class="fn">run</span>(
+        [<span class="str">"kubectl"</span>, <span class="str">"describe"</span>, <span class="str">"pod"</span>, pod_name, <span class="str">"-n"</span>, namespace],
+        capture_output=True, text=True
+    )
+    <span class="kw">return</span> result.stdout[-4000:]  <span class="cm"># last 4k chars fit in context</span>
+
+<span class="fn">@tool</span>
+<span class="kw">def</span> <span class="fn">get_recent_events</span>(namespace: str = <span class="str">"default"</span>) -> str:
+    <span class="str">"""Get recent K8s events for a namespace."""</span>
+    result = subprocess.<span class="fn">run</span>(
+        [<span class="str">"kubectl"</span>, <span class="str">"get"</span>, <span class="str">"events"</span>, <span class="str">"-n"</span>, namespace, <span class="str">"--sort-by=.lastTimestamp"</span>],
+        capture_output=True, text=True
+    )
+    <span class="kw">return</span> result.stdout
+
+tools = [kubectl_describe, get_recent_events]
+<span class="cm"># bind to LangGraph ReAct agent + Claude/GPT backbone</span></pre>
+        </div>
+
+        <div class="outcomes-box">
+          <h3>Outcomes</h3>
+          <ul>
+            <li>Autonomous incident analysis agent</li>
+            <li>MCP server connected to kubectl + Prometheus</li>
+            <li>Reduced mean time to diagnose (MTTD)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- STEP 05 — WORKFLOW AUTOMATION -->
+  <article class="step block" onclick="toggle(this, 4)">
+    <div class="step-num">05</div>
+    <div class="step-content">
+      <div class="step-head">
+        <div class="step-meta">
+          <span class="step-tag">Automation</span>
+          <h2 class="step-title">Workflow <em>Automation</em></h2>
+        </div>
+        <span class="step-toggle">+</span>
+      </div>
+      <div class="step-body">
+        <p class="step-desc">
+          Embed AI into your CI/CD pipelines and event-driven workflows without reinventing glue code. n8n gives you a self-hostable, visual workflow builder with native LLM nodes — wire GitHub webhooks, Slack alerts, and LLM calls in minutes. In pipelines, use AI for security policy checking (SAST summary), auto-tagging releases, and generating human-readable changelogs from commit diffs. The key discipline: treat AI as a pipeline step with clear input/output contracts and fallback behavior.
+        </p>
+
+        <div class="cols-2">
+          <div>
+            <p class="col-label">Platforms</p>
+            <div class="tag-list">
+              <span class="tag">n8n (self-hosted)</span>
+              <span class="tag">GitHub Actions + AI step</span>
+              <span class="tag">GitLab CI AI jobs</span>
+              <span class="tag">Zapier / Make (SaaS)</span>
+            </div>
+          </div>
+          <div>
+            <p class="col-label">Pipeline AI use-cases</p>
+            <div class="tag-list">
+              <span class="tag rust">SAST finding summarizer</span>
+              <span class="tag rust">Changelog generator</span>
+              <span class="tag rust">PR diff reviewer</span>
+              <span class="tag rust">Helm chart linter + explainer</span>
+              <span class="tag rust">Slack incident notifier</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-block">
+          <div class="snip-label">github actions · AI changelog step</div>
+<pre class="snippet">- <span class="kw">name</span>: Generate AI changelog
+  <span class="kw">env</span>:
+    OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+  <span class="kw">run</span>: |
+    DIFF=$(git log --oneline ${{ github.event.before }}..HEAD)
+    RESPONSE=$(curl -s https://api.openai.com/v1/chat/completions \
+      -H <span class="str">"Authorization: Bearer $OPENAI_API_KEY"</span> \
+      -H <span class="str">"Content-Type: application/json"</span> \
+      -d <span class="str">"{\"model\":\"gpt-4o-mini\",\"messages\":[
+            {\"role\":\"system\",\"content\":\"Summarize git commits as a user-facing changelog. Be concise.\"},
+            {\"role\":\"user\",\"content\":\"$DIFF\"}
+          ],\"temperature\":0.2}"</span>)
+    echo <span class="str">"$RESPONSE"</span> | jq -r <span class="str">'.choices[0].message.content'</span> &gt;&gt; CHANGELOG.md
+    git add CHANGELOG.md &amp;&amp; git commit -m <span class="str">"chore: AI changelog [skip ci]"</span></pre>
+        </div>
+
+        <div class="outcomes-box">
+          <h3>Outcomes</h3>
+          <ul>
+            <li>AI-aware CI/CD pipeline</li>
+            <li>Auto-generated changelogs &amp; PR summaries</li>
+            <li>n8n workflow for on-call alert triage</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ════════════════════════════════════════════════════════
+       PHASE 03 — INTELLIGENCE & GROWTH
+       ════════════════════════════════════════════════════════ -->
+  <div class="phase-divider block">
+    <span class="phase-label">Phase 03</span>
+    <span class="phase-title">Intelligence &amp; Growth</span>
+    <div class="phase-line"></div>
+    <span class="phase-meta">Steps 06 — 07</span>
+  </div>
+
+  <!-- STEP 06 — AIOPS -->
+  <article class="step block" onclick="toggle(this, 5)">
+    <div class="step-num">06</div>
+    <div class="step-content">
+      <div class="step-head">
+        <div class="step-meta">
+          <span class="step-tag">Intelligence</span>
+          <h2 class="step-title">AIOps — <em>Observability</em></h2>
+        </div>
+        <span class="step-toggle">+</span>
+      </div>
+      <div class="step-body">
+        <p class="step-desc">
+          Threshold-based alerts are the floor, not the ceiling. AIOps layers ML-based anomaly detection over your Prometheus metrics and log streams to catch patterns no human writes a static rule for: gradual memory drift, correlated cross-service latency, and silent error rate upticks below alert thresholds. Tools like Grafana's built-in ML forecasting, Dynatrace Davis AI, and open-source Prophet-based alerting on Prometheus data put predictive ops within reach without a data science team.
+        </p>
+
+        <div class="cols-2">
+          <div>
+            <p class="col-label">AIOps stack</p>
+            <div class="tag-list">
+              <span class="tag">Grafana (ML forecasting)</span>
+              <span class="tag">Prometheus + Alertmanager</span>
+              <span class="tag">OpenTelemetry</span>
+              <span class="tag">Elastic / OpenSearch ML</span>
+              <span class="tag">Prophet (time-series)</span>
+              <span class="tag">Dynatrace Davis</span>
+              <span class="tag">Coroot (self-hosted)</span>
+            </div>
+          </div>
+          <div>
+            <p class="col-label">Key capabilities to implement</p>
+            <div class="tag-list">
+              <span class="tag forest">Anomaly detection on Prometheus metrics</span>
+              <span class="tag forest">Log clustering (reduce alert noise)</span>
+              <span class="tag forest">Predictive autoscaling</span>
+              <span class="tag forest">LLM-powered alert enrichment</span>
+              <span class="tag forest">Root cause correlation</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-block">
+          <div class="snip-label">python · prophet anomaly on prom metrics</div>
+<pre class="snippet"><span class="kw">from</span> prophet <span class="kw">import</span> <span class="fn">Prophet</span>
+<span class="kw">import</span> pandas <span class="kw">as</span> pd, requests
+
+<span class="cm"># Pull metric from Prometheus HTTP API</span>
+<span class="kw">def</span> <span class="fn">fetch_metric</span>(query: str, step=<span class="str">"5m"</span>, hours=24) -> pd.DataFrame:
+    url = <span class="str">"http://prometheus:9090/api/v1/query_range"</span>
+    r = requests.<span class="fn">get</span>(url, params={
+        <span class="str">"query"</span>: query, <span class="str">"step"</span>: step,
+        <span class="str">"start"</span>: <span class="str">"now-24h"</span>, <span class="str">"end"</span>: <span class="str">"now"</span>
+    })
+    vals = r.json()[<span class="str">"data"</span>][<span class="str">"result"</span>][0][<span class="str">"values"</span>]
+    df = pd.<span class="fn">DataFrame</span>(vals, columns=[<span class="str">"ds"</span>, <span class="str">"y"</span>])
+    df[<span class="str">"ds"</span>] = pd.to_datetime(df[<span class="str">"ds"</span>], unit=<span class="str">"s"</span>)
+    df[<span class="str">"y"</span>] = df[<span class="str">"y"</span>].<span class="fn">astype</span>(float)
+    <span class="kw">return</span> df
+
+df = <span class="fn">fetch_metric</span>(<span class="str">'rate(http_requests_total[5m])'</span>)
+m  = <span class="fn">Prophet</span>(interval_width=0.95)
+m.<span class="fn">fit</span>(df)
+forecast = m.<span class="fn">predict</span>(m.<span class="fn">make_future_dataframe</span>(periods=12, freq=<span class="str">"5min"</span>))
+<span class="cm"># flag rows where yhat_lower &gt; actual → anomaly</span></pre>
+        </div>
+
+        <div class="outcomes-box">
+          <h3>Outcomes</h3>
+          <ul>
+            <li>Anomaly alerts before user impact</li>
+            <li>30–50% alert noise reduction via log clustering</li>
+            <li>LLM-enriched PagerDuty/Slack notifications</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- STEP 07 — CONTINUOUS LEARNING -->
+  <article class="step block" onclick="toggle(this, 6)">
+    <div class="step-num">07</div>
+    <div class="step-content">
+      <div class="step-head">
+        <div class="step-meta">
+          <span class="step-tag">Growth</span>
+          <h2 class="step-title">Continuous <em>Learning</em></h2>
+        </div>
+        <span class="step-toggle">+</span>
+      </div>
+      <div class="step-body">
+        <p class="step-desc">
+          The AI tooling landscape has a 3-month half-life. Engineers who treat learning as a daily 15–30 minute discipline — not a course they take once — compound significantly over those who binge then stall. Focus on the layer above your current role: if you do K8s well, learn LLMOps and model serving. If you do RAG, learn evaluation frameworks. Build in public: write one technical post per month, contribute to one open-source AI infra project per quarter. Certifications signal credibility; hands-on projects signal capability.
+        </p>
+
+        <div class="cols-3">
+          <div>
+            <p class="col-label">Learning channels (15–30 min/day)</p>
+            <div class="tag-list">
+              <span class="tag">Anthropic / OpenAI release notes</span>
+              <span class="tag">TLDR Newsletter (AI/DevOps)</span>
+              <span class="tag">Hacker News — AI track</span>
+              <span class="tag">LangChain blog</span>
+              <span class="tag">Grafana Labs blog</span>
+              <span class="tag">KodeKloud AI labs</span>
+            </div>
+          </div>
+          <div>
+            <p class="col-label">Certifications to consider</p>
+            <div class="tag-list">
+              <span class="tag forest">CKA / CKAD (Kubernetes)</span>
+              <span class="tag forest">AWS ML Specialty</span>
+              <span class="tag forest">GCP Professional ML Engineer</span>
+              <span class="tag forest">DeepLearning.AI MLOps Specialization</span>
+            </div>
+          </div>
+          <div>
+            <p class="col-label">Emerging areas to track (2026)</p>
+            <div class="tag-list">
+              <span class="tag mustard">MCP ecosystem</span>
+              <span class="tag mustard">AI gateway / LLM proxies (LiteLLM)</span>
+              <span class="tag mustard">Evals &amp; observability (LangSmith, Arize)</span>
+              <span class="tag mustard">Model fine-tuning on infra data (LoRA)</span>
+              <span class="tag mustard">AI-native IaC (Pulumi AI, Terraform AI)</span>
+              <span class="tag mustard">Green DevOps / AI energy efficiency</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="habit-badge">Suggested daily habit</div>
+        <div class="code-block">
+          <div class="snip-label">fish shell · daily learning script</div>
+<pre class="snippet"><span class="cm"># ~/.config/fish/functions/ailearn.fish</span>
+<span class="kw">function</span> <span class="fn">ailearn</span>
+    echo <span class="str">"── Today's AI DevOps learning ──"</span>
+    <span class="cm"># Open HN AI digest in browser</span>
+    open <span class="str">"https://news.ycombinator.com/news?q=llm+devops"</span>
+    <span class="cm"># Pull latest anthropic / openai changelog</span>
+    curl -s <span class="str">"https://docs.anthropic.com/rss.xml"</span> | grep -m3 <span class="str">"&lt;title&gt;"</span>
+    echo <span class="str">"15 min timer started — focus on one concept."</span>
+<span class="kw">end</span></pre>
+        </div>
+
+        <div class="outcomes-box">
+          <h3>Outcomes</h3>
+          <ul>
+            <li>Consistent skill compounding</li>
+            <li>Public portfolio of AI infra projects</li>
+            <li>Recognized as AI-forward DevOps engineer</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ════════ FOOTER RULE ════════ -->
+  <div class="footer-rule block">
+    <span class="left">◆ The AI DevOps Field Manual</span>
+    <span class="center">End of Vol. I</span>
+    <span class="right">roadmap.sh/devops ↗ <a href="https://roadmap.sh/devops" target="_blank" rel="noopener">continue reading</a></span>
+  </div>
+  <p class="colophon block">Set in Fraunces · Geist · JetBrains Mono · Printed on warm parchment · 2025–2026</p>
+
+</div><!-- /page-wrapper -->
+
+<script>
+  // ════════════════════════════════════════════════════════
+  // THEME  —  toggle with localStorage persistence
+  // ════════════════════════════════════════════════════════
+  function toggleTheme() {
+    const html = document.documentElement;
+    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  }
+  (function() {
+    const saved = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', saved);
+  })();
+
+  // ════════════════════════════════════════════════════════
+  // STEP ACCORDION + PROGRESS STRIP
+  // ════════════════════════════════════════════════════════
+  const segs = document.querySelectorAll('.prog-cell');
+
+  function toggle(el, idx) {
+    const isOpen = el.classList.contains('open');
+    // close all
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('open'));
+    // open clicked (unless it was already open, in which case it stays closed)
+    if (!isOpen) el.classList.add('open');
+    // update progress strip
+    segs.forEach((s, i) => {
+      s.classList.toggle('active', i <= idx);
+    });
+  }
+
+  // open first step by default
+  const firstStep = document.querySelector('.step');
+  if (firstStep) firstStep.classList.add('open');
+</script>
+</body>
+</html>
