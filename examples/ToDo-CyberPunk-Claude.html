@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Development Checklist // Ai-Point-of-Sale-Software</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    /* 1. CSS variables */
+    :root {
+      --neon-green:    #00ff41;
+      --neon-cyan:     #00d9ff;
+      --neon-pink:     #ff00ff;
+      --dark-bg:       #0a0e1a;
+      --darker-bg:     #050810;
+      --terminal-bg:   #0d1117;
+      --border-glow:   rgba(0, 255, 65, 0.3);
+      --text-dim:      #8b949e;
+      --warning-red:   #ff4757;
+      --success-green: #2ed573;
+    }
+
+    /* 2. Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { scroll-behavior: smooth; overflow-x: hidden; }
+
+    /* 3. Body */
+    body {
+      background: var(--dark-bg);
+      color: var(--text-dim);
+      font-family: 'Fira Code', monospace;
+      line-height: 1.8;
+      min-height: 100vh;
+    }
+
+    /* 4. Animated grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-image:
+        linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: gridScroll 20s linear infinite;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    @keyframes gridScroll {
+      0%   { transform: translateY(0); }
+      100% { transform: translateY(50px); }
+    }
+
+    /* 5. Keyframes */
+    @keyframes glow {
+      from { text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan); }
+      to   { text-shadow: 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-cyan), 0 0 60px rgba(0, 217, 255, 0.8); }
+    }
+    @keyframes slideDown {
+      from { transform: translateY(-100%); opacity: 0; }
+      to   { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes borderScan {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50%       { transform: scale(1.05); }
+    }
+    @keyframes blink {
+      0%, 49%   { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+
+    /* 6. Header */
+    header {
+      background: linear-gradient(135deg, var(--darker-bg) 0%, var(--terminal-bg) 100%);
+      border-bottom: 2px solid var(--neon-green);
+      box-shadow: 0 4px 20px rgba(0, 255, 65, 0.2);
+      padding: 2rem;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      animation: slideDown 0.6s ease-out;
+    }
+    .header-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .header-meta span { color: var(--neon-green); font-weight: 700; }
+    .cursor {
+      display: inline-block;
+      width: 0.6em;
+      height: 1em;
+      background: var(--neon-cyan);
+      vertical-align: -0.15em;
+      margin-left: 0.15em;
+      box-shadow: 0 0 8px var(--neon-cyan);
+      animation: blink 1s steps(2) infinite;
+    }
+
+    /* 7. h1 */
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--neon-cyan);
+      font-size: 2.8rem;
+      font-weight: 900;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan), 0 0 40px rgba(0, 217, 255, 0.5);
+      animation: glow 2s ease-in-out infinite alternate;
+      margin: 0.5rem 0;
+    }
+
+    .subtitle {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      letter-spacing: 2px;
+      margin-top: 0.5rem;
+    }
+    .subtitle span { color: var(--neon-green); font-weight: 700; }
+
+    /* 8. Container */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* 9. Tab nav */
+    .tab-nav {
+      display: flex;
+      gap: 0.5rem;
+      margin: 2rem 0;
+      border-bottom: 2px solid var(--border-glow);
+      overflow-x: auto;
+      animation: fadeIn 0.8s ease-out 0.2s both;
+    }
+    .tab-button {
+      background: var(--terminal-bg);
+      color: var(--text-dim);
+      border: 1px solid transparent;
+      padding: 1rem 1.5rem;
+      cursor: pointer;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+      position: relative;
+      white-space: nowrap;
+    }
+    .tab-button::before {
+      content: '> ';
+      color: var(--neon-green);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .tab-button:hover {
+      color: var(--neon-cyan);
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 15px rgba(0, 217, 255, 0.3);
+    }
+    .tab-button.active {
+      background: linear-gradient(135deg, rgba(0, 255, 65, 0.1) 0%, rgba(0, 217, 255, 0.1) 100%);
+      color: var(--neon-green);
+      border-color: var(--neon-green);
+      box-shadow: 0 0 20px var(--border-glow);
+    }
+    .tab-button.active::before { opacity: 1; }
+
+    .tab-content { display: none; animation: fadeIn 0.5s ease-out; }
+    .tab-content.active { display: block; }
+
+    /* 10. Cards */
+    .card {
+      background: linear-gradient(135deg, var(--terminal-bg) 0%, var(--darker-bg) 100%);
+      border: 1px solid var(--border-glow);
+      border-radius: 8px;
+      padding: 2rem;
+      margin: 2rem 0;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 3px;
+      background: linear-gradient(90deg, var(--neon-green), var(--neon-cyan), var(--neon-pink));
+      animation: borderScan 3s linear infinite;
+    }
+    .card h2 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--neon-cyan);
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .card h3 {
+      color: var(--neon-green);
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin: 1.5rem 0 1rem;
+    }
+    .card p, .card li { color: var(--text-dim); margin-bottom: 0.8rem; }
+    .card strong { color: var(--neon-green); font-weight: 700; }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border-bottom: 1px solid var(--border-glow);
+      padding-bottom: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* 11. Terminal block */
+    .terminal {
+      background: #000;
+      border: 2px solid var(--neon-green);
+      border-radius: 6px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      overflow-x: auto;
+      box-shadow:
+        0 0 20px rgba(0, 255, 65, 0.2),
+        inset 0 0 30px rgba(0, 255, 65, 0.05);
+      position: relative;
+    }
+    .terminal::before {
+      content: '● ● ●';
+      position: absolute;
+      top: -25px; left: 10px;
+      color: var(--text-dim);
+      font-size: 1.2rem;
+      letter-spacing: 8px;
+    }
+    .terminal pre { margin: 0; color: var(--neon-green); white-space: pre-wrap; word-wrap: break-word; }
+    .terminal .prompt  { color: var(--neon-cyan); font-weight: 700; }
+    .terminal .comment { color: #6a737d; font-style: italic; }
+    .terminal .output  { color: var(--success-green); }
+    .terminal .warning { color: var(--warning-red); }
+
+    /* 12. Stats grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .stat-cell {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--border-glow);
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      transition: all 0.3s ease;
+    }
+    .stat-cell:hover {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 15px rgba(0, 217, 255, 0.2);
+    }
+    .stat-cell .label {
+      color: var(--text-dim);
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+    .stat-cell .val {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--neon-green);
+      text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+    }
+    .stat-cell .val.cyan { color: var(--neon-cyan); text-shadow: 0 0 10px rgba(0, 217, 255, 0.5); }
+    .stat-cell .val.pink { color: var(--neon-pink); text-shadow: 0 0 10px rgba(255, 0, 255, 0.5); }
+
+    /* 13. Progress bar */
+    .progress-wrap {
+      margin: 1.5rem 0;
+    }
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .progress-label span { color: var(--neon-green); font-weight: 700; }
+    .progress-track {
+      width: 100%;
+      height: 14px;
+      background: var(--darker-bg);
+      border: 1px solid var(--border-glow);
+      border-radius: 3px;
+      overflow: hidden;
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--neon-green), var(--neon-cyan));
+      box-shadow: 0 0 12px var(--neon-green);
+      transition: width 0.5s ease;
+    }
+
+    /* 14. Checklist */
+    .checklist { list-style: none; margin: 1rem 0; }
+    .checklist li {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--border-glow);
+      border-radius: 6px;
+      margin-bottom: 0.6rem;
+      background: rgba(0, 0, 0, 0.35);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .checklist li:hover {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 12px rgba(0, 217, 255, 0.2);
+    }
+    .checklist li.done {
+      opacity: 0.55;
+    }
+    .checklist li.done .task-name {
+      text-decoration: line-through;
+      color: var(--text-dim);
+    }
+    .checklist input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--neon-green);
+      border-radius: 4px;
+      background: var(--darker-bg);
+      cursor: pointer;
+      flex-shrink: 0;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+    .checklist input[type="checkbox"]:hover {
+      box-shadow: 0 0 10px var(--neon-green);
+    }
+    .checklist input[type="checkbox"]:checked {
+      background: var(--neon-green);
+      box-shadow: 0 0 12px var(--neon-green);
+    }
+    .checklist input[type="checkbox"]:checked::after {
+      content: '✓';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      color: var(--dark-bg);
+      font-weight: 900;
+      font-size: 0.95rem;
+    }
+    .task-name {
+      flex: 1;
+      font-size: 0.95rem;
+      color: var(--neon-green);
+    }
+    .task-id {
+      color: var(--neon-cyan);
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin-right: 0.25rem;
+    }
+
+    /* 15. Badges */
+    .badge {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-family: 'Fira Code', monospace;
+    }
+    .badge-done {
+      background: rgba(46, 213, 115, 0.2);
+      color: var(--success-green);
+      border: 1px solid var(--success-green);
+    }
+    .badge-pending {
+      background: rgba(255, 71, 87, 0.2);
+      color: var(--warning-red);
+      border: 1px solid var(--warning-red);
+    }
+    .badge-info {
+      background: rgba(0, 217, 255, 0.2);
+      color: var(--neon-cyan);
+      border: 1px solid var(--neon-cyan);
+    }
+    .badge-optional {
+      background: rgba(0, 217, 255, 0.2);
+      color: var(--neon-cyan);
+      border: 1px solid var(--neon-cyan);
+    }
+    .badge-advanced {
+      background: rgba(255, 0, 255, 0.2);
+      color: var(--neon-pink);
+      border: 1px solid var(--neon-pink);
+    }
+    .delete-task {
+      background: transparent;
+      color: var(--warning-red);
+      border: 1px solid var(--warning-red);
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: all 0.2s ease;
+    }
+    .delete-task:hover {
+      background: var(--warning-red);
+      color: var(--dark-bg);
+      box-shadow: 0 0 12px var(--warning-red);
+    }
+
+    /* 16. Alert */
+    .alert {
+      border-left: 4px solid;
+      padding: 1rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 4px;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .alert-warning { border-color: var(--warning-red); background: rgba(255, 71, 87, 0.1); }
+    .alert-warning strong { color: var(--warning-red); }
+    .alert-info    { border-color: var(--neon-cyan);   background: rgba(0, 217, 255, 0.1); }
+    .alert-info strong { color: var(--neon-cyan); }
+    .alert-success { border-color: var(--success-green); background: rgba(46, 213, 115, 0.1); }
+    .alert-success strong { color: var(--success-green); }
+    .alert strong { font-weight: 700; }
+
+    /* 17. Add task form */
+    .add-task {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+    .add-task input[type="text"] {
+      flex: 1;
+      min-width: 220px;
+      background: var(--darker-bg);
+      border: 1px solid var(--border-glow);
+      border-radius: 4px;
+      padding: 0.75rem 1rem;
+      color: var(--neon-green);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+    }
+    .add-task input[type="text"]:focus {
+      outline: none;
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 12px rgba(0, 217, 255, 0.4);
+    }
+    .add-task input[type="text"]::placeholder { color: var(--text-dim); }
+    .add-task button {
+      background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+      color: var(--dark-bg);
+      border: none;
+      border-radius: 4px;
+      padding: 0.75rem 1.5rem;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      box-shadow: 0 0 14px rgba(0, 255, 65, 0.4);
+      transition: all 0.3s ease;
+    }
+    .add-task button:hover {
+      box-shadow: 0 0 20px var(--neon-cyan);
+      transform: translateY(-1px);
+    }
+    .add-task button:active { transform: translateY(0); }
+    .form-msg {
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      font-family: 'Fira Code', monospace;
+      height: 1.2rem;
+    }
+    .form-msg.ok { color: var(--success-green); }
+    .form-msg.err { color: var(--warning-red); }
+
+    /* 18. Tables / registry cells */
+    .registry {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .registry-cell {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--border-glow);
+      border-left: 3px solid var(--neon-cyan);
+      border-radius: 4px;
+      padding: 1rem 1.25rem;
+    }
+    .registry-cell .lbl {
+      color: var(--text-dim);
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+    .registry-cell .v {
+      color: var(--neon-green);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+    .registry-cell.alt { border-left-color: var(--neon-pink); }
+    .registry-cell.alt .v { color: var(--neon-pink); }
+
+    /* 19. Steps */
+    .step {
+      display: flex;
+      gap: 1.5rem;
+      margin: 2rem 0;
+      align-items: flex-start;
+    }
+    .step-number {
+      background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+      color: var(--dark-bg);
+      font-weight: 900;
+      font-size: 1.5rem;
+      width: 50px; height: 50px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      flex-shrink: 0;
+      box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    .step-content { flex: 1; }
+
+    /* 20. Inline code + key */
+    code {
+      background: rgba(0, 255, 65, 0.1);
+      color: var(--neon-green);
+      padding: 0.2rem 0.5rem;
+      border-radius: 3px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9em;
+    }
+    .key {
+      display: inline-block;
+      background: var(--terminal-bg);
+      border: 2px solid var(--neon-green);
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-family: 'Fira Code', monospace;
+      font-weight: 700;
+      color: var(--neon-green);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    /* 21. Lists */
+    ul, ol { margin-left: 2rem; margin-bottom: 1rem; }
+    li { margin-bottom: 0.5rem; }
+    li::marker { color: var(--neon-green); }
+
+    /* 22. Footer */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      margin-top: 4rem;
+      border-top: 2px solid var(--border-glow);
+      color: var(--text-dim);
+      font-size: 0.9rem;
+    }
+    footer a {
+      color: var(--neon-cyan);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    footer a:hover {
+      color: var(--neon-green);
+      text-shadow: 0 0 10px var(--neon-green);
+    }
+
+    /* 23. Scrollbar */
+    ::-webkit-scrollbar           { width: 12px; height: 12px; }
+    ::-webkit-scrollbar-track     { background: var(--darker-bg); }
+    ::-webkit-scrollbar-thumb     { background: var(--neon-green); border-radius: 6px; box-shadow: 0 0 10px var(--neon-green); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--neon-cyan); }
+
+    /* 24. Responsive */
+    @media (max-width: 900px) {
+      .registry { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      h1 { font-size: 2rem; }
+      .tab-nav { flex-wrap: wrap; }
+      .step { flex-direction: column; }
+      .card { padding: 1.5rem; }
+      .header-meta { flex-direction: column; gap: 0.25rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-meta">
+      <span>SYS://AIPOS</span>
+      <span>VOL 01 · ED 2026</span>
+      <span>STATUS: ONLINE</span>
+    </div>
+    <h1>Task Management System<span class="cursor"></span></h1>
+    <p class="subtitle">Comprehensive terminal approach to <span>development progress</span> tracking</p>
+  </header>
+
+  <div class="container">
+
+    <div class="alert alert-info">
+      <strong>ℹ️ SESSION ACTIVE:</strong> Live checklist for the <strong>Ai-Point-of-Sale-Software</strong> build pipeline. State persists in <code>localStorage</code>.
+    </div>
+
+    <nav class="tab-nav">
+      <button class="tab-button active" data-tab="dashboard">Dashboard</button>
+      <button class="tab-button" data-tab="tasks">Task List</button>
+      <button class="tab-button" data-tab="system">System</button>
+    </nav>
+
+    <!-- ============== DASHBOARD ============== -->
+    <div class="tab-content active" id="dashboard">
+      <div class="card">
+        <h2>// Mission Control</h2>
+        <p>Real-time overview of the <strong>Ai-Point-of-Sale-Software</strong> development pipeline. All metrics computed client-side.</p>
+
+        <div class="stats-grid">
+          <div class="stat-cell">
+            <span class="label">Total Tasks</span>
+            <span class="val" id="total-count">0</span>
+          </div>
+          <div class="stat-cell">
+            <span class="label">Completed</span>
+            <span class="val cyan" id="completed-count">0</span>
+          </div>
+          <div class="stat-cell">
+            <span class="label">Pending</span>
+            <span class="val pink" id="pending-count">0</span>
+          </div>
+          <div class="stat-cell">
+            <span class="label">Progress</span>
+            <span class="val" id="progress-percent">0%</span>
+          </div>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress-label">
+            <span>// COMPLETION RATIO</span>
+            <span id="progress-detail">0 / 0</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <div class="registry">
+          <div class="registry-cell">
+            <div class="lbl">Last Updated</div>
+            <div class="v" id="last-updated">—</div>
+          </div>
+          <div class="registry-cell alt">
+            <div class="lbl">Build Channel</div>
+            <div class="v">main · stable</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>// Runbook</h2>
+        <p>How to operate the checklist. Press <span class="key">Enter</span> in the input to commit a new task.</p>
+
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3>Initialize Session</h3>
+            <p>State hydrates from <code>localStorage</code> under key <code>todo-checklist-state</code>. If absent, the default seed tasks are loaded.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3>Toggle Task Status</h3>
+            <p>Click the <strong>neon checkbox</strong> on any row to flip done/pending. The progress meter and counts recompute instantly.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3>Commit New Task</h3>
+            <p>Type into the input under the task list, then press <span class="key">Enter</span> or click <code>EXECUTE</code>. The new task appends as <span class="badge badge-pending">Pending</span>.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h3>Remove Task</h3>
+            <p>Press <code style="color: var(--warning-red); background: rgba(255,71,87,0.1);">REMOVE</code> on a row to purge it. The localStorage mirror updates immediately.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============== TASK LIST ============== -->
+    <div class="tab-content" id="tasks">
+      <div class="card">
+        <div class="card-header">
+          <h2>// Task List</h2>
+          <span class="badge badge-info" id="stats-text">0 of 0 tasks completed</span>
+        </div>
+
+        <ul class="checklist" id="taskList">
+          <!-- Populated by JavaScript -->
+        </ul>
+
+        <div class="terminal">
+          <pre><span class="prompt">user@aipos ~$</span> ./inject_task.sh
+<span class="comment"># Awaiting input parameter...</span></pre>
+        </div>
+
+        <h3>// Inject New Task</h3>
+        <div class="add-task">
+          <input type="text" id="newTaskInput" placeholder="> enter task designation..." maxlength="200" autocomplete="off">
+          <button id="addTaskBtn">Execute</button>
+        </div>
+        <div class="form-msg" id="addTaskMessage"></div>
+      </div>
+    </div>
+
+    <!-- ============== SYSTEM ============== -->
+    <div class="tab-content" id="system">
+      <div class="card">
+        <h2>// System Diagnostics</h2>
+        <p>Environment metadata, persistence keys, and runtime configuration.</p>
+
+        <div class="registry">
+          <div class="registry-cell">
+            <div class="lbl">Design System</div>
+            <div class="v">CyberPunk Terminal v1.0</div>
+          </div>
+          <div class="registry-cell alt">
+            <div class="lbl">Theme Mode</div>
+            <div class="v">Dark Only (Permanent)</div>
+          </div>
+          <div class="registry-cell">
+            <div class="lbl">Storage</div>
+            <div class="v">localStorage · 5MB</div>
+          </div>
+          <div class="registry-cell alt">
+            <div class="lbl">Stack</div>
+            <div class="v">HTML · CSS · JS (Vanilla)</div>
+          </div>
+          <div class="registry-cell">
+            <div class="lbl">Build Target</div>
+            <div class="v">Ai-Point-of-Sale</div>
+          </div>
+          <div class="registry-cell alt">
+            <div class="lbl">Environment</div>
+            <div class="v">POS_PROD_STABLE</div>
+          </div>
+        </div>
+
+        <div class="terminal">
+          <pre><span class="prompt">user@aipos ~$</span> syscheck --verbose
+<span class="output">[ok]</span> grid-scroller           = armed
+<span class="output">[ok]</span> border-scan             = armed
+<span class="output">[ok]</span> neon-glow.h1            = armed
+<span class="output">[ok]</span> step-pulse              = armed
+<span class="output">[ok]</span> localStorage.persistence = armed
+<span class="comment"># All subsystems nominal</span></pre>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>// Reset Procedures</h2>
+        <div class="alert alert-warning">
+          <strong>⚠️ DESTRUCTIVE:</strong> The reset actions below are irreversible. They wipe the local mirror and reload the seed task list.
+        </div>
+        <div class="add-task">
+          <button id="resetBtn" style="background: linear-gradient(135deg, var(--warning-red), var(--neon-pink)); color: var(--dark-bg);">Reset to Default</button>
+          <button id="clearBtn" style="background: transparent; color: var(--warning-red); border: 2px solid var(--warning-red); box-shadow: none;">Clear All Tasks</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>// <a href="#">Ai-Point-of-Sale-Software</a> · Development Checklist · CyberPunk Terminal Build</p>
+  </footer>
+
+  <script>
+    // Tab system
+    const tabButtons  = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const t = btn.getAttribute('data-tab');
+        tabButtons.forEach(b => b.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(t).classList.add('active');
+      });
+    });
+
+    // Task data
+    const defaultTasks = [
+      { name: "Fix Logout on Frontend Refresh", done: true },
+      { name: "Fix RBAC — Admin Role Gets Full Access", done: false },
+      { name: "Add RBAC Role Definitions (Manager & Cashier)", done: false },
+      { name: "Fix Product Not Appearing After Creation", done: false },
+      { name: "Fix Product Creation IntegrityError — Handle DB Constraint Violations in API", done: false },
+      { name: "Final Integration Verification", done: false },
+    ];
+
+    const STORAGE_KEY = "todo-checklist-state-v2";
+    let tasks = loadTasks();
+
+    function loadTasks() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return defaultTasks.slice();
+      try {
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed) || parsed.length === 0) return defaultTasks.slice();
+        return parsed.map(t => ({ name: String(t.name || ""), done: !!t.done }));
+      } catch (e) {
+        return defaultTasks.slice();
+      }
+    }
+    function saveTasks() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+    }
+
+    function updateStats() {
+      const done = tasks.filter(t => t.done).length;
+      const total = tasks.length;
+      const pending = total - done;
+      const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+
+      document.getElementById("stats-text").textContent = `${done} of ${total} tasks completed`;
+      document.getElementById("completed-count").textContent = done;
+      document.getElementById("pending-count").textContent = pending;
+      document.getElementById("total-count").textContent = total;
+      document.getElementById("progress-percent").textContent = `${pct}%`;
+      document.getElementById("progress-fill").style.width = `${pct}%`;
+      document.getElementById("progress-detail").textContent = `${done} / ${total}`;
+      document.getElementById("last-updated").textContent = new Date().toLocaleDateString("en-US", {
+        year: "numeric", month: "short", day: "numeric"
+      });
+    }
+
+    function render() {
+      const list = document.getElementById("taskList");
+      list.innerHTML = "";
+
+      tasks.forEach((task, i) => {
+        const li = document.createElement("li");
+        li.className = task.done ? "done" : "";
+
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.checked = task.done;
+        cb.id = "task" + i;
+        cb.addEventListener("change", () => {
+          tasks[i].done = cb.checked;
+          saveTasks();
+          render();
+          updateStats();
+        });
+
+        const nameSpan = document.createElement("span");
+        nameSpan.className = "task-name";
+        const idSpan = document.createElement("span");
+        idSpan.className = "task-id";
+        idSpan.textContent = `[T${String(i + 1).padStart(2, "0")}]`;
+        nameSpan.appendChild(idSpan);
+        nameSpan.appendChild(document.createTextNode(" " + task.name));
+
+        const badge = document.createElement("span");
+        badge.className = "badge " + (task.done ? "badge-done" : "badge-pending");
+        badge.textContent = task.done ? "Complete" : "Pending";
+
+        const del = document.createElement("button");
+        del.className = "delete-task";
+        del.textContent = "Remove";
+        del.addEventListener("click", () => {
+          tasks.splice(i, 1);
+          saveTasks();
+          render();
+          updateStats();
+        });
+
+        li.appendChild(cb);
+        li.appendChild(nameSpan);
+        li.appendChild(badge);
+        li.appendChild(del);
+        list.appendChild(li);
+      });
+    }
+
+    // Add task
+    const addTaskBtn   = document.getElementById("addTaskBtn");
+    const newTaskInput = document.getElementById("newTaskInput");
+    const addTaskMsg   = document.getElementById("addTaskMessage");
+
+    function setMsg(text, ok) {
+      addTaskMsg.textContent = text;
+      addTaskMsg.className = "form-msg " + (ok ? "ok" : "err");
+    }
+
+    function commitTask() {
+      const txt = newTaskInput.value.trim();
+      if (!txt) {
+        setMsg("✗ ERROR: empty designation", false);
+        return;
+      }
+      tasks.push({ name: txt, done: false });
+      saveTasks();
+      render();
+      updateStats();
+      newTaskInput.value = "";
+      setMsg("✓ TASK COMMITTED", true);
+      setTimeout(() => setMsg("", true), 2500);
+    }
+
+    addTaskBtn.addEventListener("click", commitTask);
+    newTaskInput.addEventListener("keypress", e => {
+      if (e.key === "Enter") commitTask();
+    });
+
+    // System tab actions
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      if (!confirm("Reset to default task list? Current state will be lost.")) return;
+      localStorage.removeItem(STORAGE_KEY);
+      tasks = defaultTasks.slice();
+      saveTasks();
+      render();
+      updateStats();
+    });
+    document.getElementById("clearBtn").addEventListener("click", () => {
+      if (!confirm("Clear ALL tasks? This cannot be undone.")) return;
+      tasks = [];
+      saveTasks();
+      render();
+      updateStats();
+    });
+
+    // Boot
+    render();
+    updateStats();
+  </script>
+</body>
+</html>
