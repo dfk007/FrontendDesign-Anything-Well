@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FIELD MANUAL · Frontend Design Skill Repository</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Geist:wght@300..900&family=JetBrains+Mono:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper:        #0b0f18;
+    --paper-2:      #111827;
+    --paper-3:      #1a2236;
+    --tile:         #131c2e;
+    --ink:          #e8edf5;
+    --ink-2:        #c2cfe0;
+    --muted:        #5e7394;
+    --rule:         #1e2e44;
+    --rule-soft:    #162033;
+    --grid-line:    rgba(100,160,255,0.04);
+    --teal:         #00c8a0;
+    --teal-soft:    #00a880;
+    --blue:         #3b82f6;
+    --amber:        #f59e0b;
+    --violet:       #8b5cf6;
+    --coral:        #f87171;
+    --easy:         #00c8a0;
+    --intermediate: #3b82f6;
+    --hard:         #8b5cf6;
+    --other:        #f59e0b;
+    --jd-col:       #f87171;
+    --accent-1:     #00c8a0;
+    --accent-2:     #3b82f6;
+    --accent-3:     #f59e0b;
+    --accent-4:     #8b5cf6;
+    --accent-5:     #f87171;
+    --code-bg:      #050910;
+    --code-text:    #a8d8b8;
+  }
+  [data-theme="light"] {
+    --paper:        #f4f6fb;
+    --paper-2:      #e9edf6;
+    --paper-3:      #dee4f0;
+    --tile:         #edf0f8;
+    --ink:          #0d1424;
+    --ink-2:        #1e2d42;
+    --muted:        #5a6e8a;
+    --rule:         #c8d4e8;
+    --rule-soft:    #d8e2f0;
+    --grid-line:    rgba(30,60,120,0.05);
+    --teal:         #00957a;
+    --teal-soft:    #007d66;
+    --blue:         #1d4ed8;
+    --amber:        #b45309;
+    --violet:       #6d28d9;
+    --coral:        #dc2626;
+    --accent-1:     #00957a;
+    --accent-2:     #1d4ed8;
+    --accent-3:     #b45309;
+    --accent-4:     #6d28d9;
+    --accent-5:     #dc2626;
+    --code-bg:      #0d1424;
+    --code-text:    #a8d8b8;
+    --easy:         #00957a;
+    --intermediate: #1d4ed8;
+    --hard:         #6d28d9;
+    --other:        #b45309;
+    --jd-col:       #dc2626;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--paper);
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 44px 44px;
+    color: var(--ink-2);
+    font-family: 'Geist', sans-serif;
+    font-size: 1rem;
+    line-height: 1.55;
+    overflow-x: hidden;
+    transition: background 0.4s ease, color 0.4s ease;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.22;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,200,160,0.015) 2px,
+      rgba(0,200,160,0.015) 4px
+    );
+  }
+  [data-theme="light"] body::before { opacity: 0.06; }
+  body::after {
+    content: "";
+    position: fixed;
+    top: -200px;
+    right: -200px;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,200,160,0.07) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  [data-theme="light"] body::after {
+    background: radial-gradient(circle, rgba(0,149,122,0.06) 0%, transparent 70%);
+  }
+  .page-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem 1.5rem 4rem;
+    position: relative;
+    z-index: 2;
+  }
+  .theme-toggle {
+    position: fixed; top: 1rem; right: 1rem; z-index: 100;
+    background: var(--paper-2);
+    color: var(--teal);
+    border: 1.5px solid var(--teal);
+    width: 44px; height: 44px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    box-shadow: 0 0 12px rgba(0,200,160,0.2);
+    transition: all 0.25s ease;
+    cursor: pointer;
+  }
+  .theme-toggle:hover {
+    background: var(--teal);
+    color: var(--paper);
+    box-shadow: 0 0 20px rgba(0,200,160,0.4);
+  }
+  .masthead {
+    border-top: 1px solid var(--teal);
+    border-bottom: 1px solid var(--rule);
+    padding: 1rem 0 0.9rem;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .masthead .left  { text-align: left; }
+  .masthead .center {
+    text-align: center;
+    font-weight: 700;
+    color: var(--teal);
+    font-size: 0.78rem;
+    letter-spacing: 0.2em;
+    text-shadow: 0 0 8px rgba(0,200,160,0.5);
+  }
+  .masthead .right { text-align: right; }
+  .hero {
+    padding: 3.5rem 0 2.5rem;
+    border-bottom: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 3rem;
+    align-items: end;
+  }
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 0;
+    font-weight: 300;
+    font-size: clamp(3rem, 7.2vw, 5.8rem);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+    margin: 0;
+  }
+  .hero h1 em {
+    font-style: italic;
+    font-variation-settings: "opsz" 144, "SOFT" 80, "WONK" 1;
+    font-weight: 300;
+    color: var(--teal);
+    text-shadow: 0 0 24px rgba(0,200,160,0.35);
+  }
+  .hero h1 .co-name {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-style: normal;
+    font-variation-settings: normal;
+    margin-bottom: 1.2rem;
+  }
+  .lede {
+    border-left: 2px solid var(--teal);
+    padding-left: 1.4rem;
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "opsz" 36, "SOFT" 20;
+    font-weight: 360;
+    font-size: 1.08rem;
+    line-height: 1.6;
+    color: var(--ink-2);
+  }
+  .lede .eyebrow {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-style: normal;
+    font-size: 0.66rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 0.7rem;
+  }
+  .lede em { font-style: italic; color: var(--muted); }
+  .meta-bar {
+    display: flex;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .meta-cell {
+    flex: 1;
+    min-width: 130px;
+    padding: 1rem 1.2rem;
+    border-right: 1px solid var(--rule);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+  }
+  .meta-cell:last-child { border-right: none; }
+  .meta-cell .label {
+    text-transform: uppercase;
+    color: var(--muted);
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+  .meta-cell .val {
+    font-family: 'Geist', sans-serif;
+    font-size: 0.85rem;
+    color: var(--ink-2);
+  }
+  .meta-cell .val.big {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "opsz" 72;
+    font-size: 1.9rem;
+    font-weight: 400;
+    color: var(--teal);
+    font-style: italic;
+    line-height: 1;
+    display: block;
+    text-shadow: 0 0 16px rgba(0,200,160,0.3);
+  }
+  .search-bar {
+    margin: 2rem 0 0;
+    position: relative;
+  }
+  .search-bar input {
+    width: 100%;
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    border-left: 2px solid var(--teal);
+    color: var(--ink-2);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    padding: 0.9rem 1rem 0.9rem 2.8rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .search-bar input:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(0,200,160,0.1);
+  }
+  .search-bar input::placeholder { color: var(--muted); }
+  .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--teal);
+    font-size: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .nav-bar {
+    display: flex;
+    gap: 2px;
+    margin: 2rem 0 0;
+    border-bottom: 1px solid var(--rule);
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.69rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.8rem 1.3rem;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.2s;
+    margin-bottom: -1px;
+  }
+  .tab-btn:hover { color: var(--ink); }
+  .tab-btn.active-easy         { color: var(--easy);         border-bottom-color: var(--easy); }
+  .tab-btn.active-intermediate { color: var(--intermediate); border-bottom-color: var(--intermediate); }
+  .tab-btn.active-hard         { color: var(--hard);         border-bottom-color: var(--hard); }
+  .tab-btn.active-other        { color: var(--other);        border-bottom-color: var(--other); }
+  .tab-btn.active-jd           { color: var(--jd-col);       border-bottom-color: var(--jd-col); }
+  .section { display: none; padding-top: 2.5rem; }
+  .section.active { display: block; }
+  .section-header { margin-bottom: 2rem; }
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+  .easy         .section-label { color: var(--easy); }
+  .intermediate .section-label { color: var(--intermediate); }
+  .hard         .section-label { color: var(--hard); }
+  .other        .section-label { color: var(--other); }
+  .jd           .section-label { color: var(--jd-col); }
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "opsz" 72;
+    font-size: 1.9rem;
+    font-weight: 360;
+    color: var(--ink);
+    letter-spacing: -0.015em;
+  }
+  .section-desc {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-top: 0.35rem;
+    font-style: italic;
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "opsz" 36;
+  }
+  .qa-list { display: flex; flex-direction: column; gap: 0; }
+  .qa-item {
+    border: 1px solid var(--rule);
+    border-top: none;
+    overflow: hidden;
+    transition: border-color 0.2s;
+    animation: panelIn 0.28s ease both;
+  }
+  .qa-item:first-child { border-top: 1px solid var(--rule); }
+  .qa-item:hover { border-color: var(--muted); }
+  .qa-item.easy:hover         { border-left: 2px solid var(--easy); }
+  .qa-item.intermediate:hover { border-left: 2px solid var(--intermediate); }
+  .qa-item.hard:hover         { border-left: 2px solid var(--hard); }
+  .qa-item.other:hover        { border-left: 2px solid var(--other); }
+  .qa-item.jd:hover           { border-left: 2px solid var(--jd-col); }
+  .qa-question {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.1rem 1.4rem;
+    cursor: pointer;
+    background: var(--paper-2);
+    transition: background 0.15s;
+    user-select: none;
+  }
+  .qa-question:hover { background: var(--paper-3); }
+  .q-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    min-width: 28px;
+    padding-top: 2px;
+    color: var(--muted);
+  }
+  .q-text {
+    flex: 1;
+    font-family: 'Geist', sans-serif;
+    font-size: 0.93rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.45;
+  }
+  .q-arrow {
+    font-size: 0.65rem;
+    color: var(--muted);
+    padding-top: 4px;
+    transition: transform 0.25s;
+    min-width: 16px;
+  }
+  .qa-item.open .q-arrow { transform: rotate(180deg); }
+  .qa-answer {
+    display: none;
+    padding: 0 1.4rem 1.4rem 3.6rem;
+    background: var(--paper);
+    border-top: 1px solid var(--rule);
+  }
+  .qa-item.open .qa-answer { display: block; }
+  .answer-content {
+    padding-top: 1.2rem;
+    font-size: 0.9rem;
+    line-height: 1.72;
+    color: var(--ink-2);
+  }
+  .answer-content p          { margin: 0 0 0.85rem 0; }
+  .answer-content p:last-child { margin-bottom: 0; }
+  .answer-content strong     { color: var(--ink); font-weight: 600; }
+  .answer-content em         { font-style: italic; color: var(--muted); }
+  .answer-content code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.77rem;
+    background: var(--code-bg);
+    border: 1px solid var(--rule);
+    padding: 1px 6px;
+    color: var(--teal);
+  }
+  .answer-content ul         { margin-top: 0.6rem; padding-left: 1.5rem; }
+  .answer-content li         { margin-bottom: 0.4rem; }
+  .answer-content a {
+    color: var(--teal);
+    text-decoration: none;
+    border-bottom: 1px solid var(--teal-soft);
+    transition: all 0.2s;
+  }
+  .answer-content a:hover {
+    color: var(--ink);
+    border-bottom-color: var(--teal);
+    text-shadow: 0 0 8px rgba(0,200,160,0.3);
+  }
+  .tip-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    padding: 3px 10px;
+    margin-top: 0.9rem;
+    border: 1px solid var(--teal);
+    color: var(--teal);
+    background: rgba(0,200,160,0.05);
+  }
+  .star-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    padding: 3px 10px;
+    margin-top: 0.9rem;
+    margin-left: 6px;
+    border: 1px solid var(--amber);
+    color: var(--amber);
+    background: rgba(245,158,11,0.05);
+  }
+  .footer-rule {
+    border-top: 1px solid var(--teal);
+    margin-top: 5rem;
+    padding-top: 1.2rem;
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+  }
+  .footer-rule .center {
+    color: var(--teal);
+    font-weight: 700;
+    text-align: center;
+    text-shadow: 0 0 8px rgba(0,200,160,0.4);
+  }
+  .footer-rule .left  { text-align: left; }
+  .footer-rule .right { text-align: right; }
+  .colophon {
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 1.2rem;
+  }
+  @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+  .block {
+    opacity: 0;
+    transform: translateY(15px);
+    animation: rise 0.55s forwards;
+  }
+  .block:nth-child(2) { animation-delay: 0.08s; }
+  .block:nth-child(3) { animation-delay: 0.16s; }
+  .block:nth-child(4) { animation-delay: 0.24s; }
+  .block:nth-child(5) { animation-delay: 0.32s; }
+  .block:nth-child(6) { animation-delay: 0.40s; }
+  .block:nth-child(7) { animation-delay: 0.48s; }
+  @keyframes panelIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .stack-card {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1.1rem 1.4rem;
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .stack-card + .stack-card { border-top: none; }
+  .stack-card:hover { border-color: var(--muted); }
+  .stack-card.easy:hover         { border-left: 2px solid var(--easy); }
+  .stack-card.intermediate:hover { border-left: 2px solid var(--intermediate); }
+  .stack-card.hard:hover         { border-left: 2px solid var(--hard); }
+  .stack-card.other:hover        { border-left: 2px solid var(--other); }
+  .stack-card.jd:hover           { border-left: 2px solid var(--jd-col); }
+  .stack-card .sc-body {
+    flex: 1;
+    min-width: 0;
+  }
+  .stack-card .sc-title {
+    font-family: 'Geist', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.25rem;
+  }
+  .stack-card .sc-path {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.74rem;
+    color: var(--muted);
+    word-break: break-all;
+  }
+  .stack-card .sc-desc {
+    font-size: 0.85rem;
+    color: var(--ink-2);
+    margin-top: 0.55rem;
+    line-height: 1.5;
+  }
+  .stack-card .sc-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border: 1px solid;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .sc-tag.easy         { color: var(--easy);         border-color: var(--easy);         background: rgba(0,200,160,0.05); }
+  .sc-tag.intermediate { color: var(--intermediate); border-color: var(--intermediate); background: rgba(59,130,246,0.05); }
+  .sc-tag.hard         { color: var(--hard);         border-color: var(--hard);         background: rgba(139,92,246,0.05); }
+  .sc-tag.other        { color: var(--other);        border-color: var(--other);        background: rgba(245,158,11,0.05); }
+  .sc-tag.jd           { color: var(--jd-col);       border-color: var(--jd-col);       background: rgba(248,113,113,0.05); }
+  @media (max-width: 860px) {
+    .hero               { grid-template-columns: 1fr; gap: 2rem; }
+    .masthead           { grid-template-columns: 1fr; text-align: center; gap: 0.35rem; }
+    .masthead .right,
+    .masthead .left     { text-align: center; }
+    .meta-bar           { flex-direction: column; }
+    .meta-cell          { border-right: none; border-bottom: 1px solid var(--rule); }
+    .qa-answer          { padding-left: 1.4rem; }
+    .nav-bar            { gap: 1px; }
+    .tab-btn            { padding: 0.65rem 0.9rem; font-size: 0.62rem; }
+    .footer-rule        { grid-template-columns: 1fr; text-align: center; gap: 0.5rem; }
+    .footer-rule .right,
+    .footer-rule .left  { text-align: center; }
+    .stack-card         { flex-direction: column; gap: 0.6rem; }
+  }
+  @media print {
+    body             { background: #fff !important; color: #000 !important; }
+    body::before,
+    body::after      { display: none; }
+    .qa-answer       { display: block !important; }
+    .q-arrow         { display: none; }
+    .theme-toggle    { display: none; }
+    .block           { opacity: 1; transform: none; animation: none; }
+    .nav-bar         { display: none; }
+    .section         { display: block !important; }
+  }
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">◑</button>
+
+<div class="page-wrapper">
+
+  <div class="masthead block">
+    <span class="left">Repo · Local · Field Manual</span>
+    <span class="center">◈ FRONTEND DESIGN · SKILL REPOSITORY · 2026 ◈</span>
+    <span class="right">June 2026 · Edition 01</span>
+  </div>
+
+  <section class="hero block">
+    <h1>
+      <span class="co-name">// Repository · Design Systems · Field Manual</span>
+      Frontend <em>Design</em><br>Skill <em>Index</em>
+    </h1>
+    <div class="lede">
+      <span class="eyebrow">// 5 design systems · 4 example artifacts · 1 working repo</span>
+      A self-contained repository of <em>reproduction-grade</em> frontend design skills, paired with example HTML files that demonstrate each system. Drop a skill into your agent, point it at any plain HTML, and get a field-manual-grade interface back. <em>Edit any skill freely.</em>
+    </div>
+  </section>
+
+  <div class="meta-bar block">
+    <div class="meta-cell">
+      <span class="label">Skill Files</span>
+      <span class="val big">05</span>
+    </div>
+    <div class="meta-cell">
+      <span class="label">Example HTML</span>
+      <span class="val big">03</span>
+    </div>
+    <div class="meta-cell">
+      <span class="label">Example MD</span>
+      <span class="val big">01</span>
+    </div>
+    <div class="meta-cell">
+      <span class="label">Aesthetic Families</span>
+      <span class="val">Editorial · Cyberpunk · Dark-Gold</span>
+    </div>
+    <div class="meta-cell">
+      <span class="label">Type Stacks</span>
+      <span class="val">Fraunces · Geist · JetBrains</span>
+    </div>
+    <div class="meta-cell">
+      <span class="label">Theme Modes</span>
+      <span class="val">Dark + Light · Or Dark-Only</span>
+    </div>
+  </div>
+
+  <div class="search-bar block">
+    <span class="search-icon">⌕</span>
+    <input type="text" id="searchInput" placeholder="Search skills, examples, paths…" oninput="filterQuestions()">
+  </div>
+
+  <div class="nav-bar block">
+    <button class="tab-btn active-easy" onclick="showTab('skills', this)">Design Skills · 01–05</button>
+    <button class="tab-btn" onclick="showTab('examples', this)">Example HTML · 06–09</button>
+    <button class="tab-btn" onclick="showTab('howto', this)">How to Use · 10–13</button>
+    <button class="tab-btn" onclick="showTab('design', this)">Design Notes · 14–15</button>
+  </div>
+
+  <div class="section easy active" id="sec-skills">
+    <div class="section-header">
+      <div class="section-label">Section 01 · Markdown Skill Files</div>
+      <div class="section-title">The five design systems</div>
+      <div class="section-desc">Each <code>.md</code> file is a complete, self-contained design specification. Load it into your agent and it will reproduce that aesthetic faithfully.</div>
+    </div>
+    <div class="qa-list">
+
+      <div class="qa-item easy" onclick="toggleItem(this)">
+        <div class="qa-question">
+          <span class="q-num">01</span>
+          <span class="q-text">DeepNavy-HighQuality-Terminal-Aesthetics.md <em>·</em> the system applied to this page</span>
+          <span class="q-arrow">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="answer-content">
+            <p>Deep navy-slate editorial dark UI with electric teal accent, dual-axis variable-font typography (<strong>Fraunces</strong> serif + <strong>Geist</strong> sans + <strong>JetBrains Mono</strong>), and a scanline/ambient-glow atmosphere. Three-column masthead/footer, asymmetric <strong>1.3fr/1fr</strong> hero grid, ruled meta strip, accordion Q&amp;A panels with left-border tier accents. Full <code>data-theme</code> light/dark toggle.</p>
+            <p><strong>Use for:</strong> interview prep guides, AI platform dashboards, internal knowledge bases, document-dense SPAs. The current page is built on this system.</p>
+            <div class="tip-chip">✓ This page = live example</div>
+            <div class="star-chip">★ Default skill for new projects</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item easy" onclick="toggleItem(this)">
+        <div class="qa-question">
+          <span class="q-num">02</span>
+          <span class="q-text">skill.md <em>·</em> the original editorial craft system</span>
+          <span class="q-arrow">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="answer-content">
+            <p>Warm <strong>parchment</strong> background with a 40px blueprint grid and SVG noise-grain overlay. Newspaper-style masthead with double-rule top border, <strong>Fraunces</strong> display headlines, lifted-paper cards with <code>::before</code> shadow-offset pseudo-element, forest-green answer blocks with mustard left border, dark-brown code blocks. Zero <code>border-radius</code> on cards. Light/dark toggle (◐) with <code>0.4s</code> background transition.</p>
+            <p><strong>Use for:</strong> technical journals, field manuals, content that should feel like a 1970s print publication. The default system for open-ended editorial work.</p>
+            <div class="tip-chip">✓ Most widely applied</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item easy" onclick="toggleItem(this)">
+        <div class="qa-question">
+          <span class="q-num">03</span>
+          <span class="q-text">DeepNavy-Fraunces-Pro.md <em>·</em> editorial-technical, the ancestor of #01</span>
+          <span class="q-arrow">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="answer-content">
+            <p>Production-grade design system combining editorial typographic refinement with technical/terminal culture. Deep navy backgrounds, electric teal accent, <strong>Fraunces</strong> + <strong>Geist</strong> + <strong>JetBrains Mono</strong> stack, grid-line texture, scanline overlay, collapsible accordion panels, light/dark theme toggle.</p>
+            <p><strong>Use for:</strong> dashboards, knowledge bases, interview prep tools, documentation sites, reference guides, data-heavy reports, developer portals, internal tooling UIs. <em>Authoritative, not flashy.</em></p>
+            <div class="tip-chip">✓ Predecessor of v2 system</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item intermediate" onclick="toggleItem(this)">
+        <div class="qa-question">
+          <span class="q-num">04</span>
+          <span class="q-text">Dark-Gold-Editorial-Report.md <em>·</em> financial-journalism meets technical docs</span>
+          <span class="q-arrow">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="answer-content">
+            <p>Dark-masthead editorial report system. Primary accent: warm <strong>gold <code>#c8922a</code></strong> on an ink-dark navy masthead (<code>#0d1117</code>), over a warm off-white parchment body (<code>#f7f6f2</code>). Font stack: <strong>DM Serif Display</strong> + <strong>DM Mono</strong> + <strong>Space Grotesk</strong>. Signature patterns: gold eyebrow labels in DM Mono ALL-CAPS, full-bleed dark-ink inversion panels, sticky monospace navigation tabs with gold underline hover, 3px top-border color-coded role cards, vertical timeline with gold/teal phase dots, two-tone colophon footer.</p>
+            <p><strong>Use for:</strong> editorial reports, career guides, technical roadmaps, research documents, dashboards. The system that projects <em>authority and analytical depth</em>.</p>
+            <div class="tip-chip">✓ Has a live HTML example</div>
+            <div class="star-chip">★ Best for long-form reports</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item hard" onclick="toggleItem(this)">
+        <div class="qa-question">
+          <span class="q-num">05</span>
+          <span class="q-text">CyberPunk-Animated-Terminal-v1.md &amp; v2 <em>·</em> hacker terminal / network ops</span>
+          <span class="q-arrow">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="answer-content">
+            <p>Two variants of the cyberpunk terminal aesthetic. Deep void-black backgrounds with animated green grid scrolling vertically, neon green / cyan / magenta triad, glowing <code>box-shadow</code> and <code>text-shadow</code> as the primary depth mechanism. <strong>v1</strong> uses a single shared <code>.md</code> (which is also the rendered HTML). <strong>v2</strong> uses <strong>Orbitron</strong> display + <strong>Fira Code</strong> monospace, slightly rounded corners (<code>6–8px</code>), animated scanning chromatic gradient stripe on every card top, sticky header with glow. Permanently dark — light theme is incompatible.</p>
+            <p><strong>Use for:</strong> security dashboards, network operations centers, dev-tool landing pages, sci-fi / futuristic interfaces. <em>Everything is alive with data.</em></p>
+            <div class="tip-chip">✓ Both have live HTML examples</div>
+            <div class="star-chip">★ Dark-only · no theme toggle</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item other" onclick="toggleItem(this)">
+        <div class="qa-question">
+          <span class="q-num">06</span>
+          <span class="q-text">Claude-Skills/ subdirectory <em>·</em> alternate skill formats</span>
+          <span class="q-arrow">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="answer-content">
+            <p>Alternate-packaged versions of the same skills, located at <code>frontend-design/Claude-Skills/</code>:</p>
+            <ul>
+              <li><code>frontend-design-extractor-dfk.skill</code> — packaged skill bundle</li>
+              <li><code>frontend-design-extractor-Claude.md</code> — Claude-formatted variant of the extractor</li>
+              <li><code>CyberPunk-Animated-Terminal-v2.md</code> — Claude-packaged v2 cyberpunk</li>
+              <li><code>Claude-default-SKILL.md</code> — Claude-default skill template</li>
+            </ul>
+            <p>These exist so the same design system can be loaded into Claude Code, opencode, or any agent that consumes a <code>SKILL.md</code> / <code>.skill</code> bundle.</p>
+            <div class="tip-chip">✓ Use for Claude Code specifically</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section intermediate" id="sec-examples">
+    <div class="section-header">
+      <div class="section-label">Section 02 · Working HTML Artifacts</div>
+      <div class="section-title">The example files</div>
+      <div class="section-desc">Each example is a complete, self-contained HTML file built entirely with one of the design systems above. Open in a browser to see the system in motion.</div>
+    </div>
+    <div class="qa-list">
+
+      <div class="qa-item intermediate" onclick="toggleItem(this)">
+        <div class="qa-question">
+          <span class="q-num">07</span>
+          <span class="q-text">Dark-Gold-Editorial-Report.html <em>·</em> the dark-gold system rendered</span>
+          <span class="q-arrow">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="answer-content">
+            <p>Full single-page implementation of the <strong>Dark-Gold Editorial Report</strong> system. Dark masthead, gold verdict strip, ruled section dividers, numbered index, inversion panels, sticky monospace nav, role cards with 3px top-border color coding, vertical timeline, inline progress bars, two-tone colophon footer.</p>
+            <p><strong>Path:</strong> <code>examples/Dark-Gold-Editorial-Report.html</code></p>
+            <div class="tip-chip">✓ Open directly in any browser</div>
+            <div class="star-chip">★ ~50 KB self-contained</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item hard" onclick="toggleItem(this)">
+        <div class="qa-question">
+          <span class="q-num">08</span>
+          <span class="q-text">CyberPunk-Animated-Terminal-v2.html <em>·</em> the v2 cyberpunk system rendered</span>
+          <span class="q-arrow">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="answer-content">
+            <p>Full single-page implementation of the <strong>CyberPunk Animated Terminal v2</strong> system. Animated green grid that scrolls vertically, scanning chromatic gradient stripe on every card top, glowing borders, neon green/cyan/magenta triad, sticky header with slideDown entrance, pulsing cursor aesthetic in terminal blocks. <em>Permanently dark.</em></p>
+            <p><strong>Path:</strong> <code>examples/CyberPunk-Animated-Terminal-v2.html</code></p>
+            <div class="tip-chip">✓ Best demo of glow effects</div>
+            <div class="star-chip">★ Animations are load-bearing</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item hard" onclick="toggleItem(this)">
+        <div class="qa-question">
+          <span class="q-num">09</span>
+          <span class="q-text">CyberPunk-Animated-Terminal-v1.md <em>·</em> the v1 cyberpunk, also a runnable HTML file</span>
+          <span class="q-arrow">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="answer-content">
+            <p>The <code>v1</code> cyberpunk system is stored as a <code>.md</code> but the content is a complete runnable HTML document — open it in a browser directly. Uses <strong>Fira Code</strong> + <strong>Orbitron</strong>, neon green/cyan/magenta, terminal-style code blocks, animated scan-line borders. The <code>v1</code> spec is the seed that <code>v2</code> evolved from.</p>
+            <p><strong>Path:</strong> <code>examples/CyberPunk-Animated-Terminal-v1.md</code></p>
+            <div class="tip-chip">✓ Open the .md in a browser</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item other" onclick="toggleItem(this)">
+        <div class="qa-question">
+          <span class="q-num">10</span>
+          <span class="q-text">BaseHtml-Revamped-with-DesignSkill/ <em>·</em> same base HTML, two different model revamps</span>
+          <span class="q-arrow">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="answer-content">
+            <p>Proof that the skill works across model providers. Three files sit side-by-side:</p>
+            <ul>
+              <li><code>base-html-file.html</code> — the original. A "DevOps → AI DevOps Engineer Roadmap" page with <code>Syne</code> + <code>DM Mono</code>, flat dark <code>#070b12</code> background, neon accents, <code>border-radius: 2px</code> cards.</li>
+              <li><code>Revamped_By-DeepseekV4-flash.html</code> — same content, restyled by the skill, generated with <strong>DeepSeek V4 Flash via NVIDIA NIM</strong>.</li>
+              <li><code>Revamped_by_Minimax-m3-free.html</code> — same content, restyled by the skill, generated with <strong>MiniMax-M3 Free via OpenCode Zen</strong>.</li>
+            </ul>
+            <p>Both revamped versions are consistent with the editorial craft skill end to end. They differ only in micro-implementation details (comment density, compactness), <em>not</em> in design intent. <strong>Both are stable, responsive, visually faithful.</strong></p>
+            <p><strong>Path:</strong> <code>examples/BaseHtml-Revamped-with-DesignSkill/BaseUI-and-Revamped-Ui-Files/</code></p>
+            <div class="tip-chip">✓ Cross-model consistency proof</div>
+            <div class="star-chip">★ Best regression baseline</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section hard" id="sec-howto">
+    <div class="section-header">
+      <div class="section-label">Section 03 · Workflow</div>
+      <div class="section-title">How to use these skills</div>
+      <div class="section-desc">No CLI, no build step, no configuration. Each skill is a single markdown file that any sufficiently capable LLM can read and apply.</div>
+    </div>
+    <div class="qa-list">
+
+      <div class="qa-item hard" onclick="toggleItem(this)">
+        <div class="qa-question">
+          <span class="q-num">11</span>
+          <span class="q-text">Step 1 — load the skill into your agent</span>
+          <span class="q-arrow">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="answer-content">
+            <p>Most agents that support a <code>skill</code> tool will pick up <code>frontend-design/&lt;name&gt;.md</code> automatically. If yours doesn't, paste the entire file into the system prompt or context.</p>
+            <p>For Claude Code specifically, use the <code>Claude-Skills/</code> variants (e.g. <code>Claude-default-SKILL.md</code> or any <code>.skill</code> bundle).</p>
+            <div class="tip-chip">✓ Auto-discovery usually works</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item hard" onclick="toggleItem(this)">
+        <div class="qa-question">
+          <span class="q-num">12</span>
+          <span class="q-text">Step 2 — provide the HTML you want revamped</span>
+          <span class="q-arrow">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="answer-content">
+            <p>Either as a file path the agent can read, or pasted inline. The skill is <strong>opinionated but not destructive</strong> — semantic content, copy, and code blocks are preserved. Only the design system changes.</p>
+            <div class="tip-chip">✓ Content is preserved</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item hard" onclick="toggleItem(this)">
+        <div class="qa-question">
+          <span class="q-num">13</span>
+          <span class="q-text">Step 3 — write a short prompt</span>
+          <span class="q-arrow">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="answer-content">
+            <p>The prompt is usually just:</p>
+            <p><code>Using the frontend-design skill at frontend-design/&lt;name&gt;.md, update this HTML file: &lt;path&gt;. Preserve all content, copy, and code blocks. Only the design system (CSS + structure where needed) should change.</code></p>
+            <p>If your agent doesn't auto-discover skill files, paste the entire skill body into the prompt and reference it.</p>
+            <div class="tip-chip">✓ Minimal prompt = best results</div>
+            <div class="star-chip">★ Be explicit about preservation</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item other" onclick="toggleItem(this)">
+        <div class="qa-question">
+          <span class="q-num">14</span>
+          <span class="q-text">Step 4 — review the output &amp; extend if needed</span>
+          <span class="q-arrow">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="answer-content">
+            <p>Each skill is one file. Edit it freely:</p>
+            <ul>
+              <li><strong>New colour tokens</strong> — add to <code>:root</code> and <code>[data-theme="dark"]</code> in the colour section.</li>
+              <li><strong>New components</strong> — add a section and renumber.</li>
+              <li><strong>Different aesthetic</strong> — the load-bearing rules (zero <code>border-radius</code>, no blurred shadows, no glassmorphism, three-font stack) are what make the system look the way it looks. Override them and you get a different design system.</li>
+            </ul>
+            <p>If you fork a skill, keep its most recognisable fingerprint (e.g. the <code>em</code> rust-italic rule for the editorial craft system, or the teal top-border for the deep-navy system) — dropping it makes the output generic.</p>
+            <div class="tip-chip">✓ Edit freely · MIT licensed</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section other" id="sec-design">
+    <div class="section-header">
+      <div class="section-label">Section 04 · Notes on This Index</div>
+      <div class="section-title">Design notes &amp; conventions</div>
+      <div class="section-desc">This page is itself a worked example of the DeepNavy-HighQuality-Terminal-Aesthetics system applied to a content-inventory / index use case.</div>
+    </div>
+    <div class="qa-list">
+
+      <div class="qa-item other" onclick="toggleItem(this)">
+        <div class="qa-question">
+          <span class="q-num">15</span>
+          <span class="q-text">How this index was composed</span>
+          <span class="q-arrow">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="answer-content">
+            <p>The page is a single <code>index.html</code> with no build step, no framework, no external assets except three Google Fonts: <strong>Fraunces</strong>, <strong>Geist</strong>, <strong>JetBrains Mono</strong>.</p>
+            <p>It uses every load-bearing component from the DeepNavy spec:</p>
+            <ul>
+              <li>Three-column masthead with teal top border</li>
+              <li>Asymmetric <code>1.3fr/1fr</code> hero with <code>// co-name</code> eyebrow</li>
+              <li>Ruled meta strip with 6 stat cells</li>
+              <li>Search bar with teal left-border accent</li>
+              <li>Tabbed nav with tier-colored active underlines</li>
+              <li>4 tiered accordion sections (easy · intermediate · hard · other)</li>
+              <li>Single-open accordion behavior with rotating arrow</li>
+              <li>Cross-section full-text search filter</li>
+              <li>Three-column footer with teal top border</li>
+              <li>Colophon crediting the type system</li>
+              <li>Theme toggle (◑) with <code>localStorage</code> persistence</li>
+              <li>Scanline + ambient-glow atmospheric layers</li>
+              <li>Staggered page-load entrance animation</li>
+              <li>Print stylesheet that expands all accordions and hides navigation</li>
+              <li>Responsive collapse at <code>860px</code></li>
+            </ul>
+            <div class="tip-chip">✓ Reference implementation</div>
+            <div class="star-chip">★ Use as scaffolding template</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item other" onclick="toggleItem(this)">
+        <div class="qa-question">
+          <span class="q-num">16</span>
+          <span class="q-text">File map <em>·</em> where everything lives</span>
+          <span class="q-arrow">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="answer-content">
+            <p>Quick reference for the repository layout:</p>
+            <ul>
+              <li><code>index.html</code> — this page (DeepNavy system, live example)</li>
+              <li><code>README.md</code> — top-level repo docs</li>
+              <li><code>emojis.md</code> — emoji reference (9 bytes)</li>
+              <li><code>frontend-design/</code> — all skill files
+                <ul>
+                  <li><code>DeepNavy-HighQuality-Terminal-Aesthetics.md</code> — used here</li>
+                  <li><code>skill.md</code> — editorial craft (default)</li>
+                  <li><code>DeepNavy-Fraunces-Pro.md</code> — predecessor of #1</li>
+                  <li><code>Dark-Gold-Editorial-Report.md</code> — financial journalism</li>
+                  <li><code>CyberPunk-Animated-Terminal-v1.md</code> — terminal, v1</li>
+                  <li><code>Claude-Skills/</code> — alternate packaging for Claude Code</li>
+                </ul>
+              </li>
+              <li><code>examples/</code> — live HTML artifacts
+                <ul>
+                  <li><code>Dark-Gold-Editorial-Report.html</code></li>
+                  <li><code>CyberPunk-Animated-Terminal-v2.html</code></li>
+                  <li><code>CyberPunk-Animated-Terminal-v1.md</code> (runnable HTML)</li>
+                  <li><code>BaseHtml-Revamped-with-DesignSkill/</code> — base + 2 model revamps</li>
+                </ul>
+              </li>
+            </ul>
+            <div class="tip-chip">✓ MIT licensed</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer-rule block">
+    <span class="left">Frontend Design · Skill Repository</span>
+    <span class="center">End of Index</span>
+    <span class="right">Built with the DeepNavy System · 2026</span>
+  </div>
+  <p class="colophon block">Set in Fraunces · Geist · JetBrains Mono · Deep Navy · 2026</p>
+
+</div>
+
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  }
+  (function() {
+    const saved = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', saved);
+  })();
+
+  function showTab(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      b.classList.remove('active-easy','active-intermediate','active-hard','active-other','active-jd');
+    });
+    document.getElementById('sec-' + id).classList.add('active');
+    btn.classList.add('active-' + id);
+    const q = document.getElementById('searchInput').value;
+    if (q) filterQuestions();
+  }
+
+  function toggleItem(el) {
+    const wasOpen = el.classList.contains('open');
+    el.parentElement.querySelectorAll('.qa-item.open').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) el.classList.add('open');
+  }
+
+  function filterQuestions() {
+    const q = document.getElementById('searchInput').value.toLowerCase().trim();
+    const allItems = document.querySelectorAll('.qa-item');
+    if (!q) {
+      allItems.forEach(item => item.style.display = '');
+      return;
+    }
+    const sections = ['skills','examples','howto','design'];
+    sections.forEach(sec => {
+      const secEl = document.getElementById('sec-' + sec);
+      let hasHit = false;
+      secEl.querySelectorAll('.qa-item').forEach(item => {
+        const text = item.textContent.toLowerCase();
+        if (text.includes(q)) { item.style.display = ''; hasHit = true; }
+        else { item.style.display = 'none'; }
+      });
+      if (hasHit) secEl.classList.add('active');
+    });
+    sections.forEach(sec => {
+      const secEl = document.getElementById('sec-' + sec);
+      const hasVisible = [...secEl.querySelectorAll('.qa-item')].some(i => i.style.display !== 'none');
+      if (!hasVisible) secEl.classList.remove('active');
+      else secEl.classList.add('active');
+    });
+  }
+</script>
+</body>
+</html>

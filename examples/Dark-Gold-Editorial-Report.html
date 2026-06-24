@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daud's AI Era Career Roadmap — 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0d1117;
+    --ink-2: #1e2530;
+    --ink-dim: #4a5568;
+    --ink-muted: #718096;
+    --bg: #f7f6f2;
+    --bg-card: #ffffff;
+    --bg-dark: #0d1117;
+    --accent-gold: #c8922a;
+    --accent-gold-light: #f5e6c8;
+    --accent-teal: #0d7a5f;
+    --accent-teal-light: #d1f0e8;
+    --accent-red: #c0392b;
+    --accent-red-light: #fdecea;
+    --accent-blue: #1a5fa8;
+    --accent-blue-light: #dbeafe;
+    --accent-purple: #6b46c1;
+    --accent-purple-light: #ede9fe;
+    --border: #e2ddd6;
+    --border-strong: #c8c0b4;
+    --rule: 1px solid var(--border);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ── MASTHEAD ── */
+  .masthead {
+    background: var(--bg-dark);
+    color: #f0ebe3;
+    padding: 3.5rem 0 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .masthead::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 39px,
+      rgba(255,255,255,0.03) 39px,
+      rgba(255,255,255,0.03) 40px
+    );
+    pointer-events: none;
+  }
+  .masthead-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+  }
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+    margin-bottom: 1.2rem;
+  }
+  .masthead h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    font-weight: 400;
+    line-height: 1.1;
+    color: #f0ebe3;
+    max-width: 700px;
+    margin-bottom: 1.2rem;
+  }
+  .masthead h1 em {
+    font-style: italic;
+    color: var(--accent-gold);
+  }
+  .masthead-sub {
+    font-size: 15px;
+    color: #a09880;
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+  }
+  .masthead-meta {
+    display: flex;
+    gap: 2rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    flex-wrap: wrap;
+  }
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .meta-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #665f50;
+  }
+  .meta-value {
+    font-size: 13px;
+    color: #c8bfb0;
+    font-weight: 500;
+  }
+  .verdict-strip {
+    background: var(--accent-gold);
+    margin: 0 -2rem;
+    padding: 0.9rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .verdict-strip span {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #2a1a00;
+    font-weight: 500;
+  }
+  .verdict-strip strong {
+    color: #2a1a00;
+    font-size: 13px;
+  }
+
+  /* ── LAYOUT ── */
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+  }
+
+  /* ── SECTION HEADERS ── */
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 3rem 0 1.2rem;
+    border-bottom: var(--rule);
+    margin-bottom: 1.5rem;
+  }
+  .section-number {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent-gold);
+    letter-spacing: 0.1em;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.7rem;
+    font-weight: 400;
+    color: var(--ink);
+  }
+
+  /* ── MARKET SIGNAL BAR ── */
+  .signal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: var(--rule);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  .signal-cell {
+    background: var(--bg-card);
+    padding: 1.2rem 1.4rem;
+  }
+  .signal-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem;
+    color: var(--accent-teal);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .signal-num.red { color: var(--accent-red); }
+  .signal-num.gold { color: var(--accent-gold); }
+  .signal-num.blue { color: var(--accent-blue); }
+  .signal-label {
+    font-size: 12px;
+    color: var(--ink-muted);
+    line-height: 1.4;
+  }
+
+  /* ── THREAT / OPPORTUNITY SPLIT ── */
+  .split-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  @media (max-width: 600px) { .split-grid { grid-template-columns: 1fr; } }
+  .split-card {
+    border-radius: 8px;
+    border: var(--rule);
+    background: var(--bg-card);
+    padding: 1.4rem;
+  }
+  .split-card.threat { border-top: 3px solid var(--accent-red); }
+  .split-card.opp { border-top: 3px solid var(--accent-teal); }
+  .split-card h3 {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.9rem;
+    text-transform: uppercase;
+  }
+  .split-card.threat h3 { color: var(--accent-red); }
+  .split-card.opp h3 { color: var(--accent-teal); }
+  .split-card ul { list-style: none; }
+  .split-card ul li {
+    font-size: 13.5px;
+    color: var(--ink-dim);
+    padding: 5px 0;
+    border-bottom: 1px solid var(--bg);
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .split-card ul li::before {
+    content: '→';
+    color: var(--ink-muted);
+    flex-shrink: 0;
+    font-size: 12px;
+    margin-top: 2px;
+  }
+  .split-card.threat ul li::before { content: '✕'; color: var(--accent-red); }
+  .split-card.opp ul li::before { content: '✓'; color: var(--accent-teal); }
+
+  /* ── SKILL TIER TABLE ── */
+  .tier-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+    font-size: 13.5px;
+  }
+  .tier-table th {
+    text-align: left;
+    padding: 10px 14px;
+    background: var(--ink-2);
+    color: #f0ebe3;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 500;
+    font-family: 'DM Mono', monospace;
+  }
+  .tier-table th:first-child { border-radius: 6px 0 0 0; }
+  .tier-table th:last-child { border-radius: 0 6px 0 0; }
+  .tier-table td {
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    color: var(--ink-dim);
+  }
+  .tier-table tr:last-child td { border-bottom: none; }
+  .tier-table tr:nth-child(even) td { background: #faf9f7; }
+  .tier-table .skill-name {
+    font-weight: 600;
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .tier-table .skill-sub {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--ink-muted);
+  }
+  .priority-badge {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.04em;
+  }
+  .p-critical { background: var(--accent-red-light); color: var(--accent-red); }
+  .p-high { background: var(--accent-gold-light); color: #7a4f0a; }
+  .p-medium { background: var(--accent-blue-light); color: var(--accent-blue); }
+  .p-nice { background: #f0f0f0; color: #555; }
+  .salary-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--accent-teal);
+    font-weight: 500;
+  }
+  .already-badge {
+    display: inline-block;
+    background: var(--accent-teal-light);
+    color: var(--accent-teal);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 7px;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+    font-family: 'DM Mono', monospace;
+    vertical-align: middle;
+    margin-left: 4px;
+  }
+
+  /* ── ROLE CARDS ── */
+  .role-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .role-card {
+    background: var(--bg-card);
+    border: var(--rule);
+    border-radius: 10px;
+    padding: 1.4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .role-card.featured {
+    border-color: var(--accent-gold);
+    border-width: 2px;
+  }
+  .role-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .role-card.r-platform::before { background: var(--accent-teal); }
+  .role-card.r-llm::before { background: var(--accent-gold); }
+  .role-card.r-agent::before { background: var(--accent-purple); }
+  .role-card.r-infra::before { background: var(--accent-blue); }
+  .role-card.r-forward::before { background: var(--accent-red); }
+  .role-fit-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 0.5rem;
+  }
+  .role-card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+  .role-card .role-salary {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--accent-teal);
+    margin-bottom: 0.8rem;
+    font-weight: 500;
+  }
+  .role-card p {
+    font-size: 13px;
+    color: var(--ink-dim);
+    line-height: 1.55;
+    margin-bottom: 0.8rem;
+  }
+  .role-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 0.6rem;
+  }
+  .tag {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--ink-dim);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'DM Mono', monospace;
+  }
+  .best-fit-banner {
+    background: var(--accent-gold);
+    color: #2a1a00;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 8px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ── ROADMAP TIMELINE ── */
+  .timeline {
+    position: relative;
+    margin-bottom: 2rem;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 28px;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: var(--border-strong);
+  }
+  .timeline-phase {
+    position: relative;
+    padding-left: 70px;
+    margin-bottom: 2rem;
+  }
+  .phase-dot {
+    position: absolute;
+    left: 18px;
+    top: 4px;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 2px solid var(--border-strong);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px;
+    font-weight: 700;
+    font-family: 'DM Mono', monospace;
+    color: var(--ink-muted);
+  }
+  .phase-dot.active { border-color: var(--accent-gold); background: var(--accent-gold); color: #fff; }
+  .phase-dot.future { border-color: var(--accent-teal); }
+  .phase-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+    margin-bottom: 4px;
+  }
+  .phase-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.6rem;
+  }
+  .phase-body {
+    font-size: 13.5px;
+    color: var(--ink-dim);
+    line-height: 1.65;
+  }
+  .phase-checklist {
+    list-style: none;
+    margin-top: 0.7rem;
+  }
+  .phase-checklist li {
+    font-size: 13px;
+    color: var(--ink-dim);
+    padding: 4px 0;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .phase-checklist li .ck {
+    width: 14px; height: 14px;
+    border: 1.5px solid var(--border-strong);
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  code {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--accent-blue);
+  }
+
+  /* ── PORTFOLIO PROOF SECTION ── */
+  .proof-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .proof-card {
+    background: var(--bg-card);
+    border: var(--rule);
+    border-radius: 8px;
+    padding: 1.2rem;
+  }
+  .proof-card .proof-icon {
+    font-size: 20px;
+    margin-bottom: 0.6rem;
+  }
+  .proof-card h4 {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    color: var(--ink);
+  }
+  .proof-card p {
+    font-size: 12px;
+    color: var(--ink-muted);
+    line-height: 1.5;
+  }
+  .proof-exists {
+    font-size: 11px;
+    color: var(--accent-teal);
+    font-family: 'DM Mono', monospace;
+    margin-top: 6px;
+    font-weight: 600;
+  }
+  .proof-todo {
+    font-size: 11px;
+    color: var(--accent-gold);
+    font-family: 'DM Mono', monospace;
+    margin-top: 6px;
+    font-weight: 600;
+  }
+
+  /* ── SALARY TABLE ── */
+  .salary-section {
+    background: var(--ink-2);
+    margin: 0 -2rem;
+    padding: 2.5rem 2rem;
+    color: #f0ebe3;
+    margin-bottom: 2rem;
+  }
+  .salary-section .section-title { color: #f0ebe3; }
+  .salary-section .section-number { color: var(--accent-gold); }
+  .salary-section .section-header { border-bottom-color: rgba(255,255,255,0.1); }
+  .salary-rows { display: flex; flex-direction: column; gap: 1px; }
+  .salary-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.9rem 1rem;
+    background: rgba(255,255,255,0.03);
+    border-radius: 4px;
+    flex-wrap: wrap;
+  }
+  .salary-row:hover { background: rgba(255,255,255,0.06); }
+  .salary-role {
+    flex: 1;
+    min-width: 180px;
+  }
+  .salary-role-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #e8e0d4;
+  }
+  .salary-role-note {
+    font-size: 11px;
+    color: #665f50;
+    font-family: 'DM Mono', monospace;
+  }
+  .salary-bar-wrap {
+    flex: 2;
+    min-width: 200px;
+  }
+  .salary-bar-track {
+    height: 6px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 3px;
+    position: relative;
+  }
+  .salary-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--accent-gold);
+  }
+  .salary-bar-fill.dim { background: #444; }
+  .salary-nums {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+  }
+  .salary-nums span {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: #a09880;
+  }
+  .salary-nums .hi { color: var(--accent-gold); font-weight: 600; }
+
+  /* ── CALLOUT BOX ── */
+  .callout {
+    border-left: 3px solid var(--accent-gold);
+    background: var(--accent-gold-light);
+    padding: 1rem 1.2rem;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 1.5rem;
+  }
+  .callout-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #7a4f0a;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+  .callout p {
+    font-size: 13.5px;
+    color: #4a2c00;
+    line-height: 1.6;
+  }
+
+  /* ── LINKEDIN SIGNALS ── */
+  .signal-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+  }
+  .signal-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 0.8rem 1rem;
+    background: var(--bg-card);
+    border: var(--rule);
+    border-radius: 6px;
+    font-size: 13.5px;
+    color: var(--ink-dim);
+  }
+  .signal-item .si-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-muted);
+    flex-shrink: 0;
+    min-width: 20px;
+  }
+
+  /* ── FOOTER ── */
+  .doc-footer {
+    border-top: var(--rule);
+    padding: 2rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .doc-footer p {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── NAV ── */
+  .sticky-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(247, 246, 242, 0.95);
+    backdrop-filter: blur(4px);
+    border-bottom: var(--rule);
+    padding: 0 2rem;
+  }
+  .nav-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav-inner::-webkit-scrollbar { display: none; }
+  .nav-tab {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    text-decoration: none;
+    padding: 0.8rem 1.1rem;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .nav-tab:hover { color: var(--ink); border-bottom-color: var(--accent-gold); }
+
+  @media print {
+    .sticky-nav { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="masthead-inner">
+    <div class="eyebrow">Prepared for Daud · LLM DevOps / AI Platform Infrastructure · 25 June 2026</div>
+    <h1>Your Edge in the<br><em>AI-First</em> Engineer Market</h1>
+    <p class="masthead-sub">A data-backed career roadmap for transitioning from LLM DevOps to the highest-demand roles in 2026 — built on your existing ServeLLM platform, vLLM/Ollama stack, and multi-cloud infrastructure foundation.</p>
+    <div class="masthead-meta">
+      <div class="meta-item">
+        <span class="meta-label">Your position</span>
+        <span class="meta-value">LLM DevOps / AI Platform Infra</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Based in</span>
+        <span class="meta-value">Lahore, Pakistan</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Target market</span>
+        <span class="meta-value">Remote — Global / MENA / EU</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Horizon</span>
+        <span class="meta-value">0–18 months</span>
+      </div>
+    </div>
+    <div class="verdict-strip">
+      <span>Analyst verdict:</span>
+      <strong>Your core stack (vLLM · Kubernetes · FastAPI · pgvector · LangGraph) maps directly to the 3 fastest-growing AI infra roles. The gap is thin — primarily agent orchestration depth + Go/Rust familiarity. Act in 90 days.</strong>
+    </div>
+  </div>
+</div>
+
+<!-- STICKY NAV -->
+<nav class="sticky-nav" aria-label="Page sections">
+  <div class="nav-inner">
+    <a class="nav-tab" href="#signals">Market Signals</a>
+    <a class="nav-tab" href="#landscape">Threat vs Opportunity</a>
+    <a class="nav-tab" href="#skills">Skill Priority Map</a>
+    <a class="nav-tab" href="#roles">Target Roles</a>
+    <a class="nav-tab" href="#salary">Salary Benchmarks</a>
+    <a class="nav-tab" href="#roadmap">90-Day Roadmap</a>
+    <a class="nav-tab" href="#portfolio">Portfolio Proof</a>
+    <a class="nav-tab" href="#positioning">Positioning</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- §1 MARKET SIGNALS -->
+  <div id="signals">
+    <div class="section-header">
+      <span class="section-number">01</span>
+      <h2 class="section-title">Market Signals — 2026</h2>
+    </div>
+
+    <div class="signal-grid">
+      <div class="signal-cell">
+        <div class="signal-num">+85%</div>
+        <div class="signal-label">YoY growth in AI/ML engineering job postings (2025→2026)</div>
+      </div>
+      <div class="signal-cell">
+        <div class="signal-num">50%</div>
+        <div class="signal-label">Of all new tech job postings now in AI/ML category (up from 10% in 2023)</div>
+      </div>
+      <div class="signal-cell">
+        <div class="signal-num gold">+136%</div>
+        <div class="signal-label">Demand growth for AI Agent Developer roles — fastest growing specialty</div>
+      </div>
+      <div class="signal-cell">
+        <div class="signal-num red">−25%</div>
+        <div class="signal-label">Junior / entry-level Big Tech hiring since 2022. AI wrote the boilerplate.</div>
+      </div>
+      <div class="signal-cell">
+        <div class="signal-num blue">56%</div>
+        <div class="signal-label">Wage premium for engineers with verified AI skills vs same role without (PwC 2025)</div>
+      </div>
+      <div class="signal-cell">
+        <div class="signal-num">+30%</div>
+        <div class="signal-label">Total software engineer job listings in 2026 — highest since 2023, led by AI-adjacent roles</div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">Pakistan context</div>
+      <p>Remote work has made geography largely irrelevant for senior AI infra. Skilled engineers in Lahore are landing offers at near-international rates via Toptal, Deel, and direct contracts. The ceiling is your specialisation tier, not your location. UAE, Saudi Arabia, EU, and North American startups are all actively sourcing.</p>
+    </div>
+  </div>
+
+  <!-- §2 THREAT vs OPPORTUNITY -->
+  <div id="landscape">
+    <div class="section-header">
+      <span class="section-number">02</span>
+      <h2 class="section-title">What's Dying vs What's Exploding</h2>
+    </div>
+
+    <div class="split-grid">
+      <div class="split-card threat">
+        <h3>⚠ Roles Being Automated Away</h3>
+        <ul>
+          <li>Generic CRUD/REST API developer (AI writes boilerplate in seconds)</li>
+          <li>Junior QA / test writer (AI agents run regression at 10x speed)</li>
+          <li>Basic DevOps (Terraform/Ansible scripts now AI-generated in CI)</li>
+          <li>Data entry pipelines (replaced by document-parsing agents)</li>
+          <li>Generalist frontend (low-tier React components auto-generated)</li>
+          <li>Basic prompt engineering alone (table stakes, not a specialty)</li>
+        </ul>
+      </div>
+      <div class="split-card opp">
+        <h3>✓ Roles AI Cannot Fill (Yet)</h3>
+        <ul>
+          <li>Production LLM serving infrastructure (latency, cost, multi-tenant)</li>
+          <li>Agent orchestration systems that must be reliable, not just demos</li>
+          <li>Distributed training / inference optimisation at GPU cluster scale</li>
+          <li>AI platform governance: RBAC, audit logs, tenant isolation, RLS</li>
+          <li>Hybrid cloud reliability: FinOps + uptime + observability ownership</li>
+          <li>Forward-deployed AI engineers embedding systems into enterprises</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- §3 SKILL PRIORITY MAP -->
+  <div id="skills">
+    <div class="section-header">
+      <span class="section-number">03</span>
+      <h2 class="section-title">Skill Priority Map — Your Stack vs Market Demand</h2>
+    </div>
+
+    <p style="font-size:13.5px; color:var(--ink-dim); margin-bottom:1.2rem;">Sorted by salary delta and hiring frequency. "Already have" = verified in your current stack. Gaps are what move the needle most in interviews.</p>
+
+    <table class="tier-table">
+      <thead>
+        <tr>
+          <th style="width:28%">Skill / Domain</th>
+          <th>Your Status</th>
+          <th>Why Employers Pay a Premium</th>
+          <th>Action</th>
+          <th>Priority</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="skill-name">LLM Inference Optimisation <span class="already-badge">HAVE</span><div class="skill-sub">vLLM · Ollama · quantisation · batching</div></div></td>
+          <td><span class="salary-tag">Strong</span></td>
+          <td style="font-size:12.5px;">Production serving at sub-100ms p99 with cost control is rare. Most teams can deploy a model; few can tune it.</td>
+          <td style="font-size:12.5px;">Document ServeLLM latency metrics. Add CUDA KV-cache tuning notes to README.</td>
+          <td><span class="priority-badge p-critical">Monetise Now</span></td>
+        </tr>
+        <tr>
+          <td><div class="skill-name">AI Agent Orchestration <span class="already-badge">HAVE</span><div class="skill-sub">LangGraph · tool-calling · MCP</div></div></td>
+          <td><span class="salary-tag">Good</span></td>
+          <td style="font-size:12.5px;">136% YoY demand surge. Agentic product companies (every funded AI startup right now) require this at production scale, not notebook demos.</td>
+          <td style="font-size:12.5px;">Build one multi-agent system with failure recovery, retries, state persistence. Deploy publicly.</td>
+          <td><span class="priority-badge p-critical">Deepen</span></td>
+        </tr>
+        <tr>
+          <td><div class="skill-name">Kubernetes / GKE / EKS <span class="already-badge">HAVE</span><div class="skill-sub">GPU node pools · custom schedulers · KEDA</div></div></td>
+          <td><span class="salary-tag">Strong</span></td>
+          <td style="font-size:12.5px;">K8s is table stakes, but GPU node pool management and autoscaling LLM workloads is a genuine scarcity skill.</td>
+          <td style="font-size:12.5px;">Add KEDA-based horizontal pod autoscaler triggered by LLM queue depth. Document it.</td>
+          <td><span class="priority-badge p-high">Differentiate</span></td>
+        </tr>
+        <tr>
+          <td><div class="skill-name">Multi-Tenant RBAC + Security<span class="already-badge">HAVE</span><div class="skill-sub">JWT · RLS · pgvector · audit logs</div></div></td>
+          <td><span class="salary-tag">Strong</span></td>
+          <td style="font-size:12.5px;">Enterprise buyers block on governance. 5-tier RBAC in ServeLLM is directly monetisable in pitches to BFSI, healthcare, gov-tech clients.</td>
+          <td style="font-size:12.5px;">Prepare a 2-page security architecture doc for ServeLLM. Makes interview whiteboard trivial.</td>
+          <td><span class="priority-badge p-high">Highlight</span></td>
+        </tr>
+        <tr>
+          <td><div class="skill-name">RAG / Semantic Search<span class="already-badge">HAVE</span><div class="skill-sub">pgvector · semantic cache · embeddings</div></div></td>
+          <td><span class="salary-tag">Good</span></td>
+          <td style="font-size:12.5px;">RAG is now table stakes in enterprise AI. Your pgvector + semantic caching implementation is ahead of most candidates.</td>
+          <td style="font-size:12.5px;">Add hybrid BM25+vector retrieval and a re-ranking step to ServeLLM. Blog it.</td>
+          <td><span class="priority-badge p-high">Extend</span></td>
+        </tr>
+        <tr>
+          <td><div class="skill-name">Observability / AIOps<div class="skill-sub">Prometheus · Grafana · OpenTelemetry · OTLP traces</div></div></td>
+          <td><span class="salary-tag">Partial</span></td>
+          <td style="font-size:12.5px;">AI-powered observability (model drift detection, token anomaly alerting) is the next frontier. General Prometheus experience exists; LLM-specific metrics are the gap.</td>
+          <td style="font-size:12.5px;">Add OTLP tracing to ServeLLM requests. Instrument token latency histograms. Set drift alerting rule.</td>
+          <td><span class="priority-badge p-high">Complete</span></td>
+        </tr>
+        <tr>
+          <td><div class="skill-name">Go (language)<div class="skill-sub">HTTP servers · goroutines · gRPC</div></div></td>
+          <td style="font-size:12.5px; color:var(--ink-muted);">Gap</td>
+          <td style="font-size:12.5px;">High-performance LLM proxy/router services (think LiteLLM internals, custom API gateways) are increasingly Go. Salary bump ~18% for infra roles requiring it.</td>
+          <td style="font-size:12.5px;">Build a tiny Go HTTP reverse proxy that routes LLM requests. 200-line project is enough to claim "Go" on resume.</td>
+          <td><span class="priority-badge p-medium">Learn</span></td>
+        </tr>
+        <tr>
+          <td><div class="skill-name">LLM Fine-Tuning / PEFT<div class="skill-sub">LoRA · QLoRA · SFT · DPO · RLHF</div></div></td>
+          <td style="font-size:12.5px; color:var(--ink-muted);">Gap</td>
+          <td style="font-size:12.5px;">Highest absolute salary tier ($220K–$280K US). Your local server (64GB RAM) can run QLoRA fine-tunes on 7B models. Low barrier to entry given your hardware.</td>
+          <td style="font-size:12.5px;">Run a QLoRA fine-tune on Llama 3.1 8B on your server using Unsloth. Document the run, push to HuggingFace.</td>
+          <td><span class="priority-badge p-medium">Build Evidence</span></td>
+        </tr>
+        <tr>
+          <td><div class="skill-name">FinOps / Cloud Cost Engineering<div class="skill-sub">spot instances · GPU scheduling · cost attribution</div></div></td>
+          <td style="font-size:12.5px; color:var(--ink-muted);">Partial</td>
+          <td style="font-size:12.5px;">"Cloud cost is a design constraint in 2026, not an afterthought." Startups value engineers who ship features AND control burn rate.</td>
+          <td style="font-size:12.5px;">Add per-tenant token cost attribution to ServeLLM. Document GKE spot node pool config for LLM workloads.</td>
+          <td><span class="priority-badge p-medium">Strengthen</span></td>
+        </tr>
+        <tr>
+          <td><div class="skill-name">Rust (language)<div class="skill-sub">performance-critical components</div></div></td>
+          <td style="font-size:12.5px; color:var(--ink-muted);">Gap</td>
+          <td style="font-size:12.5px;">Premium for systems-level AI tooling (tokenizers, custom inference engines). Not required immediately — Go is more practical first step.</td>
+          <td style="font-size:12.5px;">Defer until Go is solid. Complete The Rust Book in parallel as a long-term play.</td>
+          <td><span class="priority-badge p-nice">Later</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- §4 TARGET ROLES -->
+  <div id="roles">
+    <div class="section-header">
+      <span class="section-number">04</span>
+      <h2 class="section-title">Target Role Archetypes — Ranked by Fit</h2>
+    </div>
+
+    <div class="role-grid">
+
+      <div class="role-card r-platform featured">
+        <div class="best-fit-banner">★ Best Fit — Immediate</div>
+        <div class="role-fit-tag">Platform · Infrastructure</div>
+        <h3>AI Platform / LLM Infrastructure Engineer</h3>
+        <div class="role-salary">Remote US/EU: $120K–$180K · MENA/Lahore: PKR 350K–600K/mo</div>
+        <p>Owns the serving layer: vLLM/Ollama deployment, multi-tenant API gateway, token metering, autoscaling, observability. Exactly what ServeLLM is.</p>
+        <div class="role-tags">
+          <span class="tag">vLLM</span><span class="tag">K8s</span><span class="tag">FastAPI</span><span class="tag">pgvector</span><span class="tag">PgBouncer</span><span class="tag">Prometheus</span>
+        </div>
+      </div>
+
+      <div class="role-card r-agent featured">
+        <div class="best-fit-banner">★ Best Fit — 3–6 months</div>
+        <div class="role-fit-tag">Agentic Systems</div>
+        <h3>AI Agent / Agentic Systems Engineer</h3>
+        <div class="role-salary">Remote US/EU: $130K–$200K · Growth: +136% YoY</div>
+        <p>Designs and deploys production multi-agent systems: tool-calling, memory, state machines, failure recovery. LangGraph is your entry point here.</p>
+        <div class="role-tags">
+          <span class="tag">LangGraph</span><span class="tag">MCP</span><span class="tag">Anthropic API</span><span class="tag">RAG</span><span class="tag">Redis</span>
+        </div>
+      </div>
+
+      <div class="role-card r-llm">
+        <div class="role-fit-tag">Applied ML · Infra</div>
+        <h3>MLOps / LLM Ops Engineer</h3>
+        <div class="role-salary">Remote US/EU: $130K–$200K · Demand up 85% YoY</div>
+        <p>CI/CD for model updates, A/B model routing, drift monitoring, automated evaluation pipelines. Complements your existing DevOps foundation.</p>
+        <div class="role-tags">
+          <span class="tag">MLflow</span><span class="tag">DVC</span><span class="tag">CI/CD</span><span class="tag">OTLP</span><span class="tag">Canary deploy</span>
+        </div>
+      </div>
+
+      <div class="role-card r-infra">
+        <div class="role-fit-tag">Cloud · Systems</div>
+        <h3>AI Infrastructure / GPU Cloud Engineer</h3>
+        <div class="role-salary">Remote US/EU: $150K–$250K · Very high ceiling</div>
+        <p>GPU cluster management, distributed training pipelines, custom CUDA kernels, network fabric for multi-node inference. Requires Go/CUDA depth.</p>
+        <div class="role-tags">
+          <span class="tag">CUDA</span><span class="tag">NCCL</span><span class="tag">Go</span><span class="tag">Infiniband</span><span class="tag">Ray</span>
+        </div>
+      </div>
+
+      <div class="role-card r-forward">
+        <div class="role-fit-tag">GTM · Technical</div>
+        <h3>Forward-Deployed AI Engineer</h3>
+        <div class="role-salary">Remote US/EU: $130K–$180K · Growing fast at startups</div>
+        <p>Embeds with enterprise clients to deploy AI systems into their stack. Requires strong communication + broad platform knowledge. Suits your AgentApply/MyJobs experience.</p>
+        <div class="role-tags">
+          <span class="tag">Client-facing</span><span class="tag">RAG</span><span class="tag">API integration</span><span class="tag">DevRel</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">Reality check — Pakistan remote market</div>
+      <p>690+ AI engineering roles currently listed on Glassdoor Pakistan. Active hiring on Indeed.pk for Senior AI Engineer (LLM Systems), AI Platform Engineer, Agentic AI roles. Typical Lahore/remote PKR rates for senior AI infra: PKR 250K–500K/mo locally; $60K–$120K/yr via Deel/Toptal for US/EU remote. Your stack is firmly in the upper band. Don't undersell.</p>
+    </div>
+  </div>
+
+  <!-- §5 SALARY BENCHMARKS -->
+  <div id="salary" class="salary-section">
+    <div class="section-header">
+      <span class="section-number">05</span>
+      <h2 class="section-title">Salary Benchmarks — 2026</h2>
+    </div>
+
+    <p style="font-size:13px; color:#a09880; margin-bottom:1.5rem; font-family: 'DM Mono', monospace;">US remote base salary (USD). Remote-international rates typically 60–80% of US rates. PKR conversions at 280 PKR/USD.</p>
+
+    <div class="salary-rows">
+      <div class="salary-row">
+        <div class="salary-role">
+          <div class="salary-role-name">LLM Fine-tuning Specialist</div>
+          <div class="salary-role-note">Highest absolute tier</div>
+        </div>
+        <div class="salary-bar-wrap">
+          <div class="salary-bar-track"><div class="salary-bar-fill" style="width:89%"></div></div>
+          <div class="salary-nums"><span>$120K</span><span class="hi">$280K</span></div>
+        </div>
+      </div>
+      <div class="salary-row">
+        <div class="salary-role">
+          <div class="salary-role-name">AI Infrastructure / GPU Engineer</div>
+          <div class="salary-role-note">Distributed training tier</div>
+        </div>
+        <div class="salary-bar-wrap">
+          <div class="salary-bar-track"><div class="salary-bar-fill" style="width:95%"></div></div>
+          <div class="salary-nums"><span>$150K</span><span class="hi">$300K</span></div>
+        </div>
+      </div>
+      <div class="salary-row">
+        <div class="salary-role">
+          <div class="salary-role-name">AI Agent / Agentic Systems Engineer</div>
+          <div class="salary-role-note">+136% YoY demand</div>
+        </div>
+        <div class="salary-bar-wrap">
+          <div class="salary-bar-track"><div class="salary-bar-fill" style="width:75%"></div></div>
+          <div class="salary-nums"><span>$130K</span><span class="hi">$240K</span></div>
+        </div>
+      </div>
+      <div class="salary-row">
+        <div class="salary-role">
+          <div class="salary-role-name">AI Platform / LLM Infra Engineer</div>
+          <div class="salary-role-note">← Your sweet spot now</div>
+        </div>
+        <div class="salary-bar-wrap">
+          <div class="salary-bar-track"><div class="salary-bar-fill" style="width:72%"></div></div>
+          <div class="salary-nums"><span>$120K</span><span class="hi">$200K</span></div>
+        </div>
+      </div>
+      <div class="salary-row">
+        <div class="salary-role">
+          <div class="salary-role-name">MLOps / LLM Ops Engineer</div>
+          <div class="salary-role-note">CI/CD + model lifecycle</div>
+        </div>
+        <div class="salary-bar-wrap">
+          <div class="salary-bar-track"><div class="salary-bar-fill" style="width:68%"></div></div>
+          <div class="salary-nums"><span>$120K</span><span class="hi">$200K</span></div>
+        </div>
+      </div>
+      <div class="salary-row">
+        <div class="salary-role">
+          <div class="salary-role-name">Forward-Deployed AI Engineer</div>
+          <div class="salary-role-note">Enterprise GTM</div>
+        </div>
+        <div class="salary-bar-wrap">
+          <div class="salary-bar-track"><div class="salary-bar-fill" style="width:60%"></div></div>
+          <div class="salary-nums"><span>$120K</span><span class="hi">$180K</span></div>
+        </div>
+      </div>
+      <div class="salary-row">
+        <div class="salary-role">
+          <div class="salary-role-name">Generic DevOps / SRE (no AI)</div>
+          <div class="salary-role-note">Being commoditised</div>
+        </div>
+        <div class="salary-bar-wrap">
+          <div class="salary-bar-track"><div class="salary-bar-fill dim" style="width:38%"></div></div>
+          <div class="salary-nums"><span>$90K</span><span style="color:#665f50">$140K</span></div>
+        </div>
+      </div>
+    </div>
+
+    <p style="font-size:11.5px; color:#665f50; margin-top:1rem; font-family:'DM Mono',monospace;">Sources: Second Talent (May 2026) · kore1.com AI Salary Guide · Levels.fyi · jobsbyculture.com · Glassdoor PK. PwC AI Jobs Barometer 2025 documents 56% wage premium for AI-skilled engineers.</p>
+  </div>
+
+  <!-- §6 ROADMAP -->
+  <div id="roadmap">
+    <div class="section-header">
+      <span class="section-number">06</span>
+      <h2 class="section-title">90-Day Execution Roadmap</h2>
+    </div>
+
+    <div class="timeline">
+
+      <div class="timeline-phase">
+        <div class="phase-dot active">1</div>
+        <div class="phase-label">Weeks 1–2 · Immediate</div>
+        <div class="phase-title">Monetise What You Already Have</div>
+        <div class="phase-body">You're underselling ServeLLM. Before building anything new, make what exists interview-proof.</div>
+        <ul class="phase-checklist">
+          <li><span class="ck"></span>Write a 1-page ServeLLM architecture doc: multi-tenant isolation model, RBAC tiers, PgBouncer pool config, SSE streaming design, 99.9% uptime mechanism.</li>
+          <li><span class="ck"></span>Push a public GitHub repo for ServeLLM with a proper README, architecture diagram, and benchmarks (throughput, p99 latency, cost-per-1K tokens).</li>
+          <li><span class="ck"></span>Update LinkedIn headline: <em>"AI Platform Infrastructure Engineer · Multi-tenant LLM Serving · vLLM · Kubernetes · FastAPI"</em></li>
+          <li><span class="ck"></span>Add 3 quantified bullet points to resume: "Reduced LLM inference cost X% via semantic caching", "Sustained 99.9% uptime across Y concurrent tenants", etc.</li>
+          <li><span class="ck"></span>Post a LinkedIn technical article about one hard problem in ServeLLM (e.g. PgBouncer + pgvector transaction mode gotchas). Signals practitioner depth.</li>
+        </ul>
+      </div>
+
+      <div class="timeline-phase">
+        <div class="phase-dot active">2</div>
+        <div class="phase-label">Weeks 3–6 · Near-term</div>
+        <div class="phase-title">Close the Agent Orchestration Gap</div>
+        <div class="phase-body">Agent roles are the fastest-growing category. Your LangGraph exposure is a head start — now build something production-grade.</div>
+        <ul class="phase-checklist">
+          <li><span class="ck"></span>Build a multi-agent system with at least 3 cooperative agents, tool-calling, persistent state (Redis or PostgreSQL), and retry/circuit-breaker logic.</li>
+          <li><span class="ck"></span>Deploy it on GKE with Kubernetes health checks, Prometheus metrics, and a Grafana dashboard. Public URL required.</li>
+          <li><span class="ck"></span>Add MCP (Model Context Protocol) server integration to demonstrate awareness of the emerging standard.</li>
+          <li><span class="ck"></span>Instrument OTLP traces through the full agent call chain. This becomes your "observability for agentic systems" interview talking point.</li>
+        </ul>
+      </div>
+
+      <div class="timeline-phase">
+        <div class="phase-dot active">3</div>
+        <div class="phase-label">Weeks 6–10 · Active</div>
+        <div class="phase-title">Add Fine-Tuning Evidence + Go Basics</div>
+        <div class="phase-body">Two gaps that unlock the next salary tier. Both are achievable on your existing 64GB RAM server.</div>
+        <ul class="phase-checklist">
+          <li><span class="ck"></span>Run a QLoRA fine-tune on Llama 3.1 8B using Unsloth on your local server. Target: domain-specific task (code completion, Arabic NER, or LLM-as-judge).</li>
+          <li><span class="ck"></span>Push fine-tuned adapter to HuggingFace Hub. Document training run: dataset, VRAM usage, eval metrics, inference speed delta.</li>
+          <li><span class="ck"></span>Write a Go HTTP reverse proxy that routes <code>/v1/chat/completions</code> to Ollama. Add per-tenant rate limiting. 200–300 lines is enough to claim Go experience.</li>
+          <li><span class="ck"></span>Add KEDA-based horizontal pod autoscaling to ServeLLM triggered by request queue depth (custom metrics via Prometheus adapter).</li>
+        </ul>
+      </div>
+
+      <div class="timeline-phase">
+        <div class="phase-dot future">4</div>
+        <div class="phase-label">Weeks 10–16 · Targeting</div>
+        <div class="phase-title">Apply to the Right Tier of Roles</div>
+        <div class="phase-body">With the portfolio above, you're competitive for $120K–$180K remote US/EU roles and PKR 350K–550K local senior roles.</div>
+        <ul class="phase-checklist">
+          <li><span class="ck"></span>Apply via: Toptal (AI/ML track), Turing.com, Deel-listed roles, YC-backed startup job boards (workatastartup.com), EU AI companies (Mistral, Cohere ecosystem).</li>
+          <li><span class="ck"></span>Target MENA: UAE AI companies (e.g. G42, Cerebras MENA partners), Saudi Arabia Vision 2030 tech stack projects.</li>
+          <li><span class="ck"></span>Filter job posts by: "LLM serving", "AI platform", "inference infrastructure", "multi-tenant", "agentic".</li>
+          <li><span class="ck"></span>Prepare your ServeLLM system design whiteboard: be ready to walk through architecture, trade-offs, and scaling decisions in 20 minutes.</li>
+        </ul>
+      </div>
+
+      <div class="timeline-phase">
+        <div class="phase-dot future">5</div>
+        <div class="phase-label">Month 6–18 · Long-term</div>
+        <div class="phase-title">Systems Depth — Go to Production AI Infra Tier</div>
+        <div class="phase-body">The highest-paying infra roles ($200K+) require distributed systems depth. This is the 12–18 month arc.</div>
+        <ul class="phase-checklist">
+          <li><span class="ck"></span>Go deep on GPU cluster orchestration: learn Ray Serve for distributed inference, study NCCL collective operations for model parallelism.</li>
+          <li><span class="ck"></span>Learn Rust by implementing a performance-critical component: a fast tokenizer, a custom metrics exporter, or an SSE streaming parser.</li>
+          <li><span class="ck"></span>Contribute to an open-source LLM infra project (vLLM, LiteLLM, Ollama) — even documentation/bug fixes build credibility.</li>
+          <li><span class="ck"></span>Build toward a public technical profile: 3–5 blog posts, 2–3 conference CFP submissions (CNCF KubeCon, MLOps World, local PyData Lahore).</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- §7 PORTFOLIO PROOF -->
+  <div id="portfolio">
+    <div class="section-header">
+      <span class="section-number">07</span>
+      <h2 class="section-title">Portfolio Proof Points — What to Show, What to Build</h2>
+    </div>
+
+    <p style="font-size:13.5px; color:var(--ink-dim); margin-bottom:1.2rem;">Hiring managers at AI-native companies want to see <em>deployed, documented evidence</em> — not bullet points. This is your current asset map.</p>
+
+    <div class="proof-grid">
+      <div class="proof-card">
+        <div class="proof-icon">🏗</div>
+        <h4>ServeLLM Platform</h4>
+        <p>Multi-tenant LLM serving with 5-tier RBAC, SSE streaming, PgBouncer, pgvector semantic cache, MinIO.</p>
+        <div class="proof-exists">✓ Exists — Needs GitHub + benchmark docs</div>
+      </div>
+      <div class="proof-card">
+        <div class="proof-icon">🤖</div>
+        <h4>AgentApply</h4>
+        <p>Agentic job application tool using Anthropic API with resume parsing, job discovery, cover letter generation.</p>
+        <div class="proof-exists">✓ Exists — Add reliability patterns, publish</div>
+      </div>
+      <div class="proof-card">
+        <div class="proof-icon">🔄</div>
+        <h4>Multi-Agent System</h4>
+        <p>Cooperative agents with tool-calling, state persistence, OTLP tracing, circuit breakers, K8s deploy.</p>
+        <div class="proof-todo">⚠ Build this — highest ROI gap project</div>
+      </div>
+      <div class="proof-card">
+        <div class="proof-icon">🎯</div>
+        <h4>QLoRA Fine-tune Run</h4>
+        <p>Domain-specific fine-tune of Llama 3.1 8B on local server. Adapter on HuggingFace, training metrics documented.</p>
+        <div class="proof-todo">⚠ Build this — unlocks fine-tuning roles</div>
+      </div>
+      <div class="proof-card">
+        <div class="proof-icon">🌐</div>
+        <h4>Go LLM Proxy</h4>
+        <p>Minimal Go reverse proxy for <code>/v1/chat/completions</code> with per-tenant rate limiting and request logging.</p>
+        <div class="proof-todo">⚠ Build this — signals systems breadth</div>
+      </div>
+      <div class="proof-card">
+        <div class="proof-icon">📊</div>
+        <h4>WireGuard Hybrid Cloud</h4>
+        <p>Self-hosted Ollama bridged to cloud via WireGuard VPN — a real hybrid inference architecture few engineers run.</p>
+        <div class="proof-exists">✓ Exists — Write it up as a blog post</div>
+      </div>
+      <div class="proof-card">
+        <div class="proof-icon">📝</div>
+        <h4>Technical Blog / Articles</h4>
+        <p>1–2 deep-dive posts on production LLM infra problems (PgBouncer gotchas, pgvector tuning, SSE at scale).</p>
+        <div class="proof-todo">⚠ Write 2 posts — signals communication</div>
+      </div>
+      <div class="proof-card">
+        <div class="proof-icon">🗄</div>
+        <h4>LangGraph Invoice Agent</h4>
+        <p>Production LangGraph agent with AWS Bedrock, MCP integration — demonstrates real agentic workflow ownership.</p>
+        <div class="proof-exists">✓ Exists — Add to portfolio with writeup</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §8 POSITIONING -->
+  <div id="positioning">
+    <div class="section-header">
+      <span class="section-number">08</span>
+      <h2 class="section-title">How to Position Yourself in Applications</h2>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">Your positioning statement</div>
+      <p><strong>Don't say</strong>: "DevOps engineer with AI experience." <strong>Say</strong>: "AI Platform Infrastructure Engineer specialising in production multi-tenant LLM serving, agentic system deployment, and hybrid cloud AI infrastructure — with a track record building systems that sustain 99.9% uptime at token scale."</p>
+    </div>
+
+    <div class="signal-list">
+      <div class="signal-item"><span class="si-num">01</span><span>Lead every application with ServeLLM as your proof point. It covers: multi-tenancy, RBAC, SSE, connection pooling, vector search, object storage, observability — a complete enterprise AI platform checklist.</span></div>
+      <div class="signal-item"><span class="si-num">02</span><span>Frame your hybrid cloud (WireGuard + Ollama + GKE) as a cost architecture story: "I run sub-$10/day LLM inference by self-hosting on bare metal bridged to cloud auto-scaling." That's FinOps thinking, which most AI infra engineers lack.</span></div>
+      <div class="signal-item"><span class="si-num">03</span><span>When asked about fine-tuning gaps: own it, then bridge it. "My strength is production serving infrastructure. I'm actively adding fine-tuning to my stack via QLoRA on local hardware — happy to walk through my current run."</span></div>
+      <div class="signal-item"><span class="si-num">04</span><span>For agent roles: LangGraph is your entry. Emphasise state management, failure recovery, and observability — not just prompt chaining. That's the senior differentiator.</span></div>
+      <div class="signal-item"><span class="si-num">05</span><span>For forward-deployed / startup roles: AgentApply + MyJobs shows you build AI-native products end-to-end, not just infrastructure. You can ship to users, not just to clusters.</span></div>
+      <div class="signal-item"><span class="si-num">06</span><span>Cite the BSc from Goldsmiths for international applications — UK degree signals academic rigour to EU/US hiring managers who may not know Pakistani universities.</span></div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="doc-footer">
+    <p>Prepared for Daud · TechPrysm · June 2026 · Research: Second Talent · Metaintro · Boundev · kore1.com · PwC AI Jobs Barometer</p>
+    <p>All salary figures are USD remote unless stated. PKR rates at 280 PKR/USD.</p>
+  </div>
+
+</div>
+</body>
+</html>
