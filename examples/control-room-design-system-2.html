@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Media Player — Revamp Plan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #0E0E10;
+            --surface: #16161A;
+            --elevated: #1F1F25;
+            --line: #2A2A31;
+            --paper: #E8E4D9;
+            --paper-dim: #A8A39A;
+            --muted: #6B6B73;
+            --signal: #D97757;
+            --signal-soft: rgba(217, 119, 87, 0.14);
+
+            --type-xs: 11px;
+            --type-sm: 12px;
+            --type-md: 13px;
+            --type-lg: 14px;
+            --type-xl: 16px;
+            --type-2xl: 20px;
+            --type-3xl: 28px;
+            --type-display: 44px;
+            --type-hero: 64px;
+
+            --font-display: 'Instrument Serif', Georgia, serif;
+            --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+
+            --r-sm: 4px;
+            --r-md: 8px;
+            --r-lg: 12px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            background: var(--ink);
+            color: var(--paper);
+            font-family: var(--font-body);
+            font-size: var(--type-md);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            min-height: 100vh;
+            padding: 28px 32px 60px;
+        }
+
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+        }
+
+        /* ── Top bar ────────────────────────────────────────────── */
+
+        .topbar {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--line);
+            margin-bottom: 36px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: baseline;
+            gap: 14px;
+        }
+
+        .brand-mark {
+            font-family: var(--font-mono);
+            font-size: var(--type-sm);
+            color: var(--signal);
+            letter-spacing: 0.04em;
+        }
+
+        .brand-name {
+            font-family: var(--font-display);
+            font-style: italic;
+            font-size: var(--type-2xl);
+            color: var(--paper);
+            line-height: 1;
+        }
+
+        .brand-sub {
+            font-family: var(--font-mono);
+            font-size: var(--type-xs);
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        .topbar-meta {
+            display: flex;
+            align-items: baseline;
+            gap: 18px;
+            font-family: var(--font-mono);
+            font-size: var(--type-xs);
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .topbar-meta .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--signal);
+            display: inline-block;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+        /* ── Hero ───────────────────────────────────────────────── */
+
+        .hero {
+            padding: 32px 0 40px;
+            border-bottom: 1px solid var(--line);
+            margin-bottom: 48px;
+        }
+
+        .hero-eyebrow {
+            font-family: var(--font-mono);
+            font-size: var(--type-xs);
+            color: var(--signal);
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            margin-bottom: 16px;
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-style: italic;
+            font-size: var(--type-hero);
+            line-height: 1.0;
+            color: var(--paper);
+            letter-spacing: -0.015em;
+            margin-bottom: 18px;
+        }
+
+        .hero-sub {
+            font-size: var(--type-xl);
+            color: var(--paper-dim);
+            max-width: 640px;
+            line-height: 1.5;
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 28px;
+            margin-top: 28px;
+            font-family: var(--font-mono);
+            font-size: var(--type-xs);
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .hero-meta .stat strong {
+            display: block;
+            font-family: var(--font-display);
+            font-style: italic;
+            font-size: var(--type-2xl);
+            color: var(--paper);
+            text-transform: none;
+            letter-spacing: -0.01em;
+            margin-bottom: 2px;
+        }
+
+        /* ── Plan-progress ribbon (signature carryover) ──────────── */
+
+        .plan-ribbon {
+            margin: 48px 0 8px;
+        }
+
+        .plan-ribbon-head {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .plan-ribbon-title {
+            font-family: var(--font-mono);
+            font-size: var(--type-xs);
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+        }
+
+        .plan-ribbon-count {
+            font-family: var(--font-mono);
+            font-size: var(--type-xs);
+            color: var(--muted);
+        }
+
+        .plan-ribbon-track {
+            position: relative;
+            display: flex;
+            height: 24px;
+            border: 1px solid var(--line);
+            border-radius: var(--r-sm);
+            overflow: hidden;
+            background: var(--surface);
+        }
+
+        .plan-ribbon-seg {
+            flex: 1;
+            position: relative;
+            border-right: 1px solid var(--ink);
+        }
+
+        .plan-ribbon-seg:last-child { border-right: none; }
+
+        .plan-ribbon-seg .seg-num {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            font-size: var(--type-xs);
+            color: var(--muted);
+        }
+
+        .plan-ribbon-seg.is-cut .seg-num {
+            color: var(--signal);
+        }
+
+        .plan-ribbon-seg.is-cut {
+            background: var(--signal-soft);
+        }
+
+        .plan-ribbon-legend {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+            font-family: var(--font-mono);
+            font-size: var(--type-xs);
+            color: var(--muted);
+        }
+
+        .plan-ribbon-legend .swatch {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            background: var(--signal-soft);
+            border: 1px solid var(--signal);
+        }
+
+        /* ── Section heading ───────────────────────────────────── */
+
+        .section {
+            margin-top: 64px;
+        }
+
+        .section-label {
+            display: flex;
+            align-items: baseline;
+            gap: 14px;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .section-label .num {
+            font-family: var(--font-mono);
+            font-size: var(--type-xs);
+            color: var(--signal);
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+        }
+
+        .section-label .label {
+            font-family: var(--font-display);
+            font-style: italic;
+            font-size: var(--type-2xl);
+            color: var(--paper);
+        }
+
+        /* ── Phase blocks ──────────────────────────────────────── */
+
+        .phases {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .phase {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--r-md);
+            overflow: hidden;
+        }
+
+        .phase-head {
+            display: grid;
+            grid-template-columns: 56px 1fr auto;
+            align-items: center;
+            gap: 18px;
+            padding: 18px 20px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .phase:hover .phase-head {
+            background: var(--elevated);
+        }
+
+        .phase-num {
+            font-family: var(--font-mono);
+            font-size: var(--type-md);
+            color: var(--muted);
+            letter-spacing: 0.04em;
+        }
+
+        .phase-title {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .phase-title .name {
+            font-size: var(--type-xl);
+            color: var(--paper);
+            font-weight: 500;
+        }
+
+        .phase-title .summary {
+            font-size: var(--type-sm);
+            color: var(--muted);
+        }
+
+        .phase-tag {
+            font-family: var(--font-mono);
+            font-size: var(--type-xs);
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 3px 8px;
+            border: 1px solid var(--line);
+            border-radius: var(--r-sm);
+        }
+
+        .phase[data-cut="true"] .phase-tag {
+            color: var(--signal);
+            border-color: var(--signal);
+        }
+
+        .phase-toggle {
+            font-family: var(--font-mono);
+            font-size: var(--type-md);
+            color: var(--muted);
+            transition: transform 0.2s ease;
+        }
+
+        .phase.is-open .phase-toggle {
+            transform: rotate(45deg);
+            color: var(--signal);
+        }
+
+        .phase-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .phase.is-open .phase-body {
+            max-height: 1000px;
+        }
+
+        .phase-body-inner {
+            padding: 4px 20px 22px 94px;
+            border-top: 1px solid var(--line);
+        }
+
+        .phase-body ul {
+            list-style: none;
+            margin-top: 14px;
+        }
+
+        .phase-body li {
+            position: relative;
+            padding: 8px 0 8px 18px;
+            font-size: var(--type-md);
+            color: var(--paper-dim);
+            line-height: 1.55;
+        }
+
+        .phase-body li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 16px;
+            width: 6px;
+            height: 1px;
+            background: var(--line);
+        }
+
+        .phase-body li strong {
+            color: var(--paper);
+            font-weight: 500;
+        }
+
+        .phase-body li code {
+            font-family: var(--font-mono);
+            font-size: var(--type-sm);
+            color: var(--paper);
+            background: var(--ink);
+            padding: 1px 5px;
+            border-radius: 3px;
+            border: 1px solid var(--line);
+        }
+
+        /* ── Recommended cut callout ───────────────────────────── */
+
+        .callout {
+            margin-top: 64px;
+            padding: 28px 28px 26px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-left: 2px solid var(--signal);
+            border-radius: var(--r-md);
+        }
+
+        .callout-label {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .callout-label .num {
+            font-family: var(--font-mono);
+            font-size: var(--type-xs);
+            color: var(--signal);
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+        }
+
+        .callout-label .label {
+            font-family: var(--font-display);
+            font-style: italic;
+            font-size: var(--type-2xl);
+            color: var(--paper);
+        }
+
+        .callout-intro {
+            color: var(--paper-dim);
+            font-size: var(--type-lg);
+            margin-bottom: 18px;
+        }
+
+        .callout-list {
+            list-style: none;
+            counter-reset: cut;
+        }
+
+        .callout-list li {
+            counter-increment: cut;
+            position: relative;
+            padding: 12px 0 12px 44px;
+            border-top: 1px solid var(--line);
+        }
+
+        .callout-list li:first-child { border-top: none; }
+
+        .callout-list li::before {
+            content: counter(cut, decimal-leading-zero);
+            position: absolute;
+            left: 0;
+            top: 12px;
+            font-family: var(--font-mono);
+            font-size: var(--type-sm);
+            color: var(--signal);
+        }
+
+        .callout-list .cut-title {
+            font-size: var(--type-lg);
+            color: var(--paper);
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .callout-list .cut-body {
+            font-size: var(--type-md);
+            color: var(--paper-dim);
+            line-height: 1.55;
+        }
+
+        .callout-list .cut-body code {
+            font-family: var(--font-mono);
+            font-size: var(--type-sm);
+            color: var(--paper);
+            background: var(--ink);
+            padding: 1px 5px;
+            border-radius: 3px;
+            border: 1px solid var(--line);
+        }
+
+        /* ── Open questions ────────────────────────────────────── */
+
+        .questions {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            margin-top: 20px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--r-md);
+        }
+
+        .question {
+            display: grid;
+            grid-template-columns: 48px 1fr auto;
+            align-items: center;
+            gap: 16px;
+            padding: 18px 22px;
+            border-top: 1px solid var(--line);
+        }
+
+        .question:first-child { border-top: none; }
+
+        .question .q-num {
+            font-family: var(--font-mono);
+            font-size: var(--type-sm);
+            color: var(--muted);
+        }
+
+        .question .q-text {
+            font-size: var(--type-lg);
+            color: var(--paper);
+        }
+
+        .question .q-tag {
+            font-family: var(--font-mono);
+            font-size: var(--type-xs);
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .questions-footer {
+            padding: 16px 22px;
+            font-size: var(--type-md);
+            color: var(--paper-dim);
+            border-top: 1px solid var(--line);
+            background: var(--ink);
+            border-radius: 0 0 var(--r-md) var(--r-md);
+        }
+
+        /* ── Footer ────────────────────────────────────────────── */
+
+        footer {
+            margin-top: 80px;
+            padding-top: 20px;
+            border-top: 1px solid var(--line);
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            font-family: var(--font-mono);
+            font-size: var(--type-xs);
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* ── Responsive ────────────────────────────────────────── */
+
+        @media (max-width: 720px) {
+            body { padding: 20px 18px 40px; }
+            .topbar { flex-direction: column; gap: 10px; align-items: flex-start; }
+            .hero-title { font-size: 44px; }
+            .hero-meta { flex-wrap: wrap; gap: 18px; }
+            .phase-head { grid-template-columns: 40px 1fr auto; gap: 12px; padding: 14px 16px; }
+            .phase-body-inner { padding: 4px 16px 20px 16px; }
+            .question { grid-template-columns: 32px 1fr; }
+            .question .q-tag { grid-column: 2; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Top bar -->
+        <div class="topbar">
+            <div class="brand">
+                <span class="brand-mark">▶</span>
+                <span class="brand-name">Local Media Player</span>
+                <span class="brand-sub">Revamp plan</span>
+            </div>
+            <div class="topbar-meta">
+                <span><span class="dot"></span>Draft</span>
+                <span>Single file · No build</span>
+            </div>
+        </div>
+
+        <!-- Hero -->
+        <section class="hero">
+            <div class="hero-eyebrow">Implementation plan · Ordered by impact</div>
+            <h1 class="hero-title">Eight phases to a player that survives a refresh.</h1>
+            <p class="hero-sub">Single-file app (<code>player-mute.html</code>, vanilla JS, no build). Each phase ships a working app — no half-broken intermediate states. Estimated effort: medium.</p>
+            <div class="hero-meta">
+                <div class="stat"><strong>8</strong>Phases</div>
+                <div class="stat"><strong>3</strong>Recommended cut</div>
+                <div class="stat"><strong>5</strong>Open questions</div>
+                <div class="stat"><strong>1</strong>Critical bug</div>
+            </div>
+        </section>
+
+        <!-- Plan ribbon (signature carryover) -->
+        <div class="plan-ribbon">
+            <div class="plan-ribbon-head">
+                <div class="plan-ribbon-title">Plan ribbon</div>
+                <div class="plan-ribbon-count">01 → 08 · recommended cut highlighted</div>
+            </div>
+            <div class="plan-ribbon-track">
+                <div class="plan-ribbon-seg is-cut" title="Phase 1 — recommended cut"><span class="seg-num">01</span></div>
+                <div class="plan-ribbon-seg" title="Phase 2 — partial cut"><span class="seg-num">02</span></div>
+                <div class="plan-ribbon-seg" title="Phase 3"><span class="seg-num">03</span></div>
+                <div class="plan-ribbon-seg is-cut" title="Phase 4 — partial cut"><span class="seg-num">04</span></div>
+                <div class="plan-ribbon-seg" title="Phase 5"><span class="seg-num">05</span></div>
+                <div class="plan-ribbon-seg" title="Phase 6"><span class="seg-num">06</span></div>
+                <div class="plan-ribbon-seg" title="Phase 7"><span class="seg-num">07</span></div>
+                <div class="plan-ribbon-seg is-cut" title="Phase 8 — recommended cut"><span class="seg-num">08</span></div>
+            </div>
+            <div class="plan-ribbon-legend">
+                <span class="swatch"></span>
+                <span>Recommended cut</span>
+            </div>
+        </div>
+
+        <!-- Phases -->
+        <section class="section">
+            <div class="section-label">
+                <span class="num">Phases</span>
+                <span class="label">The full plan, in order</span>
+            </div>
+
+            <div class="phases">
+                <article class="phase" data-cut="true">
+                    <div class="phase-head" onclick="togglePhase(this)">
+                        <div class="phase-num">01</div>
+                        <div class="phase-title">
+                            <div class="name">Persistence &amp; library</div>
+                            <div class="summary">Close the tab, keep the playlist. Resume from where you left off.</div>
+                        </div>
+                        <div class="phase-tag">Biggest QoL</div>
+                        <div class="phase-toggle">+</div>
+                    </div>
+                    <div class="phase-body">
+                        <div class="phase-body-inner">
+                            <p>The single biggest UX gap: closing the tab loses the entire playlist. Fix that first.</p>
+                            <ul>
+                                <li><strong>IndexedDB media library</strong> — store loaded files (or references + blob) so the playlist survives reloads. Use a small wrapper or the <code>idb</code> library via CDN.</li>
+                                <li><strong>Auto-save current state</strong> — debounced save of: <code>currentIndex</code>, <code>currentTime</code>, <code>playbackRate</code>, <code>volume</code>, <code>muted</code>, <code>isShuffle</code>.</li>
+                                <li><strong>Resume on load</strong> — on startup, restore the library, then seek to the saved time of the last-played file.</li>
+                                <li><strong>Clear library</strong> button + confirmation.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="phase">
+                    <div class="phase-head" onclick="togglePhase(this)">
+                        <div class="phase-num">02</div>
+                        <div class="phase-title">
+                            <div class="name">Playback polish</div>
+                            <div class="summary">Loop, volume keys, persistence. Round out the keyboard surface.</div>
+                        </div>
+                        <div class="phase-tag">Shortcuts</div>
+                        <div class="phase-toggle">+</div>
+                    </div>
+                    <div class="phase-body">
+                        <div class="phase-body-inner">
+                            <ul>
+                                <li><strong>Loop one / loop all</strong> — new <code>L</code> shortcut, button next to Shuffle.</li>
+                                <li><strong>Volume control</strong> — <code>↑</code>/<code>↓</code> keys (5% steps), visual volume bar.</li>
+                                <li><strong>Save volume/speed to localStorage</strong> — they're global preferences, not per-playlist.</li>
+                                <li><strong>Time display in shortcuts UI</strong> — surface current <code>currentTime / duration</code> somewhere subtle (footer of shortcut help).</li>
+                                <li><strong>Click-to-seek on the video</strong> — optional, depends on whether you want native video controls hidden.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="phase">
+                    <div class="phase-head" onclick="togglePhase(this)">
+                        <div class="phase-num">03</div>
+                        <div class="phase-title">
+                            <div class="name">Playlist &amp; search</div>
+                            <div class="summary">Sort, drag-reorder, auto-scroll. Make the queue feel like a queue.</div>
+                        </div>
+                        <div class="phase-tag">Queue UX</div>
+                        <div class="phase-toggle">+</div>
+                    </div>
+                    <div class="phase-body">
+                        <div class="phase-body-inner">
+                            <ul>
+                                <li><strong>Persistent sort</strong> — sort by name / date added / duration. Saved in localStorage.</li>
+                                <li><strong>Active-item auto-scroll</strong> — if you hit "Next" while the active row is off-screen, scroll it into view.</li>
+                                <li><strong>Drag-to-reorder</strong> — HTML5 DnD on playlist items.</li>
+                                <li><strong>Remove from playlist</strong> — small <code>✕</code> on hover, with optional "remove and revoke object URL" cleanup.</li>
+                                <li><strong>Group by type</strong> — collapse video / audio sections, optional toggle.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="phase" data-cut="true">
+                    <div class="phase-head" onclick="togglePhase(this)">
+                        <div class="phase-num">04</div>
+                        <div class="phase-title">
+                            <div class="name">Subtitles &amp; captions</div>
+                            <div class="summary">Sidecar .srt / .vtt files. Toggle with C.</div>
+                        </div>
+                        <div class="phase-tag">Captions</div>
+                        <div class="phase-toggle">+</div>
+                    </div>
+                    <div class="phase-body">
+                        <div class="phase-body-inner">
+                            <ul>
+                                <li><strong>Load <code>.srt</code> / <code>.vtt</code> file</strong> — paired to current video, or sidecar file (same basename).</li>
+                                <li><strong>Toggle subtitles</strong> — <code>C</code> shortcut.</li>
+                                <li><strong>Style controls</strong> — font size, color, background, position. Persist to localStorage.</li>
+                                <li><strong>Auto-detect sidecar</strong> — when a video is added, look for <code>&lt;name&gt;.vtt</code> in the same File batch.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="phase">
+                    <div class="phase-head" onclick="togglePhase(this)">
+                        <div class="phase-num">05</div>
+                        <div class="phase-title">
+                            <div class="name">Quality, speed &amp; chapters</div>
+                            <div class="summary">Speed presets, chapter overlay, sleep timer.</div>
+                        </div>
+                        <div class="phase-tag">Advanced</div>
+                        <div class="phase-toggle">+</div>
+                    </div>
+                    <div class="phase-body">
+                        <div class="phase-body-inner">
+                            <ul>
+                                <li><strong>Playback speed presets</strong> — 0.5x / 1x / 1.25x / 1.5x / 2x menu, plus the <code>[</code>/<code>]</code> fine adjust.</li>
+                                <li><strong>Speed persistence</strong> — per-file or global (your call; default global).</li>
+                                <li><strong>Chapter support</strong> — parse YouTube-style chapter comments or sidecar <code>.chapters</code> file, show as a timeline overlay.</li>
+                                <li><strong>Sleep timer</strong> — pause after N minutes. Useful for long playlists.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="phase">
+                    <div class="phase-head" onclick="togglePhase(this)">
+                        <div class="phase-num">06</div>
+                        <div class="phase-title">
+                            <div class="name">Visuals &amp; information</div>
+                            <div class="summary">Richer properties popup, theme toggle, custom background.</div>
+                        </div>
+                        <div class="phase-tag">Polish</div>
+                        <div class="phase-toggle">+</div>
+                    </div>
+                    <div class="phase-body">
+                        <div class="phase-body-inner">
+                            <ul>
+                                <li><strong>Media-properties popup upgrade</strong> — add: codec, bitrate (from <code>MediaSource</code>/<code>getVideoPlaybackQuality</code> where available), file size, last played timestamp.</li>
+                                <li><strong>Mini waveform / timeline preview</strong> for audio files using a <code>Web Worker</code> + <code>OfflineAudioContext</code>. Skip if you don't listen to audio here.</li>
+                                <li><strong>Theme toggle</strong> — dark (current) / light / system. Single CSS variable swap.</li>
+                                <li><strong>Custom background</strong> — user-supplied image for the page (saved as object URL in IndexedDB).</li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="phase">
+                    <div class="phase-head" onclick="togglePhase(this)">
+                        <div class="phase-num">07</div>
+                        <div class="phase-title">
+                            <div class="name">Power features</div>
+                            <div class="summary">Picture-in-picture, theater mode, cast, cheat sheet.</div>
+                        </div>
+                        <div class="phase-tag">Power user</div>
+                        <div class="phase-toggle">+</div>
+                    </div>
+                    <div class="phase-body">
+                        <div class="phase-body-inner">
+                            <ul>
+                                <li><strong>Picture-in-Picture</strong> — <code>I</code> shortcut, uses <code>video.requestPictureInPicture()</code>.</li>
+                                <li><strong>Theater mode</strong> — hides playlist, expands player. <code>T</code> shortcut.</li>
+                                <li><strong>Cast support</strong> — <code>Presentation API</code> (<code>presentation.requestShow()</code>) for Chrome → TV. Best-effort.</li>
+                                <li><strong>Keyboard cheat sheet</strong> — <code>?</code> toggles an in-app overlay listing all shortcuts (you already have it; just add a one-keystroke reveal).</li>
+                                <li><strong>Fullscreen-only shortcuts</strong> — keep the existing overlay; ensure it shows only in fullscreen and dismisses on Escape.</li>
+                                <li><strong>AirPlay / Cast buttons</strong> — detect support, show icons only when available.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="phase" data-cut="true">
+                    <div class="phase-head" onclick="togglePhase(this)">
+                        <div class="phase-num">08</div>
+                        <div class="phase-title">
+                            <div class="name">Reliability &amp; cleanup</div>
+                            <div class="summary">Fix the object-URL leak. Add error handling. Refactor if it hurts.</div>
+                        </div>
+                        <div class="phase-tag">Critical bug</div>
+                        <div class="phase-toggle">+</div>
+                    </div>
+                    <div class="phase-body">
+                        <div class="phase-body-inner">
+                            <ul>
+                                <li><strong>Object URL revocation</strong> — <code>URL.revokeObjectURL</code> is never called. Add a <code>URL.revoke(item.url)</code> in the playlist-remove path and on library clear. Currently a memory leak.</li>
+                                <li><strong>Media error handling</strong> — show a friendly error in the action popup when <code>video.error</code> is non-null; auto-skip to next on fatal decode errors.</li>
+                                <li><strong>Drag-drop visual feedback</strong> — highlight the page while a file is being dragged over it.</li>
+                                <li><strong>Tab visibility behavior</strong> — option to pause when tab is hidden (default off; users get annoyed when music stops).</li>
+                                <li><strong>Refactor</strong> — break <code>player-mute.html</code> into logical sections via comments / <code>&lt;script type="module"&gt;</code> extraction. Optional — only if the file is getting hard to navigate.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Recommended cut -->
+        <section class="callout">
+            <div class="callout-label">
+                <span class="num">Recommended cut</span>
+                <span class="label">If you only do three.</span>
+            </div>
+            <p class="callout-intro">The minimum set that gets you the largest quality-of-life jump without committing to the whole plan.</p>
+            <ol class="callout-list">
+                <li>
+                    <div class="cut-title">Phase 1 — persistence</div>
+                    <div class="cut-body">Biggest quality-of-life win. The single feature that makes the player feel "real" instead of a scratchpad.</div>
+                </li>
+                <li>
+                    <div class="cut-title">Phase 8 — object URL leak fix</div>
+                    <div class="cut-body">It's a real bug; cleanup is 10 lines. The only item in this list that's a defect, not a feature.</div>
+                </li>
+                <li>
+                    <div class="cut-title">Phase 2's volume keys + Phase 4's subtitle toggle</div>
+                    <div class="cut-body">They round out the shortcuts and the existing media properties popup. <code>↑</code>/<code>↓</code> for volume, <code>C</code> for captions.</div>
+                </li>
+            </ol>
+        </section>
+
+        <!-- Open questions -->
+        <section class="section">
+            <div class="section-label">
+                <span class="num">Open questions</span>
+                <span class="label">Worth a quick yes/no before starting</span>
+            </div>
+
+            <div class="questions">
+                <div class="question">
+                    <div class="q-num">Q1</div>
+                    <div class="q-text">Per-file playback speed, or one global speed?</div>
+                    <div class="q-tag">Phase 05</div>
+                </div>
+                <div class="question">
+                    <div class="q-num">Q2</div>
+                    <div class="q-text">Loop one behavior when you hit "Next" — override loop, or stay on the same file?</div>
+                    <div class="q-tag">Phase 02</div>
+                </div>
+                <div class="question">
+                    <div class="q-num">Q3</div>
+                    <div class="q-text">Light theme worth the CSS work, or keep dark-only?</div>
+                    <div class="q-tag">Phase 06</div>
+                </div>
+                <div class="question">
+                    <div class="q-num">Q4</div>
+                    <div class="q-text">Cast / AirPlay / PiP — which platforms do you actually use?</div>
+                    <div class="q-tag">Phase 07</div>
+                </div>
+                <div class="question">
+                    <div class="q-num">Q5</div>
+                    <div class="q-text">Subtitle file format — <code>.srt</code>, <code>.vtt</code>, or both?</div>
+                    <div class="q-tag">Phase 04</div>
+                </div>
+            </div>
+            <div class="questions-footer">Answer these and the relevant phase turns into a concrete implementation plan.</div>
+        </section>
+
+        <footer>
+            <span>Local Media Player · Revamp plan</span>
+            <span>End of document</span>
+        </footer>
+    </div>
+
+    <script>
+        function togglePhase(headEl) {
+            const phase = headEl.closest('.phase');
+            phase.classList.toggle('is-open');
+        }
+    </script>
+</body>
+</html>
