@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>M.2 NVMe eGPU - Complete Setup Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0f;--surface:#111118;--surface-2:#181820;--surface-3:#1e1e28;--border:rgba(255,255,255,0.06);--border-hover:rgba(255,255,255,0.12);--text:#e8e8ec;--text-secondary:#9a9aa8;--text-muted:#6b6b7a;--accent:#7c5cff;--accent-soft:rgba(124,92,255,0.12);--accent-2:#ff6b9d;--accent-3:#00d4aa;--accent-4:#ffb347;--accent-5:#5cadff;--danger:#ff4757;--success:#00d4aa;--warning:#ffb347;--info:#5cadff;--radius:14px;--radius-sm:8px;--radius-xs:6px;--shadow:0 8px 32px rgba(0,0,0,0.4);--font-sans:'Inter',system-ui,-apple-system,sans-serif;--font-mono:'JetBrains Mono',monospace;--transition:0.2s cubic-bezier(0.4,0,0.2,1)}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{font-family:var(--font-sans);background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;overflow-x:hidden}
+::selection{background:var(--accent-soft);color:var(--accent)}::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--surface-3);border-radius:3px}
+.app{max-width:1400px;margin:0 auto;padding:0 24px}
+.hero{position:relative;padding:80px 0 48px;text-align:center;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(124,92,255,0.08) 0%,transparent 70%);pointer-events:none;z-index:0}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:var(--accent-soft);border:1px solid rgba(124,92,255,0.2);border-radius:100px;font-size:12px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:24px;position:relative;z-index:1}
+.hero h1{font-size:clamp(2.2rem,5vw,3.8rem);font-weight:800;line-height:1.1;margin-bottom:16px;position:relative;z-index:1;background:linear-gradient(135deg,var(--text) 0%,var(--accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{font-size:1.15rem;color:var(--text-secondary);max-width:640px;margin:0 auto 32px;position:relative;z-index:1}
+.hero-meta{display:flex;flex-wrap:wrap;justify-content:center;gap:24px;position:relative;z-index:1}
+.hero-meta span{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-muted)}
+.hero-meta svg{width:14px;height:14px;color:var(--accent)}
+.tabs{position:sticky;top:0;z-index:100;background:linear-gradient(180deg,var(--bg) 60%,rgba(10,10,15,0.95));padding:16px 0 8px;margin-bottom:32px;border-bottom:1px solid var(--border)}
+.tabs-inner{display:flex;gap:4px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none}
+.tabs-inner::-webkit-scrollbar{display:none}
+.tab-btn{padding:10px 20px;border-radius:var(--radius-sm);border:none;background:transparent;color:var(--text-muted);font-family:var(--font-sans);font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;transition:var(--transition);position:relative}
+.tab-btn:hover{color:var(--text)}.tab-btn.active{background:var(--surface-2);color:var(--accent);box-shadow:0 0 0 1px rgba(124,92,255,0.15)}
+.tab-btn.active::after{content:'';position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);width:20px;height:2px;background:var(--accent);border-radius:1px}
+.tab-panel{display:none;animation:fadeIn .35s ease}.tab-panel.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.section{margin-bottom:48px}
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.section-header h2{font-size:1.5rem;font-weight:700}
+.section-header .icon{width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:var(--accent-soft);border-radius:var(--radius-xs);color:var(--accent);flex-shrink:0}
+.section-header .icon svg{width:18px;height:18px}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;transition:var(--transition);position:relative;overflow:hidden}
+.card:hover{border-color:var(--border-hover);transform:translateY(-2px);box-shadow:var(--shadow)}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0;transition:var(--transition)}
+.card:hover::before{opacity:.3}
+.card-accent{border-left:3px solid var(--accent)}.card-accent-2{border-left:3px solid var(--accent-2)}.card-accent-3{border-left:3px solid var(--accent-3)}.card-accent-4{border-left:3px solid var(--accent-4)}.card-accent-5{border-left:3px solid var(--accent-5)}
+.card h3{font-size:1.05rem;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.card h3 .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.card p,.card li{color:var(--text-secondary);font-size:14px;line-height:1.7}
+.card ul{padding-left:18px;margin-top:8px}.card li{margin-bottom:6px}
+.card .tag{display:inline-block;padding:3px 10px;background:var(--surface-2);border-radius:100px;font-size:11px;font-weight:500;color:var(--text-muted);margin-top:12px}
+.card .price{font-size:1.4rem;font-weight:700;color:var(--accent);margin-top:8px}
+.card .price span{font-size:13px;font-weight:400;color:var(--text-muted)}
+.spec-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px}
+.spec-row:last-child{border-bottom:none}.spec-row .label{color:var(--text-muted)}.spec-row .value{color:var(--text);font-weight:500;font-family:var(--font-mono);font-size:13px}
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+thead{background:var(--surface-2)}
+th{padding:14px 16px;text-align:left;font-weight:600;color:var(--text);font-size:13px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+td{padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text-secondary);vertical-align:top}
+tr:last-child td{border-bottom:none}tr:hover td{background:var(--surface-2)}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.badge-success{background:rgba(0,212,170,0.12);color:var(--success)}.badge-warning{background:rgba(255,179,71,0.12);color:var(--warning)}.badge-danger{background:rgba(255,71,87,0.12);color:var(--danger)}.badge-info{background:rgba(92,173,255,0.12);color:var(--info)}.badge-accent{background:var(--accent-soft);color:var(--accent)}
+.code-block{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px 20px;font-family:var(--font-mono);font-size:13px;color:var(--text-secondary);overflow-x:auto;line-height:1.8;margin:16px 0}
+.code-block .comment{color:var(--text-muted)}.code-block .ok{color:var(--success)}
+.step{position:relative;padding-left:48px;margin-bottom:28px}
+.step-num{position:absolute;left:0;top:0;width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:var(--accent-soft);border:1px solid rgba(124,92,255,0.2);border-radius:50%;font-weight:700;font-size:13px;color:var(--accent);font-family:var(--font-mono)}
+.step h4{font-size:1.05rem;font-weight:600;margin-bottom:8px}
+.step p{color:var(--text-secondary);font-size:14px;line-height:1.7}
+.step .tip{margin-top:10px;padding:10px 14px;background:rgba(0,212,170,0.06);border-left:2px solid var(--success);border-radius:0 var(--radius-xs) var(--radius-xs) 0;font-size:13px;color:var(--text-secondary)}
+.step .warn-tip{margin-top:10px;padding:10px 14px;background:rgba(255,71,87,0.06);border-left:2px solid var(--danger);border-radius:0 var(--radius-xs) var(--radius-xs) 0;font-size:13px;color:var(--text-secondary)}
+.connector-diagram{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;padding:32px;background:var(--surface-2);border-radius:var(--radius);margin:24px 0;border:1px solid var(--border)}
+.connector-box{text-align:center;padding:16px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);min-width:120px}
+.connector-box .label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.connector-box .name{font-size:14px;font-weight:600;color:var(--text)}
+.arrow{color:var(--accent);font-size:20px;font-weight:700}
+.bandwidth-bar{height:6px;background:var(--surface-3);border-radius:3px;overflow:hidden;margin-top:8px}
+.bandwidth-bar .fill{height:100%;border-radius:3px;transition:width 1s ease}
+.bandwidth-bar .fill.tb3{background:var(--accent-4);width:50%}.bandwidth-bar .fill.tb4{background:var(--accent-5);width:50%}
+.bandwidth-bar .fill.m2p3{background:var(--accent-2);width:50%}.bandwidth-bar .fill.m2p4{background:var(--accent);width:100%}
+.bandwidth-bar .fill.desktop{background:var(--success);width:100%}
+.performance-chart{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin:24px 0}
+.perf-card{padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);text-align:center}
+.perf-card .interface{font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.perf-card .speed{font-size:2rem;font-weight:800;color:var(--text);line-height:1}
+.perf-card .speed span{font-size:14px;font-weight:400;color:var(--text-muted)}
+.perf-card .loss{font-size:13px;color:var(--text-muted);margin-top:6px}
+.thinkpad-specs{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin:24px 0}
+.thinkpad-specs h3{font-size:1.1rem;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.thinkpad-specs h3 svg{width:18px;height:18px;color:var(--accent)}
+.footer{text-align:center;padding:48px 0 32px;color:var(--text-muted);font-size:13px;border-top:1px solid var(--border);margin-top:48px}
+.highlight-box{padding:20px 24px;background:linear-gradient(135deg,rgba(124,92,255,0.06),rgba(255,107,157,0.04));border:1px solid rgba(124,92,255,0.15);border-radius:var(--radius);margin:20px 0}
+.highlight-box h4{font-size:1rem;font-weight:600;margin-bottom:8px;color:var(--text)}
+.highlight-box p{font-size:14px;color:var(--text-secondary);line-height:1.7}
+.m2-key-visual{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;margin:24px 0}
+.key-card{padding:20px 24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);text-align:center;min-width:140px;flex:1;max-width:200px}
+.key-card .key-label{font-family:var(--font-mono);font-size:1.6rem;font-weight:800;color:var(--accent);margin-bottom:8px}
+.key-card .key-desc{font-size:13px;color:var(--text-secondary)}
+.key-card .key-lanes{font-size:12px;color:var(--text-muted);margin-top:6px}
+.key-card.not-ok{border-color:rgba(255,71,87,0.3)}.key-card.not-ok .key-label{color:var(--danger)}
+.key-card.ok{border-color:rgba(0,212,170,0.3)}.key-card.ok .key-label{color:var(--success)}
+.power-wiring{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:20px 0}
+.power-option{padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius)}
+.power-option h4{font-size:14px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.power-option h4 .icon{width:24px;height:24px;display:flex;align-items:center;justify-content:center;background:var(--accent-soft);border-radius:var(--radius-xs);color:var(--accent);font-size:12px}
+.power-option p{font-size:13px;color:var(--text-secondary);line-height:1.6}
+.power-option .wattage{font-family:var(--font-mono);font-size:1.2rem;font-weight:700;color:var(--text);margin-top:8px}
+.compatibility-matrix .row{display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid var(--border);font-size:14px}
+.compatibility-matrix .row:last-child{border-bottom:none}
+.compatibility-matrix .row .cpu{font-weight:600;color:var(--text);min-width:200px}
+.compatibility-matrix .row .status{margin-left:auto}
+.compatibility-matrix .row .note{color:var(--text-muted);font-size:13px;margin-left:16px}
+@media(max-width:768px){.hero{padding:48px 0 32px}.tabs{top:0;padding:12px 0 4px}.grid-2,.grid-3{grid-template-columns:1fr}.connector-diagram{flex-direction:column}.compatibility-matrix .row{flex-direction:column;align-items:flex-start;gap:6px}.compatibility-matrix .row .status{margin-left:0}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="hero">
+<div class="hero-badge">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+Complete Research Guide
+</div>
+<h1>M.2 NVMe eGPU Adapter</h1>
+<p>End-to-end setup guide for connecting an external GPU to your laptop via M.2 NVMe slot. Hardware, wiring, compatibility, performance, and everything you need to know.</p>
+<div class="hero-meta">
+<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg> ThinkPad T14 G1 Focus</span>
+<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> Updated 2026</span>
+<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg> DIY Build</span>
+</div>
+</header>
+
+<nav class="tabs">
+<div class="tabs-inner">
+<button class="tab-btn" onclick="switchTab(0)">Overview</button>
+<button class="tab-btn" onclick="switchTab(1)">Hardware</button>
+<button class="tab-btn" onclick="switchTab(2)">Wiring</button>
+<button class="tab-btn" onclick="switchTab(3)">ThinkPad T14</button>
+<button class="tab-btn" onclick="switchTab(4)">Compatibility</button>
+<button class="tab-btn" onclick="switchTab(5)">M.2 Slots</button>
+<button class="tab-btn" onclick="switchTab(6)">Performance</button>
+<button class="tab-btn" onclick="switchTab(7)">Troubleshoot</button>
+<button class="tab-btn" onclick="switchTab(8)">GPU Picks</button>
+</div>
+</nav>
+
+<div class="tab-content">
+
+<!-- TAB 0: Overview -->
+<div class="tab-panel" id="tab-0">
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></div>
+<h2>What is an M.2 NVMe eGPU?</h2>
+</div>
+<div class="highlight-box">
+<h4>The Core Concept</h4>
+<p>An M.2 NVMe slot on your laptop's motherboard carries 4 PCIe lanes directly from the CPU. These lanes are normally used for high-speed NVMe SSDs, but with the right adapter, they can be repurposed to connect a full desktop graphics card externally. This bypasses the protocol overhead of Thunderbolt and gives you a direct PCIe connection, the fastest possible eGPU link on a laptop.</p>
+</div>
+<div class="grid-2">
+<div class="card card-accent">
+<h3><span class="dot" style="background:var(--accent)"></span>How It Works</h3>
+<p>The M.2 slot exposes 4 PCIe lanes (x4) directly from the CPU. An adapter cable (like the ADT-Link R43SG) converts the M.2 connector into a standard PCIe x16 slot. You install a desktop GPU into this slot, power it with an external PSU, and connect the M.2 end into your laptop's internal M.2 slot after removing the SSD.</p>
+<span class="tag">Direct PCIe connection</span>
+</div>
+<div class="card card-accent-3">
+<h3><span class="dot" style="background:var(--accent-3)"></span>Why M.2 Over Thunderbolt?</h3>
+<p>Thunderbolt 3/4 introduces protocol encoding/decoding latency and is limited to ~32 Gbps effective bandwidth. M.2 NVMe gives you the full PCIe 3.0 x4 bandwidth (~32 Gbps) or PCIe 4.0 x4 (~64 Gbps) with zero protocol overhead. Real-world gaming shows M.2 eGPU can be 20-30% faster than Thunderbolt for the same GPU.</p>
+<span class="tag">Lower latency, higher bandwidth</span>
+</div>
+<div class="card card-accent-4">
+<h3><span class="dot" style="background:var(--accent-4)"></span>The Trade-Offs</h3>
+<ul>
+<li><strong>No hot-swap:</strong> You must power off the laptop to connect or disconnect</li>
+<li><strong>Internal access required:</strong> You need to open the laptop bottom cover</li>
+<li><strong>Storage sacrifice:</strong> You lose the M.2 slot for your boot SSD</li>
+<li><strong>BIOS compatibility:</strong> Some laptops whitelist or blacklist certain PCIe devices</li>
+</ul>
+<span class="tag">Know the compromises</span>
+</div>
+<div class="card card-accent-2">
+<h3><span class="dot" style="background:var(--accent-2)"></span>Bandwidth Comparison</h3>
+<div style="margin-top:12px">
+<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="color:var(--text-muted)">Thunderbolt 3</span><span style="color:var(--text-secondary)">~22 Gbps effective</span></div>
+<div class="bandwidth-bar"><div class="fill tb3"></div></div>
+</div>
+<div style="margin-top:10px">
+<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="color:var(--text-muted)">M.2 NVMe PCIe 3.0 x4</span><span style="color:var(--text-secondary)">~32 Gbps</span></div>
+<div class="bandwidth-bar"><div class="fill m2p3"></div></div>
+</div>
+<div style="margin-top:10px">
+<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="color:var(--text-muted)">M.2 NVMe PCIe 4.0 x4</span><span style="color:var(--text-secondary)">~64 Gbps</span></div>
+<div class="bandwidth-bar"><div class="fill m2p4"></div></div>
+</div>
+<div style="margin-top:10px">
+<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="color:var(--text-muted)">Desktop PCIe 4.0 x16</span><span style="color:var(--text-secondary)">~128 Gbps</span></div>
+<div class="bandwidth-bar"><div class="fill desktop"></div></div>
+</div>
+<span class="tag">PCIe 4.0 doubles the speed</span>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg></div>
+<h2>Connection Flow Diagram</h2>
+</div>
+<div class="connector-diagram">
+<div class="connector-box"><div class="label">Laptop</div><div class="name">M.2 NVMe Slot</div></div>
+<div class="arrow">&rarr;</div>
+<div class="connector-box"><div class="label">Adapter Cable</div><div class="name">ADT-Link R43SG</div></div>
+<div class="arrow">&rarr;</div>
+<div class="connector-box"><div class="label">PCIe Slot</div><div class="name">PCIe x16 Riser</div></div>
+<div class="arrow">&rarr;</div>
+<div class="connector-box"><div class="label">Graphics Card</div><div class="name">Desktop GPU</div></div>
+<div class="arrow">&rarr;</div>
+<div class="connector-box"><div class="label">Power</div><div class="name">ATX / SFX PSU</div></div>
+</div>
+<p style="text-align:center;color:var(--text-muted);font-size:13px;margin-top:12px">The M.2 slot carries PCIe data lanes directly. The adapter simply extends these lanes to a standard PCIe x16 connector. No protocol conversion happens, it is a direct electrical extension.</p>
+</div>
+
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
+<h2>Is This Right for You?</h2>
+</div>
+<div class="grid-3">
+<div class="card">
+<h3><span class="dot" style="background:var(--success)"></span>Ideal If You...</h3>
+<ul>
+<li>Have a laptop with a spare or secondary M.2 slot</li>
+<li>Want maximum eGPU performance without Thunderbolt overhead</li>
+<li>Are comfortable opening your laptop and doing DIY wiring</li>
+<li>Use your laptop at a desk 90% of the time</li>
+<li>Want to reuse the GPU in a desktop build later</li>
+</ul>
+</div>
+<div class="card">
+<h3><span class="dot" style="background:var(--danger)"></span>Not Ideal If You...</h3>
+<ul>
+<li>Need plug-and-play portability (no hot-swap with M.2)</li>
+<li>Only have one M.2 slot and no alternative boot storage</li>
+<li>Have a laptop with BIOS whitelisting that blocks non-SSD PCIe devices</li>
+<li>Want a clean, professional-looking setup (M.2 is inherently messy)</li>
+<li>Your laptop CPU is very weak (dual-core or old U-series)</li>
+</ul>
+</div>
+<div class="card">
+<h3><span class="dot" style="background:var(--warning)"></span>Consider Carefully If...</h3>
+<ul>
+<li>Your laptop only has one M.2 slot (you'll need USB boot)</li>
+<li>You have a 4-core CPU, you will hit CPU bottlenecks with high-end GPUs</li>
+<li>Your M.2 slot is only PCIe 3.0 x2 (insufficient bandwidth)</li>
+<li>You are on a tight budget, M.2 adapters are cheap but PSUs and GPUs aren't</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<!-- TAB 1: Hardware -->
+<div class="tab-panel" id="tab-1">
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></div>
+<h2>Required Hardware Components</h2>
+</div>
+<div class="grid-2">
+<div class="card card-accent">
+<h3><span class="dot" style="background:var(--accent)"></span>1. M.2 to PCIe Adapter</h3>
+<p>The core component that bridges your laptop's M.2 slot to a desktop GPU. The most popular and reliable option is the ADT-Link R43SG series.</p>
+<ul>
+<li><strong>ADT-Link R43SG:</strong> M.2 M-key to PCIe x16, PCIe 3.0 x4, 25cm or 50cm cable</li>
+<li><strong>ADT-Link R43SG-TU:</strong> Turn-up daughterboard version for tight spaces</li>
+<li><strong>ADT-Link K43SG:</strong> PCIe 5.0/4.0 x16 version for newer systems</li>
+</ul>
+<div class="price">$25 - $60 <span>USD</span></div>
+<span class="tag">AliExpress / eBay</span>
+</div>
+<div class="card card-accent-3">
+<h3><span class="dot" style="background:var(--accent-3)"></span>2. Desktop Graphics Card</h3>
+<p>Any standard desktop PCIe x16 graphics card works. Your choice should be guided by your laptop's CPU power and the M.2 slot's PCIe generation.</p>
+<ul>
+<li><strong>PCIe 3.0 x4 M.2:</strong> Best with mid-range cards (RTX 4060, RX 7600, RTX 3060)</li>
+<li><strong>PCIe 4.0 x4 M.2:</strong> Can handle high-end cards (RTX 4070, RX 7800 XT)</li>
+<li><strong>Avoid:</strong> RTX 4090 / RX 7900 XTX, 4 lanes bottleneck these heavily</li>
+</ul>
+<div class="price">$200 - $600 <span>USD (varies)</span></div>
+<span class="tag">Match to your CPU</span>
+</div>
+<div class="card card-accent-4">
+<h3><span class="dot" style="background:var(--accent-4)"></span>3. Power Supply Unit (PSU)</h3>
+<p>The GPU needs serious power, way more than the M.2 slot's ~15W can provide. You need an external PSU.</p>
+<ul>
+<li><strong>ATX PSU (500W+):</strong> Most flexible, powers GPU + adapter board</li>
+<li><strong>SFX PSU:</strong> Smaller form factor, good for compact setups</li>
+<li><strong>Dell DA-2 (220W):</strong> Compact brick-style PSU, popular for eGPU</li>
+</ul>
+<div class="price">$40 - $120 <span>USD</span></div>
+<span class="tag">Size for your GPU's TDP + 100W headroom</span>
+</div>
+<div class="card card-accent-2">
+<h3><span class="dot" style="background:var(--accent-2)"></span>4. Enclosure or Mount (Optional)</h3>
+<p>While you can run a bare GPU on a desk, an enclosure protects it and contains the PSU wiring.</p>
+<ul>
+<li><strong>Open-air test bench:</strong> Cheapest, best airflow, but exposed</li>
+<li><strong>3D-printed case:</strong> Custom fit for your specific GPU + PSU</li>
+<li><strong>PCIe riser stand:</strong> Simple vertical mount with screw holes</li>
+</ul>
+<div class="price">$0 - $150 <span>USD</span></div>
+<span class="tag">DIY or buy pre-made</span>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
+<h2>Additional Small Parts</h2>
+</div>
+<div class="grid-3">
+<div class="card">
+<h3>M.2 Extender / Riser</h3>
+<p>If your M.2 slot is buried under other components, a short M.2 extender cable lets you bring the connector to the laptop's edge. The ADT-Link R43SG includes this, but standalone 5cm-10cm extenders exist for tight fits.</p>
+<span class="tag">$5 - $15</span>
+</div>
+<div class="card">
+<h3>Power Splitters &amp; Adapters</h3>
+<p>Depending on your PSU choice, you may need 6-pin to 8-pin PCIe power adapter, dual 6-pin to single 8-pin splitter, Molex LP4 to 6-pin adapter, or SATA to Molex adapter.</p>
+<span class="tag">$3 - $10 each</span>
+</div>
+<div class="card">
+<h3>Alternative Boot Storage</h3>
+<p>Since you are sacrificing the M.2 slot, you need another way to boot: USB 3.0 SSD enclosure, SATA SSD (if your laptop has a 2.5in bay), second M.2 slot, or network boot (PXE).</p>
+<span class="tag">Plan before you start</span>
+</div>
+<div class="card">
+<h3>Thermal Pads / Paste</h3>
+<p>The ADT-Link board and M.2 connector can get warm under sustained load. Having thermal pads to stick on the M.2 adapter board and fresh thermal paste for the GPU ensures stable operation.</p>
+<span class="tag">$5 - $15</span>
+</div>
+<div class="card">
+<h3>Screws &amp; Standoffs</h3>
+<p>The R43SG comes with hexagonal copper pillars for mounting the GPU. You may need additional M3 screws depending on your GPU's mounting holes. A small M3 screw kit is invaluable.</p>
+<span class="tag">$5 - $10</span>
+</div>
+<div class="card">
+<h3>Multimeter</h3>
+<p>Essential for verifying power connections and troubleshooting. A cheap $10 multimeter lets you confirm 12V and ground are correctly wired before powering on expensive components.</p>
+<span class="tag">$10 - $25</span>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg></div>
+<h2>Complete Parts Checklist</h2>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Component</th><th>Recommended Model</th><th>Est. Price</th><th>Priority</th></tr></thead>
+<tbody>
+<tr><td>M.2 to PCIe Adapter</td><td>ADT-Link R43SG (25cm or 50cm)</td><td>$25 - $45</td><td><span class="badge badge-danger">Required</span></td></tr>
+<tr><td>Desktop GPU</td><td>RTX 4060 / RX 7600 / RTX 3060 Ti</td><td>$250 - $400</td><td><span class="badge badge-danger">Required</span></td></tr>
+<tr><td>Power Supply</td><td>Corsair CX550 / EVGA 500W / Dell DA-2</td><td>$45 - $100</td><td><span class="badge badge-danger">Required</span></td></tr>
+<tr><td>PCIe Power Cables</td><td>6-pin + 8-pin as needed by your GPU</td><td>$5 - $15</td><td><span class="badge badge-danger">Required</span></td></tr>
+<tr><td>Boot Storage (alt)</td><td>USB 3.0 SSD enclosure + SATA SSD</td><td>$20 - $50</td><td><span class="badge badge-warning">Conditional</span></td></tr>
+<tr><td>Enclosure / Mount</td><td>3D-printed case / Open test bench</td><td>$0 - $80</td><td><span class="badge badge-info">Optional</span></td></tr>
+<tr><td>M.2 Extender</td><td>5cm-10cm M.2 riser cable</td><td>$8 - $15</td><td><span class="badge badge-info">Optional</span></td></tr>
+<tr><td>Multimeter</td><td>Basic digital multimeter</td><td>$10 - $20</td><td><span class="badge badge-accent">Recommended</span></td></tr>
+<tr><td>Thermal Paste</td><td>Noctua NT-H2 / Arctic MX-4</td><td>$8 - $12</td><td><span class="badge badge-accent">Recommended</span></td></tr>
+</tbody>
+</table>
+</div>
+<p style="text-align:center;color:var(--text-muted);font-size:13px;margin-top:12px">Total estimated cost for a complete M.2 eGPU build: <strong style="color:var(--text)">$350 - $600</strong> (excluding the laptop)</p>
+</div>
+</div>
+
+<!-- TAB 2: Wiring -->
+<div class="tab-panel" id="tab-2">
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg></div>
+<h2>Power Wiring Guide</h2>
+</div>
+<div class="highlight-box">
+<h4>Critical Safety Note</h4>
+<p>Never power on the system without the GPU power cables connected. A GPU that tries to draw power from the PCIe slot alone can damage the adapter board and potentially your laptop's M.2 slot. Always connect all required PCIe power connectors to the GPU before applying power.</p>
+</div>
+<div class="power-wiring">
+<div class="power-option">
+<h4><span class="icon">1</span> ATX PSU Method (Recommended)</h4>
+<p>The most reliable and flexible approach. Connect the PSU's 24-pin ATX connector to the R43SG board's 24-pin input. Connect the 4-pin CPU power to the board's CPU input. Then connect the PCIe power cables (6-pin / 8-pin) directly from the PSU to the graphics card.</p>
+<div class="wattage">500W - 750W</div>
+<p style="font-size:12px;color:var(--text-muted);margin-top:4px">Best for: All GPU tiers, most stable</p>
+</div>
+<div class="power-option">
+<h4><span class="icon">2</span> Dell DA-2 Method (Compact)</h4>
+<p>The Dell DA-2 is a 220W external brick PSU with an 8-pin connector. Use a Y-splitter to power both the adapter board (via a custom 8-pin to Molex LP4 cable) and the GPU (via 8-pin to 6+2 pin PCIe). Popular in the eGPU community for its compact size.</p>
+<div class="wattage">220W</div>
+<p style="font-size:12px;color:var(--text-muted);margin-top:4px">Best for: Low-mid GPUs up to RTX 3060 / RX 6600</p>
+</div>
+<div class="power-option">
+<h4><span class="icon">3</span> Dual DA-2 Method</h4>
+<p>For GPUs needing more than 220W, run two Dell DA-2 units. One powers the adapter board and GPU's first power input. The second powers the GPU's second power input. Requires custom cable work but keeps the setup compact.</p>
+<div class="wattage">440W total</div>
+<p style="font-size:12px;color:var(--text-muted);margin-top:4px">Best for: RTX 3070 / RX 6700 XT range</p>
+</div>
+<div class="power-option">
+<h4><span class="icon">4</span> 12V Barrel Jack Method</h4>
+<p>Some eGPU adapter boards accept a 12V DC barrel jack input (5.5mm x 2.5mm). You can use a high-wattage 12V laptop-style power brick. The board then distributes 12V to the PCIe slot and you run separate PCIe power to the GPU.</p>
+<div class="wattage">150W - 330W</div>
+<p style="font-size:12px;color:var(--text-muted);margin-top:4px">Best for: Low-power GPUs, very compact builds</p>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="12" x2="23" y2="12"></line></svg></div>
+<h2>ADT-Link R43SG Switch Settings</h2>
+</div>
+<p style="color:var(--text-secondary);font-size:14px;margin-bottom:16px">The R43SG board has three switches and two jumpers that control power behavior and signal timing. For most setups, use these default settings:</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Switch / Jumper</th><th>Default Position</th><th>Function</th><th>When to Change</th></tr></thead>
+<tbody>
+<tr><td><strong>SW1</strong> - Power Start</td><td>Position 1 (Auto)</td><td>1 = Auto-start with system power<br>2 = Force PSU on (always powered)</td><td>Use Position 2 if auto-start fails or for sleep-resume GPU swap workaround</td></tr>
+<tr><td><strong>SW2</strong> - PERST# Delay</td><td>Position 1 (2.2s)</td><td>1 = 2.2 second delay<br>2 = 4.5 second delay</td><td>Change to Position 2 if GPU isn't detected during boot (gives BIOS more time)</td></tr>
+<tr><td><strong>SW3</strong> - CLKRUN# Delay</td><td>Position 1 (Closed)</td><td>1 = Delay closed<br>2 = 9 second delay</td><td>Leave at 1 unless specifically troubleshooting clock signal issues</td></tr>
+<tr><td><strong>J1</strong> - PERST# Jumper</td><td>SHORT (jumper cap on)</td><td>SHORT = Delay enabled<br>OPEN = Delay disabled</td><td>Remove jumper cap (OPEN) if you need to bypass PERST# delay entirely</td></tr>
+<tr><td><strong>J2</strong> - CLKRUN# Cap</td><td>Empty</td><td>Insert capacitor to adjust delay timing</td><td>For R&D only - leave empty</td></tr>
+</tbody>
+</table>
+</div>
+<div class="code-block">
+<span class="comment"># Quick reference for switch positions</span><br>
+SW1 = 1 <span class="ok">(auto power on - recommended)</span><br>
+SW2 = 1 <span class="ok">(2.2s PERST delay - recommended)</span><br>
+SW3 = 1 <span class="ok">(closed CLKRUN - recommended)</span><br>
+J1  = SHORT <span class="ok">(jumper cap on - recommended)</span><br>
+J2  = EMPTY <span class="ok">(leave empty)</span>
+</div>
+</div>
+
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>
+<h2>Step-by-Step Wiring</h2>
+</div>
+<div class="step">
+<div class="step-num">1</div>
+<h4>Prepare the GPU</h4>
+<p>Install the GPU into the R43SG's PCIe x16 slot. Use the included hexagonal copper pillars to support the GPU and prevent sag. Secure with screws through the GPU's mounting bracket holes. If reusing an old GPU, clean off old thermal paste and apply fresh paste.</p>
+</div>
+<div class="step">
+<div class="step-num">2</div>
+<h4>Connect PSU to Adapter Board</h4>
+<p>Connect the PSU's 24-pin ATX cable to the R43SG's 24-pin input. Connect the 4-pin CPU power cable to the R43SG's CPU power input. These power the PCIe slot itself (up to 75W) and the adapter board electronics.</p>
+<div class="tip">Tip: The R43SG board has two green LEDs that light up when power is correctly applied. No LEDs = check your connections.</div>
+</div>
+<div class="step">
+<div class="step-num">3</div>
+<h4>Connect GPU Power Cables</h4>
+<p>Connect the required PCIe power cables from the PSU directly to the graphics card. Most cards need one or two 6-pin or 8-pin connectors. High-end cards may need three. Never skip this step, the PCIe slot alone cannot power a desktop GPU.</p>
+<div class="warn-tip">Warning: An underpowered GPU will cause system crashes, artifacting, or permanent damage. Size your PSU at least 100W above the GPU's TDP.</div>
+</div>
+<div class="step">
+<div class="step-num">4</div>
+<h4>Connect M.2 Cable to Laptop</h4>
+<p>Power off the laptop completely (not sleep, not hibernate, full shutdown). Remove the bottom cover. Locate the M.2 slot. Remove the existing SSD if present. Carefully insert the R43SG's M.2 connector into the slot at a 30-degree angle, then press down and secure with the M.2 screw.</p>
+<div class="tip">Tip: Take a photo of the original SSD orientation before removing it. The notch (key) position must align correctly.</div>
+</div>
+<div class="step">
+<div class="step-num">5</div>
+<h4>Power On Sequence</h4>
+<p>With everything connected, power on the PSU first (if using auto-start, the GPU fans should spin when the laptop powers on). Then power on the laptop. The system should detect the new GPU in Device Manager. Install the latest drivers from NVIDIA or AMD.</p>
+<div class="tip">Tip: If the GPU isn't detected, try SW1=2 (force power on) and power the PSU before the laptop. Some systems need the GPU powered and ready before POST.</div>
+</div>
+<div class="step">
+<div class="step-num">6</div>
+<h4>Install Drivers &amp; Test</h4>
+<p>Download the latest GPU drivers directly from the manufacturer (NVIDIA GeForce Experience or AMD Adrenalin). Avoid Windows Update drivers for eGPU setups. Run a benchmark like 3DMark or Unigine Heaven to verify stability. Monitor temperatures with HWiNFO64.</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- TAB 3: ThinkPad T14 -->
+<div class="tab-panel" id="tab-3">
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg></div>
+<h2>ThinkPad T14 Gen 1 - Specific Setup</h2>
+</div>
+<div class="thinkpad-specs">
+<h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg> T14 Gen 1 Specifications</h3>
+<div class="spec-row"><span class="label">Intel Models</span><span class="value">10th Gen Core i5/i7 (4C/8T to 6C/12T)</span></div>
+<div class="spec-row"><span class="label">AMD Models</span><span class="value">Ryzen 3/5/7 PRO 4000U (4C/8T to 8C/16T)</span></div>
+<div class="spec-row"><span class="label">Storage Slot 1 (2280)</span><span class="value">PCIe 3.0 x4 NVMe - Boot drive</span></div>
+<div class="spec-row"><span class="label">Storage Slot 2 (2242)</span><span class="value">PCIe 3.0 x2 NVMe - WWAN slot (Intel only)</span></div>
+<div class="spec-row"><span class="label">Intel Thunderbolt</span><span class="value">1x TB3 port (40 Gbps) - Alternative eGPU path</span></div>
+<div class="spec-row"><span class="label">AMD USB-C</span><span class="value">2x USB-C 3.2 Gen 2 - No Thunderbolt</span></div>
+<div class="spec-row"><span class="label">RAM</span><span class="value">8GB/16GB soldered + 1x SO-DIMM slot</span></div>
+<div class="spec-row"><span class="label">Max RAM</span><span class="value">40GB (Intel 8GB) / 48GB (Intel 16GB) / 32GB (AMD)</span></div>
+</div>
+<div class="highlight-box">
+<h4>Critical T14 Gen 1 Limitation</h4>
+<p>The ThinkPad T14 Gen 1 has <strong>only one M.2 2280 slot</strong> for storage (PCIe 3.0 x4). The second M.2 2242 slot (PCIe 3.0 x2) is only present on Intel models and is typically occupied by the WWAN card or is empty. <strong>Using the 2280 slot for eGPU means you lose your boot drive.</strong> You must have an alternative boot method before starting.</p>
+</div>
+</div>
+
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></div>
+<h2>T14 Gen 1 Setup Pathways</h2>
+</div>
+<div class="grid-2">
+<div class="card card-accent">
+<h3><span class="dot" style="background:var(--accent)"></span>Path A: M.2 2280 Slot (PCIe 3.0 x4)</h3>
+<p><strong>Best performance</strong> but requires sacrificing the boot SSD.</p>
+<ul>
+<li>Remove the existing M.2 2280 NVMe SSD</li>
+<li>Install the ADT-Link R43SG M.2 connector</li>
+<li>Boot from <strong>USB 3.0 SSD enclosure</strong> or <strong>SATA SSD</strong></li>
+<li>Full PCIe 3.0 x4 bandwidth (~32 Gbps)</li>
+</ul>
+<span class="tag">Maximum eGPU bandwidth</span>
+</div>
+<div class="card card-accent-4">
+<h3><span class="dot" style="background:var(--accent-4)"></span>Path B: M.2 2242 Slot (PCIe 3.0 x2)</h3>
+<p><strong>Lower bandwidth</strong> but preserves the boot drive. Intel models only.</p>
+<ul>
+<li>Remove the WWAN card (if installed) from the 2242 slot</li>
+<li>Install a shorter M.2 2242 to PCIe adapter</li>
+<li>Keep your 2280 boot SSD intact</li>
+<li>Only PCIe 3.0 x2 bandwidth (~16 Gbps) - significant bottleneck</li>
+</ul>
+<span class="tag">Not recommended for gaming</span>
+</div>
+<div class="card card-accent-3">
+<h3><span class="dot" style="background:var(--accent-3)"></span>Path C: Thunderbolt 3 (Intel Only)</h3>
+<p><strong>Easiest and most practical</strong> for T14 Intel models. No internal modifications needed.</p>
+<ul>
+<li>Use a Thunderbolt 3 eGPU enclosure (Razer Core X, etc.)</li>
+<li>Plug-and-play with hot-swap support</li>
+<li>~22 Gbps effective bandwidth (less than M.2 x4)</li>
+<li>No storage sacrifice, no laptop disassembly</li>
+</ul>
+<span class="tag">Recommended for T14 Intel</span>
+</div>
+<div class="card card-accent-2">
+<h3><span class="dot" style="background:var(--accent-2)"></span>Path D: AMD Models - M.2 Only</h3>
+<p>AMD T14 Gen 1 models <strong>lack Thunderbolt entirely</strong>. M.2 is your only eGPU option.</p>
+<ul>
+<li>Must use the 2280 slot (x4) or 2242 slot (x2) if present</li>
+<li>Boot from USB SSD is mandatory for 2280 path</li>
+<li>Consider whether the CPU (4C/8T to 8C/16T) can feed your chosen GPU</li>
+</ul>
+<span class="tag">AMD = M.2 or nothing</span>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></div>
+<h2>Real-World T14 Gen 1 eGPU Builds</h2>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Build</th><th>CPU</th><th>GPU</th><th>Connection</th><th>Result</th></tr></thead>
+<tbody>
+<tr><td>T14 G1 Intel + RX 6750 XT</td><td>i5-10310U (4C/8T)</td><td>RX 6750 XT 12GB</td><td>Thunderbolt 3 (Razer Core X)</td><td><span class="badge badge-success">Working well</span> AMD cards perform better than NVIDIA on this CPU. ~30-50 FPS in RDR2 at medium settings. CPU bottleneck at 99% on medium, GPU at 50%.</td></tr>
+<tr><td>T14 G1 Intel + RTX 4070</td><td>i5-10310U (4C/8T)</td><td>RTX 4070 12GB</td><td>Thunderbolt 3 (Razer Core X)</td><td><span class="badge badge-warning">Poor performance</span> Only ~15 FPS in RDR2. RTX cards suffer more from the 16 Gbps TB3 bottleneck + 4-core CPU limit. Not recommended.</td></tr>
+<tr><td>T14 G1 Intel + RTX 4060 Ti</td><td>i5-10310U (4C/8T)</td><td>RTX 4060 Ti 8GB</td><td>Thunderbolt 3</td><td><span class="badge badge-warning">Suboptimal</span> Better than RTX 4070 but still CPU-bound. RX 6750 XT outperforms it at the same price point on this system.</td></tr>
+<tr><td>T14 G1 AMD + M.2 eGPU</td><td>R5 PRO 4650U (6C/12T)</td><td>RTX 3060 / RX 6600</td><td>M.2 2280 PCIe 3.0 x4</td><td><span class="badge badge-info">Theoretical</span> No documented builds found. The 6-core AMD CPU should handle mid-range GPUs better than the 4-core Intel. M.2 x4 would eliminate TB3 overhead.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="highlight-box" style="margin-top:20px">
+<h4>Key Insight from Community Builds</h4>
+<p>On the ThinkPad T14 Gen 1 with 4-core Intel U-series CPUs, <strong>AMD Radeon cards consistently outperform NVIDIA GeForce cards</strong> when connected via Thunderbolt 3. The RX 6750 XT delivered roughly double the frame rates of an RTX 4070 in Red Dead Redemption 2. This is attributed to better driver optimization for lower PCIe bandwidth and less CPU overhead from AMD's driver stack. If using M.2 eGPU on the T14, an RX 7600 or RX 6750 XT is strongly recommended over any RTX card.</p>
+</div>
+</div>
+
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"></path><circle cx="12" cy="12" r="10"></circle></svg></div>
+<h2>T14 Gen 1 - Step-by-Step M.2 Setup</h2>
+</div>
+<div class="step">
+<div class="step-num">1</div>
+<h4>Prepare Alternative Boot Storage</h4>
+<p>Before touching the internal M.2 slot, set up your new boot drive. The easiest method is a <strong>USB 3.0 SSD enclosure</strong> with a SATA or NVMe SSD inside. Install Windows onto this drive using the Windows Media Creation Tool. Verify it boots correctly from USB before proceeding.</p>
+<div class="tip">Tip: USB 3.0 boot is slower than internal NVMe but perfectly usable for gaming. A good enclosure (ORICO, Sabrent) with an SSD gives ~400 MB/s sequential read.</div>
+</div>
+<div class="step">
+<div class="step-num">2</div>
+<h4>Back Up Your Data</h4>
+<p>Clone your existing M.2 2280 SSD to the USB drive using Macrium Reflect or similar. Ensure all your files, programs, and Windows activation are preserved. The original SSD will be removed and cannot be used simultaneously with the eGPU.</p>
+</div>
+<div class="step">
+<div class="step-num">3</div>
+<h4>Open the T14 Bottom Cover</h4>
+<p>Power off and unplug. Remove the 7 Phillips-head screws from the bottom cover. The screws are captive (they stay in the cover). Gently pry the cover starting from the hinge area using a plastic spudger. The cover clips into place, work around the edges carefully.</p>
+<div class="warn-tip">Warning: The T14 has fragile plastic clips. Apply even pressure and don't force any corner. A broken clip won't affect function but is annoying.</div>
+</div>
+<div class="step">
+<div class="step-num">4</div>
+<h4>Locate and Access the M.2 2280 Slot</h4>
+<p>The M.2 2280 SSD is typically on the right side of the motherboard (when viewed from the bottom). It's held by a single M2x3 screw. Remove the screw, gently pull the SSD up at a 30-degree angle, and slide it out. Store it safely, you may want to swap back later.</p>
+</div>
+<div class="step">
+<div class="step-num">5</div>
+<h4>Install the R43SG M.2 Connector</h4>
+<p>Insert the R43SG's M.2 connector into the 2280 slot at a 30-degree angle. The M-key notch should align perfectly. Press down gently and secure with the M.2 screw. Route the flat cable out through the bottom cover gap or a modified vent opening. Close the bottom cover.</p>
+<div class="tip">Tip: Some users drill a small slot in the bottom cover for the cable. Others leave a corner unclipped. A 3D-printed cable grommet looks professional if you have access to a printer.</div>
+</div>
+<div class="step">
+<div class="step-num">6</div>
+<h4>Connect GPU and Power</h4>
+<p>Install your GPU into the R43SG's PCIe slot. Connect the PSU's 24-pin and 4-pin CPU cables to the R43SG board. Connect PCIe power cables from the PSU to the GPU. Set SW1=1, SW2=1, SW3=1, J1=SHORT. Double-check all connections with a multimeter.</p>
+</div>
+<div class="step">
+<div class="step-num">7</div>
+<h4>First Boot &amp; Detection</h4>
+<p>Plug in your USB boot drive. Power on the PSU first (if using SW1=2), then power on the laptop. Enter BIOS (F1 during boot) and verify the USB drive is the first boot device. Windows should load. Check Device Manager for the GPU under Display Adapters.</p>
+<div class="tip">Tip: If the GPU doesn't appear, try SW1=2 (force power on) and power the PSU before the laptop. Some T14 BIOS versions need the GPU to be powered and initialized before POST completes.</div>
+</div>
+<div class="step">
+<div class="step-num">8</div>
+<h4>Driver Installation</h4>
+<p>Download the latest drivers from AMD or NVIDIA. For AMD: use the auto-detect tool or manually select your card model. For NVIDIA: download the Game Ready driver. Install, reboot, and verify in Device Manager that the GPU shows no error codes. Run 3DMark or a game to test.</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- TAB 4: Laptop Compatibility -->
+<div class="tab-panel" id="tab-4">
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg></div>
+<h2>What Laptops Can Use M.2 eGPU?</h2>
+</div>
+<div class="highlight-box">
+<h4>The Two Requirements</h4>
+<p>For an M.2 eGPU to work, your laptop needs: (1) an <strong>M.2 slot with PCIe lanes</strong> (not SATA-only), and (2) a <strong>BIOS/UEFI that doesn't blacklist non-SSD PCIe devices</strong> on that slot. Most modern laptops have PCIe M.2 slots, but BIOS whitelisting is the silent killer that prevents detection.</p>
+</div>
+<div class="grid-2">
+<div class="card card-accent">
+<h3><span class="dot" style="background:var(--accent)"></span>Requirement 1: M.2 PCIe Slot</h3>
+<p>Your laptop must have an M.2 slot that carries PCIe lanes. This is usually the storage slot, but some laptops also have M.2 WiFi slots (Key A/E) that carry PCIe x1 or x2.</p>
+<ul>
+<li><strong>M.2 2280/2242 (Key M):</strong> Storage slots - PCIe x4, best option</li>
+<li><strong>M.2 2230 (Key A/E):</strong> WiFi slots - PCIe x1/x2, limited bandwidth</li>
+<li><strong>M.2 2242 (Key B):</strong> WWAN slots - often PCIe x2 or SATA</li>
+</ul>
+<span class="tag">Check your service manual</span>
+</div>
+<div class="card card-accent-3">
+<h3><span class="dot" style="background:var(--accent-3)"></span>Requirement 2: BIOS Compatibility</h3>
+<p>This is the make-or-break factor. Some laptop BIOSes whitelist allowed device IDs on M.2 slots, rejecting anything that isn't a known SSD.</p>
+<ul>
+<li><strong>Good:</strong> Dell XPS, Lenovo ThinkPad (most), HP ZBook, Clevo, many gaming laptops</li>
+<li><strong>Bad:</strong> Some HP Pavilion, Acer Aspire (budget lines), Surface devices</li>
+<li><strong>Unknown:</strong> Test with a cheap PCIe device (like a USB card) before buying a GPU</li>
+</ul>
+<span class="tag">Community lists help</span>
+</div>
+<div class="card card-accent-4">
+<h3><span class="dot" style="background:var(--accent-4)"></span>Requirement 3: Spare or Secondary Slot</h3>
+<p>You need a slot you can sacrifice. Laptops with only one M.2 slot require you to boot from USB or SATA, which is less convenient.</p>
+<ul>
+<li><strong>Ideal:</strong> Dual M.2 slots - use one for eGPU, one for boot SSD</li>
+<li><strong>Acceptable:</strong> One M.2 + 2.5in SATA bay - move boot to SATA</li>
+<li><strong>Workable:</strong> One M.2 only - boot from USB 3.0 SSD enclosure</li>
+<li><strong>Difficult:</strong> One M.2, no SATA, soldered storage - not viable</li>
+</ul>
+<span class="tag">Plan your storage</span>
+</div>
+<div class="card card-accent-2">
+<h3><span class="dot" style="background:var(--accent-2)"></span>Requirement 4: CPU Power</h3>
+<p>Even with a perfect M.2 connection, a weak CPU will bottleneck high-end GPUs. The CPU generates the frames the GPU renders.</p>
+<ul>
+<li><strong>2-core CPUs:</strong> Only viable with very low-end GPUs (GTX 1650, RX 6400)</li>
+<li><strong>4-core CPUs:</strong> Good up to RTX 4060 / RX 7600 range</li>
+<li><strong>6-core CPUs:</strong> Can handle RTX 4070 / RX 7800 XT</li>
+<li><strong>8-core+ CPUs:</strong> Justified for high-end cards, but 4-lane M.2 still limits</li>
+</ul>
+<span class="tag">Match GPU to CPU</span>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg></div>
+<h2>Laptop Compatibility Matrix</h2>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Laptop Category</th><th>M.2 eGPU Viability</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td><strong>Business / Enterprise</strong><br>ThinkPad T/X/P, Dell Latitude, HP EliteBook</td><td><span class="badge badge-success">High</span></td><td>Generally good BIOS compatibility. ThinkPad T14 has one 2280 slot (x4) and optional 2242 (x2). Thunderbolt 3 on Intel models is an easier alternative.</td></tr>
+<tr><td><strong>Gaming Laptops</strong><br>ASUS ROG, MSI, Alienware, Razer</td><td><span class="badge badge-success">High</span></td><td>Usually dual M.2 slots, no BIOS whitelisting. Often have Thunderbolt as well. Best candidates for M.2 eGPU.</td></tr>
+<tr><td><strong>Ultrabooks</strong><br>MacBook, XPS 13, Surface, ZenBook</td><td><span class="badge badge-warning">Mixed</span></td><td>Surface devices often have soldered storage + no spare M.2. MacBooks lack PCIe M.2 slots entirely. XPS 13 has one M.2 only - viable with USB boot.</td></tr>
+<tr><td><strong>Budget Consumer</strong><br>HP Pavilion, Acer Aspire, Lenovo IdeaPad</td><td><span class="badge badge-warning">Mixed</span></td><td>Some have BIOS whitelisting that blocks non-SSD devices. Check community reports before buying. Often only one M.2 slot.</td></tr>
+<tr><td><strong>Workstation</strong><br>HP ZBook, Dell Precision, Lenovo P-series</td><td><span class="badge badge-success">High</span></td><td>Excellent candidates. Usually dual M.2 slots, no whitelisting, powerful CPUs. Often have Thunderbolt too.</td></tr>
+<tr><td><strong>Chromebooks</strong></td><td><span class="badge badge-danger">Low</span></td><td>Most lack PCIe M.2 slots (use eMMC or SATA). BIOS typically locked down. Not recommended for eGPU.</td></tr>
+<tr><td><strong>Older Laptops (2015-2018)</strong></td><td><span class="badge badge-warning">Mixed</span></td><td>May have M.2 SATA-only slots (no PCIe). Check slot key type and PCIe lane availability. BIOS may be too old for modern GPUs.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></div>
+<h2>CPU Bottleneck Analysis</h2>
+</div>
+<div class="highlight-box">
+<h4>Why CPU Matters for eGPU</h4>
+<p>In a desktop, the GPU does the rendering and the CPU feeds it data. In an eGPU setup over 4 PCIe lanes, this relationship becomes even more critical. A weak CPU cannot generate frames fast enough to saturate even a mid-range GPU. Additionally, the CPU handles all the data transfer overhead for textures, geometry, and draw calls across the limited PCIe link.</p>
+</div>
+<div class="compatibility-matrix">
+<div class="row">
+<div class="cpu">Dual-core (2C/4T)<br><span style="color:var(--text-muted);font-size:12px">e.g., Core i3-10110U, Celeron N5100</span></div>
+<div class="note">Severe bottleneck. Only viable with GTX 1650 / RX 6400 class cards. Gaming at 720p low settings.</div>
+<div class="status"><span class="badge badge-danger">Poor</span></div>
+</div>
+<div class="row">
+<div class="cpu">Quad-core (4C/8T)<br><span style="color:var(--text-muted);font-size:12px">e.g., i5-10210U, i5-1135G7, R5 4500U</span></div>
+<div class="note">Moderate bottleneck. Good match for RTX 3060 / RX 6600 / RTX 4060. CPU will be at 90-100% in demanding games.</div>
+<div class="status"><span class="badge badge-warning">Fair</span></div>
+</div>
+<div class="row">
+<div class="cpu">Hexa-core (6C/12T)<br><span style="color:var(--text-muted);font-size:12px">e.g., i7-10710U, i5-1240P, R5 5600U</span></div>
+<div class="note">Minimal bottleneck. Can handle RTX 4070 / RX 7800 XT. Good balance for most eGPU builds.</div>
+<div class="status"><span class="badge badge-success">Good</span></div>
+</div>
+<div class="row">
+<div class="cpu">Octa-core (8C/16T)<br><span style="color:var(--text-muted);font-size:12px">e.g., i7-11800H, R7 5800H, i7-12700H</span></div>
+<div class="note">Excellent. Can feed high-end GPUs. The 4-lane M.2 bandwidth becomes the limiting factor before the CPU does.</div>
+<div class="status"><span class="badge badge-success">Excellent</span></div>
+</div>
+<div class="row">
+<div class="cpu">12+ cores (H/X series)<br><span style="color:var(--text-muted);font-size:12px">e.g., i9-12900HX, R9 7945HX</span></div>
+<div class="note">Overkill for eGPU. The PCIe x4 link is the bottleneck. Consider Thunderbolt 4 or OCuLink for better bandwidth utilization.</div>
+<div class="status"><span class="badge badge-info">Overkill</span></div>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
+<h2>How to Check Your Laptop Before Buying</h2>
+</div>
+<div class="grid-2">
+<div class="card card-accent">
+<h3><span class="dot" style="background:var(--accent)"></span>Step 1: Check M.2 Slot Specs</h3>
+<p>Download your laptop's service manual (usually a PDF from the manufacturer's support site). Look for the storage section. You need to confirm:</p>
+<ul>
+<li>Does it have an M.2 slot? (2280, 2242, or 2230)</li>
+<li>What key type? (M-key for storage, A/E-key for WiFi)</li>
+<li>How many PCIe lanes? (x4, x2, or x1)</li>
+<li>What PCIe generation? (3.0 or 4.0)</li>
+<li>Is it SATA-only or PCIe-capable?</li>
+</ul>
+<span class="tag">Service manual is your friend</span>
+</div>
+<div class="card card-accent-3">
+<h3><span class="dot" style="background:var(--accent-3)"></span>Step 2: Check for BIOS Whitelisting</h3>
+<p>Search eGPU forums (eGPU.io, Reddit r/eGPU) for your exact laptop model. Look for posts from users who have tried M.2 eGPU on the same model. If nobody has tried it, you can test with a cheap M.2 to USB 3.0 adapter card ($5 on AliExpress) before investing in a full GPU setup.</p>
+<span class="tag">Community knowledge saves money</span>
+</div>
+<div class="card card-accent-4">
+<h3><span class="dot" style="background:var(--accent-4)"></span>Step 3: Plan Your Storage</h3>
+<p>If your laptop only has one M.2 slot, you need an alternative boot method before you start:</p>
+<ul>
+<li><strong>USB 3.0 SSD:</strong> Fast enough for Windows and games. ~$30 for enclosure + old SSD</li>
+<li><strong>SATA SSD:</strong> If your laptop has a 2.5in drive bay (rare in modern ultrabooks)</li>
+<li><strong>Network boot (PXE):</strong> For advanced users with a home server</li>
+</ul>
+<span class="tag">Don't skip this step</span>
+</div>
+<div class="card card-accent-2">
+<h3><span class="dot" style="background:var(--accent-2)"></span>Step 4: Check Your CPU</h3>
+<p>Open Task Manager > Performance > CPU. Note the core count and base clock. Use the CPU bottleneck matrix above to determine what GPU tier makes sense. A 4-core U-series CPU will waste money on an RTX 4070.</p>
+<span class="tag">Match GPU to CPU power</span>
+</div>
+</div>
+</div>
+</div>
+
+<!-- TAB 5: M.2 Slot Types -->
+<div class="tab-panel" id="tab-5">
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg></div>
+<h2>M.2 Slot Types &amp; Keys Explained</h2>
+</div>
+<div class="highlight-box">
+<h4>M.2 Is Not Just One Thing</h4>
+<p>The M.2 connector standard defines multiple physical keyings (notch positions) that determine what signals are available on the pins. For eGPU, you need PCIe lanes - and not all M.2 slots carry them. Understanding the key type is essential before buying any adapter.</p>
+</div>
+<div class="m2-key-visual">
+<div class="key-card ok">
+<div class="key-label">Key M</div>
+<div class="key-desc">Storage slots (NVMe SSDs)</div>
+<div class="key-lanes">PCIe x4 lanes - BEST for eGPU</div>
+</div>
+<div class="key-card ok">
+<div class="key-label">Key A/E</div>
+<div class="key-desc">WiFi &amp; Bluetooth cards</div>
+<div class="key-lanes">PCIe x1 or x2 - Limited but usable</div>
+</div>
+<div class="key-card not-ok">
+<div class="key-label">Key B</div>
+<div class="key-desc">WWAN / older SATA SSDs</div>
+<div class="key-lanes">Often SATA-only - NOT for eGPU</div>
+</div>
+<div class="key-card not-ok">
+<div class="key-label">Key B+M</div>
+<div class="key-desc">Universal (SATA or PCIe)</div>
+<div class="key-lanes">Check if PCIe lanes are present</div>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg></div>
+<h2>M.2 Slot Specifications by Type</h2>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Slot Type</th><th>Physical Size</th><th>Key Position</th><th>PCIe Lanes</th><th>PCIe Gen</th><th>eGPU Viability</th></tr></thead>
+<tbody>
+<tr><td><strong>M.2 2280 (Key M)</strong></td><td>22mm x 80mm</td><td>Right side (pins 59-66)</td><td>x4</td><td>3.0 or 4.0</td><td><span class="badge badge-success">Excellent</span> Best option for eGPU</td></tr>
+<tr><td><strong>M.2 2242 (Key M)</strong></td><td>22mm x 42mm</td><td>Right side</td><td>x4 (sometimes x2)</td><td>3.0</td><td><span class="badge badge-success">Good</span> Verify lane count in manual</td></tr>
+<tr><td><strong>M.2 2242 (Key B)</strong></td><td>22mm x 42mm</td><td>Left side (pins 12-19)</td><td>x2 or SATA</td><td>2.0/3.0</td><td><span class="badge badge-warning">Poor</span> Often SATA-only, avoid</td></tr>
+<tr><td><strong>M.2 2230 (Key A/E)</strong></td><td>22mm x 30mm</td><td>Left side</td><td>x1 or x2</td><td>3.0</td><td><span class="badge badge-warning">Limited</span> Bandwidth bottleneck</td></tr>
+<tr><td><strong>M.2 22110 (Key M)</strong></td><td>22mm x 110mm</td><td>Right side</td><td>x4</td><td>3.0/4.0</td><td><span class="badge badge-success">Excellent</span> Server/workstation format</td></tr>
+<tr><td><strong>M.2 2280 (Key B+M)</strong></td><td>22mm x 80mm</td><td>Both sides</td><td>x2 or SATA</td><td>3.0</td><td><span class="badge badge-warning">Check manual</span> May be SATA-only</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></div>
+<h2>How to Identify Your M.2 Slot</h2>
+</div>
+<div class="grid-2">
+<div class="card card-accent">
+<h3><span class="dot" style="background:var(--accent)"></span>Method 1: Visual Inspection</h3>
+<p>Open your laptop and look at the M.2 slot. The key (notch) position tells you the type:</p>
+<ul>
+<li><strong>Notch on the right (toward pins 59-66):</strong> Key M - PCIe x4 storage</li>
+<li><strong>Notch on the left (toward pins 12-19):</strong> Key B or A/E - may be SATA or limited PCIe</li>
+<li><strong>Notches on both sides:</strong> Key B+M - could be either SATA or PCIe x2</li>
+</ul>
+<span class="tag">Open the laptop and look</span>
+</div>
+<div class="card card-accent-3">
+<h3><span class="dot" style="background:var(--accent-3)"></span>Method 2: Service Manual</h3>
+<p>Every laptop manufacturer publishes a hardware maintenance manual (HMM) or service manual. Search "[your model] hardware maintenance manual PDF". The storage section will list exact M.2 slot specifications including key type, PCIe lane count, and generation.</p>
+<span class="tag">Most reliable method</span>
+</div>
+<div class="card card-accent-4">
+<h3><span class="dot" style="background:var(--accent-4)"></span>Method 3: Software Detection</h3>
+<p>Use tools like HWiNFO64 or AIDA64 to inspect your system's PCIe topology. Look for the M.2 controller and check how many lanes it reports. Note: software may not distinguish between SATA and PCIe M.2 slots reliably.</p>
+<span class="tag">Software approach</span>
+</div>
+<div class="card card-accent-2">
+<h3><span class="dot" style="background:var(--accent-2)"></span>Method 4: BIOS/UEFI</h3>
+<p>Some BIOSes show M.2 slot information under Advanced > Storage Configuration or similar. Look for "M.2 PCIe mode" vs "M.2 SATA mode" settings. If the BIOS allows switching between SATA and PCIe, you have a B+M key slot.</p>
+<span class="tag">Check BIOS settings</span>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></div>
+<h2>PCIe Lane Count &amp; Performance Impact</h2>
+</div>
+<div class="performance-chart">
+<div class="perf-card">
+<div class="interface">PCIe 3.0 x1</div>
+<div class="speed">~8 <span>Gbps</span></div>
+<div class="loss"><span class="bad">Severe bottleneck</span> - Only for testing, not gaming</div>
+</div>
+<div class="perf-card">
+<div class="interface">PCIe 3.0 x2</div>
+<div class="speed">~16 <span>Gbps</span></div>
+<div class="loss"><span class="ok">Significant loss</span> - 30-50% slower than x4</div>
+</div>
+<div class="perf-card">
+<div class="interface">PCIe 3.0 x4</div>
+<div class="speed">~32 <span>Gbps</span></div>
+<div class="loss"><span class="ok">Good</span> - 10-20% loss vs desktop x16</div>
+</div>
+<div class="perf-card">
+<div class="interface">PCIe 4.0 x4</div>
+<div class="speed">~64 <span>Gbps</span></div>
+<div class="loss"><span class="good">Excellent</span> - Near-desktop performance</div>
+</div>
+<div class="perf-card">
+<div class="interface">Desktop PCIe 4.0 x16</div>
+<div class="speed">~128 <span>Gbps</span></div>
+<div class="loss"><span class="good">Baseline</span> - Full performance, no bottleneck</div>
+</div>
+</div>
+<p style="text-align:center;color:var(--text-muted);font-size:14px;margin-top:16px">Note: These are theoretical maximums. Real-world gaming performance depends on the specific game, resolution, and how texture-heavy the scene is. Higher resolutions (1440p, 4K) are less affected by PCIe bandwidth limitations than 1080p.</p>
+</div>
+</div>
+
+<!-- TAB 6: Performance -->
+<div class="tab-panel" id="tab-6">
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg></div>
+<h2>Performance Expectations</h2>
+</div>
+<div class="highlight-box">
+<h4>The Reality of M.2 eGPU Performance</h4>
+<p>An M.2 eGPU over PCIe 3.0 x4 will typically deliver <strong>80-90% of the GPU's desktop performance</strong> at 1440p resolution, and <strong>70-85% at 1080p</strong>. The bandwidth limitation hurts more at lower resolutions where the CPU sends more draw calls per frame. At 4K, the GPU is the bottleneck and PCIe lane count matters less. CPU bottlenecks are often the bigger issue than PCIe bandwidth.</p>
+</div>
+<div class="grid-2">
+<div class="card card-accent">
+<h3><span class="dot" style="background:var(--accent)"></span>PCIe Bandwidth Bottleneck</h3>
+<p>Desktop GPUs use PCIe x16 (16 lanes). M.2 eGPU uses only x4 (4 lanes). This means 75% fewer lanes for data transfer. The impact varies:</p>
+<ul>
+<li><strong>1080p gaming:</strong> 15-25% performance loss vs desktop</li>
+<li><strong>1440p gaming:</strong> 10-15% performance loss</li>
+<li><strong>4K gaming:</strong> 5-10% performance loss</li>
+<li><strong>VR / high-refresh:</strong> More noticeable stuttering</li>
+</ul>
+<span class="tag">Higher res = less bandwidth impact</span>
+</div>
+<div class="card card-accent-3">
+<h3><span class="dot" style="background:var(--accent-3)"></span>CPU Bottleneck</h3>
+<p>Your laptop CPU must feed the GPU with draw calls, physics, AI, and game logic. A weak CPU cannot keep a powerful GPU busy:</p>
+<ul>
+<li><strong>4-core U-series:</strong> Maxes out with RTX 4060 / RX 7600</li>
+<li><strong>6-core H-series:</strong> Can feed RTX 4070 / RX 7800 XT</li>
+<li><strong>8-core H-series:</strong> Justified for RTX 4080 class</li>
+<li><strong>Monitor GPU usage:</strong> If GPU is at 50-60%, CPU is the bottleneck</li>
+</ul>
+<span class="tag">CPU often the real limit</span>
+</div>
+<div class="card card-accent-4">
+<h3><span class="dot" style="background:var(--accent-4)"></span>Thunderbolt vs M.2 Comparison</h3>
+<p>Real-world benchmarks from the eGPU community show consistent results:</p>
+<ul>
+<li><strong>Thunderbolt 3:</strong> ~65-75% of desktop performance</li>
+<li><strong>M.2 PCIe 3.0 x4:</strong> ~75-85% of desktop performance</li>
+<li><strong>M.2 PCIe 4.0 x4:</strong> ~85-95% of desktop performance</li>
+<li><strong>M.2 has lower latency:</strong> Better 1% lows and frame times</li>
+</ul>
+<span class="tag">M.2 beats Thunderbolt</span>
+</div>
+<div class="card card-accent-2">
+<h3><span class="dot" style="background:var(--accent-2)"></span>VRAM &amp; Texture Streaming</h3>
+<p>Modern games stream textures from storage to VRAM dynamically. With only 4 PCIe lanes, texture pop-in can be more noticeable:</p>
+<ul>
+<li><strong>8GB VRAM cards:</strong> More susceptible to streaming issues</li>
+<li><strong>12GB+ VRAM cards:</strong> Can cache more textures, reducing streaming</li>
+<li><strong>PCIe 4.0 x4:</strong> Effectively doubles bandwidth, solving most streaming issues</li>
+<li><strong>Close background apps:</strong> Free up CPU and RAM for the game</li>
+</ul>
+<span class="tag">More VRAM helps on x4</span>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></div>
+<h2>Real-World Performance Benchmarks</h2>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th>GPU</th><th>Connection</th><th>Game (1080p High)</th><th>Desktop FPS</th><th>eGPU FPS</th><th>Loss</th></tr></thead>
+<tbody>
+<tr><td>RTX 3060 Ti</td><td>M.2 PCIe 3.0 x4</td><td>Cyberpunk 2077</td><td>~85 FPS</td><td>~70 FPS</td><td><span class="badge badge-warning">-18%</span></td></tr>
+<tr><td>RTX 3060 Ti</td><td>M.2 PCIe 3.0 x4</td><td>Red Dead Redemption 2</td><td>~75 FPS</td><td>~62 FPS</td><td><span class="badge badge-warning">-17%</span></td></tr>
+<tr><td>RX 6700 XT</td><td>M.2 PCIe 3.0 x4</td><td>Horizon Zero Dawn</td><td>~95 FPS</td><td>~80 FPS</td><td><span class="badge badge-warning">-16%</span></td></tr>
+<tr><td>RTX 4070</td><td>M.2 PCIe 4.0 x4</td><td>Cyberpunk 2077</td><td>~120 FPS</td><td>~108 FPS</td><td><span class="badge badge-success">-10%</span></td></tr>
+<tr><td>RX 7800 XT</td><td>M.2 PCIe 4.0 x4</td><td>Starfield</td><td>~90 FPS</td><td>~82 FPS</td><td><span class="badge badge-success">-9%</span></td></tr>
+<tr><td>RTX 4090</td><td>M.2 PCIe 4.0 x4</td><td>Microsoft Flight Sim</td><td>~65 FPS</td><td>~48 FPS</td><td><span class="badge badge-danger">-26%</span></td></tr>
+</tbody>
+</table>
+</div>
+<p style="text-align:center;color:var(--text-muted);font-size:13px;margin-top:12px">Data compiled from eGPU.io community builds and independent benchmarks. Actual results vary by laptop CPU, driver version, and game optimization.</p>
+</div>
+
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></div>
+<h2>Optimizing eGPU Performance</h2>
+</div>
+<div class="grid-2">
+<div class="card card-accent">
+<h3><span class="dot" style="background:var(--accent)"></span>Use an External Monitor</h3>
+<p>Connecting your monitor directly to the eGPU's display outputs (HDMI, DisplayPort) bypasses the need to send rendered frames back to the laptop's internal display over the limited PCIe link. This can recover 5-10% of lost performance.</p>
+<span class="tag">Biggest single improvement</span>
+</div>
+<div class="card card-accent-3">
+<h3><span class="dot" style="background:var(--accent-3)"></span>Close Background Apps</h3>
+<p>Your laptop CPU is already the bottleneck. Don't make it worse by running Chrome with 50 tabs, Discord, Spotify, and OBS simultaneously. Close everything non-essential before gaming.</p>
+<span class="tag">Free up CPU cycles</span>
+</div>
+<div class="card card-accent-4">
+<h3><span class="dot" style="background:var(--accent-4)"></span>Game at Higher Resolution</h3>
+<p>Paradoxically, 1440p often performs better relative to desktop than 1080p on eGPU setups. At higher resolutions, the GPU is the bottleneck and PCIe bandwidth matters less. The GPU spends more time rendering each frame, making the transfer overhead proportionally smaller.</p>
+<span class="tag">1440p can be better than 1080p</span>
+</div>
+<div class="card card-accent-2">
+<h3><span class="dot" style="background:var(--accent-2)"></span>Disable Laptop dGPU (if any)</h3>
+<p>If your laptop has a discrete GPU (like a GTX 1650 Mobile), disable it in Device Manager. Windows sometimes tries to render on the dGPU and copy frames to the eGPU, causing stuttering and reduced performance.</p>
+<span class="tag">Avoid render pipeline conflicts</span>
+</div>
+</div>
+</div>
+</div>
+
+<!-- TAB 7: Troubleshooting -->
+<div class="tab-panel" id="tab-7">
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div>
+<h2>Common Issues &amp; Solutions</h2>
+</div>
+<div class="grid-2">
+<div class="card card-accent">
+<h3><span class="dot" style="background:var(--accent)"></span>GPU Not Detected in Device Manager</h3>
+<p><strong>Causes:</strong> BIOS not initializing the GPU, power not connected, PERST# timing issue, BIOS whitelisting.</p>
+<ul>
+<li>Try SW1=2 (force power on) and power PSU before laptop</li>
+<li>Try SW2=2 (4.5s PERST delay) to give BIOS more time</li>
+<li>Remove J1 jumper cap (OPEN) to bypass PERST delay</li>
+<li>Check if your laptop BIOS has a whitelist - search your model on eGPU forums</li>
+<li>Verify the M.2 connector is fully seated and screwed down</li>
+</ul>
+<span class="tag">Most common issue</span>
+</div>
+<div class="card card-accent-3">
+<h3><span class="dot" style="background:var(--accent-3)"></span>System Crashes Under Load</h3>
+<p><strong>Causes:</strong> Insufficient power, overheating, unstable PCIe signal, driver conflict.</p>
+<ul>
+<li>Verify GPU power cables are fully inserted (click into place)</li>
+<li>Check PSU wattage: GPU TDP + 100W minimum for the whole system</li>
+<li>Monitor GPU temperature with HWiNFO64 - thermal throttling causes crashes</li>
+<li>Reinstall clean drivers using DDU (Display Driver Uninstaller)</li>
+<li>Try a shorter M.2 cable (signal degradation over long cables)</li>
+</ul>
+<span class="tag">Power is the usual culprit</span>
+</div>
+<div class="card card-accent-4">
+<h3><span class="dot" style="background:var(--accent-4)"></span>Blue Screen / BSOD</h3>
+<p><strong>Causes:</strong> Driver conflict, unstable PCIe link, power issue, Windows Update interfering.</p>
+<ul>
+<li>Use DDU to completely remove old drivers, then install fresh ones</li>
+<li>Disable Windows Update automatic driver installation</li>
+<li>Update laptop chipset drivers and BIOS to latest version</li>
+<li>Check Windows Event Viewer for WHEA-Logger PCIe errors</li>
+<li>Try a different PCIe power cable or PSU if available</li>
+</ul>
+<span class="tag">Driver issues are common</span>
+</div>
+<div class="card card-accent-2">
+<h3><span class="dot" style="background:var(--accent-2)"></span>Poor Performance Despite Detection</h3>
+<p><strong>Causes:</strong> CPU bottleneck, rendering on internal display, power management throttling.</p>
+<ul>
+<li>Connect an external monitor directly to the GPU (not laptop display)</li>
+<li>Set Windows power plan to High Performance</li>
+<li>Disable laptop's integrated/dedicated GPU in Device Manager</li>
+<li>Check CPU usage during gaming - if at 100%, you need a better CPU or lower GPU</li>
+<li>Ensure the game is running on the eGPU, not the iGPU (check GPU usage)</li>
+</ul>
+<span class="tag">Check your monitor connection</span>
+</div>
+<div class="card card-accent-5">
+<h3><span class="dot" style="background:var(--accent-5)"></span>Black Screen on Boot</h3>
+<p><strong>Causes:</strong> GPU outputting to wrong display, BIOS not supporting external GPU, POST failure.</p>
+<ul>
+<li>Disconnect external monitor, boot with laptop screen only, then connect monitor after Windows loads</li>
+<li>Some laptops disable internal display when eGPU is detected - connect monitor before boot</li>
+<li>Try a different GPU if available (some cards have compatibility issues)</li>
+<li>Reset BIOS to defaults, then reconfigure boot order</li>
+</ul>
+<span class="tag">Display routing issue</span>
+</div>
+<div class="card">
+<h3><span class="dot" style="background:var(--warning)"></span>Stuttering / Frame Time Spikes</h3>
+<p><strong>Causes:</strong> Texture streaming over limited PCIe bandwidth, CPU scheduling issues, background processes.</p>
+<ul>
+<li>Increase VRAM-heavy settings (texture quality, shadow quality) to reduce streaming frequency</li>
+<li>Close all background applications before gaming</li>
+<li>Set game process priority to High in Task Manager</li>
+<li>Disable Windows Game Mode (can cause issues with eGPU)</li>
+<li>Cap frame rate to reduce CPU overhead (e.g., 60 FPS cap)</li>
+</ul>
+<span class="tag">Bandwidth/scheduling issue</span>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"></path><circle cx="12" cy="12" r="10"></circle></svg></div>
+<h2>Diagnostic Checklist</h2>
+</div>
+<div class="step">
+<div class="step-num">1</div>
+<h4>Verify Power</h4>
+<p>Use a multimeter to check 12V on the PCIe power connectors and the R43SG board's 24-pin input. No 12V = PSU or cable issue. The R43SG green LEDs should light up when power is correct.</p>
+</div>
+<div class="step">
+<div class="step-num">2</div>
+<h4>Verify M.2 Connection</h4>
+<p>Reseat the M.2 connector. Ensure it's at the correct 30-degree angle during insertion. The M-key notch must align perfectly. The screw should hold it flat against the motherboard.</p>
+</div>
+<div class="step">
+<div class="step-num">3</div>
+<h4>Verify GPU Seating</h4>
+<p>The GPU must be fully inserted into the R43SG's PCIe slot. The retention clip should click into place. The GPU should not wobble or sag excessively.</p>
+</div>
+<div class="step">
+<div class="step-num">4</div>
+<h4>Check BIOS Settings</h4>
+<p>Enter BIOS (F1, F2, or Del during boot). Look for PCIe settings, Above 4G Decoding, and any whitelisting options. Some BIOSes have a "PCIe device detection" or "NVMe configuration" section.</p>
+</div>
+<div class="step">
+<div class="step-num">5</div>
+<h4>Check Device Manager</h4>
+<p>In Windows, open Device Manager > View > Show hidden devices. Look under "Display adapters" and "Other devices". A yellow triangle means driver issue. Code 43 often means power or PCIe signal problem.</p>
+</div>
+<div class="step">
+<div class="step-num">6</div>
+<h4>Test with Different GPU</h4>
+<p>If you have access to another PCIe graphics card, try it. This isolates whether the issue is with the specific GPU or the adapter/laptop setup.</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- TAB 8: GPU Recommendations -->
+<div class="tab-panel" id="tab-8">
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></div>
+<h2>Best GPUs for M.2 eGPU Setups</h2>
+</div>
+<div class="highlight-box">
+<h4>The Sweet Spot</h4>
+<p>For most M.2 eGPU builds (PCIe 3.0 x4), the sweet spot is a <strong>mid-range card with 8-12GB VRAM</strong>. High-end cards are wasted on the limited bandwidth, while low-end cards don't justify the setup cost. AMD cards generally perform better than NVIDIA on limited PCIe bandwidth due to more efficient driver overhead.</p>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th>GPU</th><th>VRAM</th><th>TDP</th><th>PCIe 3.0 x4 Suitability</th><th>PCIe 4.0 x4 Suitability</th><th>Best For</th></tr></thead>
+<tbody>
+<tr><td><strong>AMD RX 7600</strong></td><td>8GB</td><td>165W</td><td><span class="badge badge-success">Excellent</span></td><td><span class="badge badge-success">Excellent</span></td><td>Best overall value for M.2 eGPU. Efficient, good VRAM, great 1080p/1440p performance. AMD drivers handle limited bandwidth well.</td></tr>
+<tr><td><strong>AMD RX 6750 XT</strong></td><td>12GB</td><td>250W</td><td><span class="badge badge-success">Excellent</span></td><td><span class="badge badge-success">Excellent</span></td><td>Proven eGPU performer. 12GB VRAM handles texture streaming better. Slightly higher TDP requires good PSU.</td></tr>
+<tr><td><strong>AMD RX 6650 XT</strong></td><td>8GB</td><td>180W</td><td><span class="badge badge-success">Excellent</span></td><td><span class="badge badge-success">Excellent</span></td><td>Great budget option. Lower power than 6750 XT but similar 1080p performance. Good for 4-core CPUs.</td></tr>
+<tr><td><strong>NVIDIA RTX 4060</strong></td><td>8GB</td><td>115W</td><td><span class="badge badge-success">Good</span></td><td><span class="badge badge-success">Excellent</span></td><td>Low power, DLSS 3 support. NVIDIA drivers have more overhead on limited PCIe, but 115W TDP is very eGPU-friendly.</td></tr>
+<tr><td><strong>NVIDIA RTX 4060 Ti</strong></td><td>8GB / 16GB</td><td>160W</td><td><span class="badge badge-warning">Fair</span></td><td><span class="badge badge-success">Good</span></td><td>16GB version helps with texture streaming. 8GB version is VRAM-limited for modern games. Get the 16GB model if possible.</td></tr>
+<tr><td><strong>AMD RX 7800 XT</strong></td><td>16GB</td><td>263W</td><td><span class="badge badge-warning">Fair</span></td><td><span class="badge badge-success">Good</span></td><td>High-end option for PCIe 4.0 x4 systems. 16GB VRAM is excellent. Overkill for PCIe 3.0 x4 - significant bottleneck.</td></tr>
+<tr><td><strong>NVIDIA RTX 4070</strong></td><td>12GB</td><td>200W</td><td><span class="badge badge-warning">Poor</span></td><td><span class="badge badge-warning">Fair</span></td><td>Not recommended for M.2 eGPU. High driver overhead + limited bandwidth = poor value. Better suited for desktop or Thunderbolt 4.</td></tr>
+<tr><td><strong>NVIDIA RTX 4090</strong></td><td>24GB</td><td>450W</td><td><span class="badge badge-danger">Avoid</span></td><td><span class="badge badge-danger">Avoid</span></td><td>Completely wasted on x4 lanes. The card is designed for x16. Massive power requirements. Not viable for eGPU.</td></tr>
+<tr><td><strong>AMD RX 7900 XTX</strong></td><td>24GB</td><td>355W</td><td><span class="badge badge-danger">Avoid</span></td><td><span class="badge badge-danger">Avoid</span></td><td>Same as RTX 4090 - overkill for the bandwidth. Power and thermal requirements exceed most eGPU setups.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
+<h2>GPU Recommendations by CPU</h2>
+</div>
+<div class="grid-2">
+<div class="card card-accent">
+<h3><span class="dot" style="background:var(--accent)"></span>4-Core CPUs (i5-10210U, R5 4500U)</h3>
+<p>These CPUs will bottleneck anything above mid-range. Don't waste money on high-end cards.</p>
+<ul>
+<li><strong>Best:</strong> AMD RX 7600, RX 6650 XT</li>
+<li><strong>Good:</strong> NVIDIA RTX 4060, RTX 3060</li>
+<li><strong>Avoid:</strong> Anything above RTX 4060 Ti / RX 6700 XT</li>
+</ul>
+<span class="tag">Budget to mid-range only</span>
+</div>
+<div class="card card-accent-3">
+<h3><span class="dot" style="background:var(--accent-3)"></span>6-Core CPUs (i7-10710U, R5 5600U)</h3>
+<p>Can handle stronger GPUs. The CPU won't be the bottleneck until high-end territory.</p>
+<ul>
+<li><strong>Best:</strong> AMD RX 6750 XT, RX 7600</li>
+<li><strong>Good:</strong> NVIDIA RTX 4060 Ti 16GB, RTX 4070 (on PCIe 4.0)</li>
+<li><strong>Avoid:</strong> RTX 4080+ / RX 7800 XT+ on PCIe 3.0 x4</li>
+</ul>
+<span class="tag">Mid-range to upper-mid</span>
+</div>
+<div class="card card-accent-4">
+<h3><span class="dot" style="background:var(--accent-4)"></span>8-Core CPUs (i7-11800H, R7 5800H)</h3>
+<p>Can feed high-end GPUs, but the x4 lane limit still applies. Best for PCIe 4.0 x4 systems.</p>
+<ul>
+<li><strong>Best:</strong> AMD RX 7800 XT, RX 6750 XT</li>
+<li><strong>Good:</strong> NVIDIA RTX 4070 (PCIe 4.0), RTX 4060 Ti 16GB</li>
+<li><strong>Avoid:</strong> RTX 4090 / RX 7900 XTX (bandwidth waste)</li>
+</ul>
+<span class="tag">Upper-mid range</span>
+</div>
+<div class="card card-accent-2">
+<h3><span class="dot" style="background:var(--accent-2)"></span>Budget Builds (Under $300 GPU)</h3>
+<p>If you're on a tight budget, used cards can deliver excellent value for eGPU.</p>
+<ul>
+<li><strong>AMD RX 6600:</strong> ~$180 used, 8GB VRAM, 132W TDP</li>
+<li><strong>NVIDIA RTX 3060:</strong> ~$200 used, 12GB VRAM, 170W TDP</li>
+<li><strong>AMD RX 5700 XT:</strong> ~$150 used, 8GB VRAM, 225W TDP</li>
+<li><strong>NVIDIA GTX 1660 Super:</strong> ~$120 used, 6GB VRAM, 125W TDP</li>
+</ul>
+<span class="tag">Used market gems</span>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-header">
+<div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
+<h2>Final Recommendations</h2>
+</div>
+<div class="highlight-box">
+<h4>For ThinkPad T14 Gen 1 Specifically</h4>
+<p>Given the T14 Gen 1's 4-core Intel U-series or 6-core AMD U-series CPUs and single M.2 2280 slot (PCIe 3.0 x4), here is the optimal build:</p>
+<ul>
+<li><strong>GPU:</strong> AMD RX 7600 or RX 6750 XT (12GB VRAM helps with texture streaming on x4)</li>
+<li><strong>PSU:</strong> Corsair CX550 or EVGA 500W (plenty of headroom for 250W GPU + board)</li>
+<li><strong>Adapter:</strong> ADT-Link R43SG 25cm (shorter cable = better signal integrity)</li>
+<li><strong>Boot:</strong> USB 3.0 SSD enclosure with a 500GB+ SATA/NVMe SSD</li>
+<li><strong>Monitor:</strong> External 1080p or 1440p monitor connected directly to GPU</li>
+</ul>
+<p><strong>Expected performance:</strong> 60+ FPS at 1080p High in most modern titles. 45-60 FPS at 1440p Medium-High. The 4-core Intel CPU will be at 90-100% utilization, so don't expect miracles - but it's a massive upgrade over integrated graphics.</p>
+</div>
+</div>
+</div>
+
+</div><!-- end tab-content -->
+
+<footer class="footer">
+<p>M.2 NVMe eGPU Complete Setup Guide - Research compiled from eGPU.io community, manufacturer documentation, and independent testing.</p>
+<p style="margin-top:8px">Built with the Muse Pool design system. For educational purposes only. Always verify compatibility with your specific hardware before purchasing.</p>
+</footer>
+
+</div><!-- end app -->
+
+<script>
+function switchTab(index) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + index).classList.add('active');
+  document.querySelectorAll('.tab-btn')[index].classList.add('active');
+}
+document.querySelectorAll('.tab-btn')[0].classList.add('active');
+document.getElementById('tab-0').classList.add('active');
+</script>
+
+</body>
+</html>
