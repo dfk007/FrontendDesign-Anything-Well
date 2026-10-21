@@ -573,6 +573,61 @@
   .sc-tag.hard         { color: var(--hard);         border-color: var(--hard);         background: rgba(139,92,246,0.05); }
   .sc-tag.other        { color: var(--other);        border-color: var(--other);        background: rgba(245,158,11,0.05); }
   .sc-tag.jd           { color: var(--jd-col);       border-color: var(--jd-col);       background: rgba(248,113,113,0.05); }
+  .group-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--teal);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin: 0 0 1rem;
+  }
+  .group-label::after { content: ''; flex: 1; height: 1px; background: var(--rule); }
+  .preview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 2.4rem;
+  }
+  .preview-card {
+    display: block;
+    border: 1px solid var(--rule);
+    background: var(--paper-2);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s;
+  }
+  .preview-card:hover { border-color: var(--teal); box-shadow: 0 0 16px rgba(0,200,160,0.12); }
+  .preview-card img { display: block; width: 100%; height: auto; }
+  .preview-card .pc-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.7rem 0.9rem;
+    border-top: 1px solid var(--rule);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.64rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .preview-card .pc-meta strong {
+    color: var(--ink);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: none;
+    font-size: 0.78rem;
+  }
+  .shot {
+    display: block;
+    width: 100%;
+    max-width: 640px;
+    border: 1px solid var(--rule);
+    margin: 0.4rem 0 1rem;
+  }
   @media (max-width: 860px) {
     .hero               { grid-template-columns: 1fr; gap: 2rem; }
     .masthead           { grid-template-columns: 1fr; text-align: center; gap: 0.35rem; }
@@ -587,6 +642,7 @@
     .footer-rule .right,
     .footer-rule .left  { text-align: center; }
     .stack-card         { flex-direction: column; gap: 0.6rem; }
+    .preview-grid       { grid-template-columns: 1fr; }
   }
   @media print {
     body             { background: #fff !important; color: #000 !important; }
@@ -619,8 +675,8 @@
       Frontend <em>Design</em><br>Skill <em>Index</em>
     </h1>
     <div class="lede">
-      <span class="eyebrow">// 5 design systems · 4 example artifacts · 1 working repo</span>
-      A self-contained repository of <em>reproduction-grade</em> frontend design skills, paired with example HTML files that demonstrate each system. Drop a skill into your agent, point it at any plain HTML, and get a field-manual-grade interface back. <em>Edit any skill freely.</em>
+      <span class="eyebrow">// 5 core systems · 12 specimen pages · screenshots included</span>
+      A self-contained repository of <em>reproduction-grade</em> frontend design skills, each with a one-page HTML specimen and a screenshot. Drop a skill into your agent, point it at any plain HTML, and get a field-manual-grade interface back. <em>Edit any skill freely.</em>
     </div>
   </section>
 
@@ -630,12 +686,12 @@
       <span class="val big">05</span>
     </div>
     <div class="meta-cell">
-      <span class="label">Example HTML</span>
-      <span class="val big">03</span>
+      <span class="label">Specimen Pages</span>
+      <span class="val big">12</span>
     </div>
     <div class="meta-cell">
-      <span class="label">Example MD</span>
-      <span class="val big">01</span>
+      <span class="label">Screenshots</span>
+      <span class="val big">12</span>
     </div>
     <div class="meta-cell">
       <span class="label">Aesthetic Families</span>
@@ -658,7 +714,7 @@
 
   <div class="nav-bar block">
     <button class="tab-btn active-easy" onclick="showTab('skills', this)">Design Skills · 01–05</button>
-    <button class="tab-btn" onclick="showTab('examples', this)">Example HTML · 06–09</button>
+    <button class="tab-btn" onclick="showTab('examples', this)">Examples · 12 pages</button>
     <button class="tab-btn" onclick="showTab('howto', this)">How to Use · 10–13</button>
     <button class="tab-btn" onclick="showTab('design', this)">Design Notes · 14–15</button>
   </div>
@@ -752,20 +808,22 @@
       <div class="qa-item other" onclick="toggleItem(this)">
         <div class="qa-question">
           <span class="q-num">06</span>
-          <span class="q-text">Claude-Skills/ subdirectory <em>·</em> alternate skill formats</span>
+          <span class="q-text">Seven more systems <em>·</em> journal, brutalist, signal, control room, PaperOS, NVMe, Volga</span>
           <span class="q-arrow">▼</span>
         </div>
         <div class="qa-answer">
           <div class="answer-content">
-            <p>Alternate-packaged versions of the same skills, located at <code>frontend-design/Claude-Skills/</code>:</p>
+            <p>Beyond the five core systems, the repo holds seven more specs. Each has a one-page specimen and a screenshot under <a href="examples/design-system-examples/">Examples</a>.</p>
             <ul>
-              <li><code>frontend-design-extractor-dfk.skill</code> — packaged skill bundle</li>
-              <li><code>frontend-design-extractor-Claude.md</code> — Claude-formatted variant of the extractor</li>
-              <li><code>CyberPunk-Animated-Terminal-v2.md</code> — Claude-packaged v2 cyberpunk</li>
-              <li><code>Claude-default-SKILL.md</code> — Claude-default skill template</li>
+              <li><code>New-DesignSystems-Experimental/Amber-Parchment-Journal.md</code></li>
+              <li><code>New-DesignSystems-Experimental/Concrete-Brutalist-Forge.md</code></li>
+              <li><code>New-DesignSystems-Experimental/Signal-Void-Minimal.md</code></li>
+              <li><code>control-room-design-system.md</code></li>
+              <li><code>PaperOS—DesignSystem-SKILL.md</code></li>
+              <li><code>nvme-egpu-design-SKILL.md</code></li>
+              <li><code>volga-partners-frontend-design.md</code></li>
             </ul>
-            <p>These exist so the same design system can be loaded into Claude Code, opencode, or any agent that consumes a <code>SKILL.md</code> / <code>.skill</code> bundle.</p>
-            <div class="tip-chip">✓ Use for Claude Code specifically</div>
+            <div class="tip-chip">✓ Open the Examples tab to see them</div>
           </div>
         </div>
       </div>
@@ -776,9 +834,25 @@
   <div class="section intermediate" id="sec-examples">
     <div class="section-header">
       <div class="section-label">Section 02 · Working HTML Artifacts</div>
-      <div class="section-title">The example files</div>
-      <div class="section-desc">Each example is a complete, self-contained HTML file built entirely with one of the design systems above. Open in a browser to see the system in motion.</div>
+      <div class="section-title">Specimens &amp; screenshots</div>
+      <div class="section-desc">Twelve one-page specimens, one per design system. Click a screenshot to open the HTML. The longer examples further down are the full rendered pages.</div>
     </div>
+    <div class="group-label">One-page specimens · 1280×720</div>
+    <div class="preview-grid">
+      <a class="preview-card" href="examples/design-system-examples/deepnavy-highquality-terminal-aesthetics.html"><img src="examples/design-system-examples/screenshots/deepnavy-highquality-terminal-aesthetics.png" alt="DeepNavy HighQuality Terminal Aesthetics"><span class="pc-meta"><strong>DeepNavy Terminal</strong><span>01 · this page</span></span></a>
+      <a class="preview-card" href="examples/design-system-examples/skill.html"><img src="examples/design-system-examples/screenshots/skill.png" alt="Editorial Craft"><span class="pc-meta"><strong>Editorial Craft</strong><span>02 · skill.md</span></span></a>
+      <a class="preview-card" href="examples/design-system-examples/deepnavy-fraunces-pro.html"><img src="examples/design-system-examples/screenshots/deepnavy-fraunces-pro.png" alt="DeepNavy Fraunces Pro"><span class="pc-meta"><strong>DeepNavy Fraunces Pro</strong><span>03</span></span></a>
+      <a class="preview-card" href="examples/design-system-examples/dark-gold-editorial-report.html"><img src="examples/design-system-examples/screenshots/dark-gold-editorial-report.png" alt="Dark Gold Editorial Report"><span class="pc-meta"><strong>Dark Gold Report</strong><span>04</span></span></a>
+      <a class="preview-card" href="examples/design-system-examples/cyberpunk-animated-terminal-v1.html"><img src="examples/design-system-examples/screenshots/cyberpunk-animated-terminal-v1.png" alt="CyberPunk Terminal"><span class="pc-meta"><strong>CyberPunk Terminal</strong><span>05</span></span></a>
+      <a class="preview-card" href="examples/design-system-examples/amber-parchment-journal.html"><img src="examples/design-system-examples/screenshots/amber-parchment-journal.png" alt="Amber Parchment Journal"><span class="pc-meta"><strong>Amber Journal</strong><span>parchment</span></span></a>
+      <a class="preview-card" href="examples/design-system-examples/concrete-brutalist-forge.html"><img src="examples/design-system-examples/screenshots/concrete-brutalist-forge.png" alt="Concrete Brutalist Forge"><span class="pc-meta"><strong>Concrete Forge</strong><span>brutalist</span></span></a>
+      <a class="preview-card" href="examples/design-system-examples/signal-void-minimal.html"><img src="examples/design-system-examples/screenshots/signal-void-minimal.png" alt="Signal Void Minimal"><span class="pc-meta"><strong>Signal / Void</strong><span>minimal</span></span></a>
+      <a class="preview-card" href="examples/design-system-examples/control-room-design-system.html"><img src="examples/design-system-examples/screenshots/control-room-design-system.png" alt="Control Room"><span class="pc-meta"><strong>Control Room</strong><span>playback</span></span></a>
+      <a class="preview-card" href="examples/design-system-examples/paperos-designsystem-skill.html"><img src="examples/design-system-examples/screenshots/paperos-designsystem-skill.png" alt="PaperOS"><span class="pc-meta"><strong>PaperOS</strong><span>project desk</span></span></a>
+      <a class="preview-card" href="examples/design-system-examples/nvme-egpu-design-skill.html"><img src="examples/design-system-examples/screenshots/nvme-egpu-design-skill.png" alt="NVMe eGPU guide"><span class="pc-meta"><strong>NVMe → eGPU</strong><span>guide</span></span></a>
+      <a class="preview-card" href="examples/design-system-examples/volga-partners-frontend-design.html"><img src="examples/design-system-examples/screenshots/volga-partners-frontend-design.png" alt="Volga Partners"><span class="pc-meta"><strong>Volga Partners</strong><span>interview</span></span></a>
+    </div>
+    <div class="group-label">Full rendered pages</div>
     <div class="qa-list">
 
       <div class="qa-item intermediate" onclick="toggleItem(this)">
@@ -790,7 +864,8 @@
         <div class="qa-answer">
           <div class="answer-content">
             <p>Full single-page implementation of the <strong>Dark-Gold Editorial Report</strong> system. Dark masthead, gold verdict strip, ruled section dividers, numbered index, inversion panels, sticky monospace nav, role cards with 3px top-border color coding, vertical timeline, inline progress bars, two-tone colophon footer.</p>
-            <p><strong>Path:</strong> <code>examples/Dark-Gold-Editorial-Report.html</code></p>
+            <a href="examples/Dark-Gold-Editorial-Report.html"><img class="shot" src="examples/design-system-examples/screenshots/dark-gold-editorial-report.png" alt="Dark Gold specimen"></a>
+            <p><strong>Full page:</strong> <a href="examples/Dark-Gold-Editorial-Report.html"><code>examples/Dark-Gold-Editorial-Report.html</code></a> · <strong>Specimen:</strong> <a href="examples/design-system-examples/dark-gold-editorial-report.html">one-page version</a></p>
             <div class="tip-chip">✓ Open directly in any browser</div>
             <div class="star-chip">★ ~50 KB self-contained</div>
           </div>
@@ -806,7 +881,8 @@
         <div class="qa-answer">
           <div class="answer-content">
             <p>Full single-page implementation of the <strong>CyberPunk Animated Terminal v2</strong> system. Animated green grid that scrolls vertically, scanning chromatic gradient stripe on every card top, glowing borders, neon green/cyan/magenta triad, sticky header with slideDown entrance, pulsing cursor aesthetic in terminal blocks. <em>Permanently dark.</em></p>
-            <p><strong>Path:</strong> <code>examples/CyberPunk-Animated-Terminal-v2.html</code></p>
+            <a href="examples/CyberPunk-Animated-Terminal-v2.html"><img class="shot" src="examples/design-system-examples/screenshots/cyberpunk-animated-terminal-v1.png" alt="CyberPunk specimen"></a>
+            <p><strong>Full page:</strong> <a href="examples/CyberPunk-Animated-Terminal-v2.html"><code>examples/CyberPunk-Animated-Terminal-v2.html</code></a> · <strong>Specimen:</strong> <a href="examples/design-system-examples/cyberpunk-animated-terminal-v1.html">one-page version</a></p>
             <div class="tip-chip">✓ Best demo of glow effects</div>
             <div class="star-chip">★ Animations are load-bearing</div>
           </div>
@@ -869,8 +945,7 @@
         </div>
         <div class="qa-answer">
           <div class="answer-content">
-            <p>Most agents that support a <code>skill</code> tool will pick up <code>frontend-design/&lt;name&gt;.md</code> automatically. If yours doesn't, paste the entire file into the system prompt or context.</p>
-            <p>For Claude Code specifically, use the <code>Claude-Skills/</code> variants (e.g. <code>Claude-default-SKILL.md</code> or any <code>.skill</code> bundle).</p>
+            <p>Most agents that support a <code>skill</code> tool will pick up <code>frontend-design/&lt;name&gt;.md</code> automatically. If yours doesn't, paste the entire file into the system prompt or context. The same files work in Claude Code and opencode.</p>
             <div class="tip-chip">✓ Auto-discovery usually works</div>
           </div>
         </div>
@@ -991,14 +1066,17 @@
                   <li><code>DeepNavy-Fraunces-Pro.md</code> — predecessor of #1</li>
                   <li><code>Dark-Gold-Editorial-Report.md</code> — financial journalism</li>
                   <li><code>CyberPunk-Animated-Terminal-v1.md</code> — terminal, v1</li>
-                  <li><code>Claude-Skills/</code> — alternate packaging for Claude Code</li>
+                  <li><code>PaperOS</code>, <code>nvme-egpu</code>, <code>volga</code>, <code>control-room</code>, and <code>New-DesignSystems-Experimental/</code></li>
                 </ul>
               </li>
-              <li><code>examples/</code> — live HTML artifacts
+              <li><code>examples/design-system-examples/</code> — 12 specimen HTML pages and matching screenshots
+              </li>
+              <li><code>examples/</code> — full rendered pages
                 <ul>
                   <li><code>Dark-Gold-Editorial-Report.html</code></li>
                   <li><code>CyberPunk-Animated-Terminal-v2.html</code></li>
-                  <li><code>CyberPunk-Animated-Terminal-v1.md</code> (runnable HTML)</li>
+                  <li><code>CyberPunk-Animated-Terminal-v1.html</code> and the runnable <code>.md</code></li>
+                  <li><code>control-room-design-system-1.html</code> and <code>-2.html</code></li>
                   <li><code>BaseHtml-Revamped-with-DesignSkill/</code> — base + 2 model revamps</li>
                 </ul>
               </li>
@@ -1038,7 +1116,8 @@
       b.classList.remove('active-easy','active-intermediate','active-hard','active-other','active-jd');
     });
     document.getElementById('sec-' + id).classList.add('active');
-    btn.classList.add('active-' + id);
+    const tones = { skills: 'easy', examples: 'intermediate', howto: 'hard', design: 'other' };
+    btn.classList.add('active-' + tones[id]);
     const q = document.getElementById('searchInput').value;
     if (q) filterQuestions();
   }
@@ -1051,7 +1130,7 @@
 
   function filterQuestions() {
     const q = document.getElementById('searchInput').value.toLowerCase().trim();
-    const allItems = document.querySelectorAll('.qa-item');
+    const allItems = document.querySelectorAll('.qa-item, .preview-card');
     if (!q) {
       allItems.forEach(item => item.style.display = '');
       return;
@@ -1060,7 +1139,7 @@
     sections.forEach(sec => {
       const secEl = document.getElementById('sec-' + sec);
       let hasHit = false;
-      secEl.querySelectorAll('.qa-item').forEach(item => {
+      secEl.querySelectorAll('.qa-item, .preview-card').forEach(item => {
         const text = item.textContent.toLowerCase();
         if (text.includes(q)) { item.style.display = ''; hasHit = true; }
         else { item.style.display = 'none'; }
@@ -1069,7 +1148,7 @@
     });
     sections.forEach(sec => {
       const secEl = document.getElementById('sec-' + sec);
-      const hasVisible = [...secEl.querySelectorAll('.qa-item')].some(i => i.style.display !== 'none');
+      const hasVisible = [...secEl.querySelectorAll('.qa-item, .preview-card')].some(i => i.style.display !== 'none');
       if (!hasVisible) secEl.classList.remove('active');
       else secEl.classList.add('active');
     });
